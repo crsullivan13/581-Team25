@@ -1,23 +1,29 @@
 import logo from './logo.svg';
 import './App.css';
+import Tabs from "./components/Tabs";
+import Tab from "./components/Tab";
+
+
+
+function handleClick(){
+}
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+	<Tabs>
+	<div label="Tab1">
+		<div>
+			<button type="button" onClick={handleClick}>Tab1 button</button>
+		</div>
+	</div>
+	<div label="Tab2">
+	</div>
+	<div label="Tab3">
+	</div>
+	</Tabs>
+	</header>
     </div>
   );
 }
