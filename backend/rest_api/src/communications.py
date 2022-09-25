@@ -16,7 +16,7 @@ def PushToFront(toPath:str, type: str, subtype: str, returnVal): #push a json fi
     json.dump(value, f, indent = 6)#dump json file
     f.close() #close the file
 
-def readCommand (commandCode): #read command and call the proper function when asked. Still under construction
+def ReadCommand (commandCode): #read command and call the proper function when asked. Still under construction
     #input: commandCode: commands from command line
     #output: runs the proper function. no output.
 
