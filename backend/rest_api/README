@@ -1,9 +1,0 @@
-To deploy, you'll need to login to gcloud:
-
- - gcloud auth login [ACCOUNT]
-
-and run gcloud app deploy 
-
-alternatively, ./deploy.sh should do everything.
-
-
