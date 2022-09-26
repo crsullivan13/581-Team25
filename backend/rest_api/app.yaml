@@ -1,3 +1,7 @@
+# app.yaml by Derrick Quinn
+# app.yaml describes the environment required for the app on google's servers
+# log: created Sep 25: Added initial settings
+
 runtime: python37
 
 handlers:
