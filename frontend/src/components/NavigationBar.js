@@ -1,16 +1,32 @@
+/*
+Name: NavigationBar.js
+Description: Nav bar component
+Programmers: Connor Sullivan
+Creation Date: 9/24/22
+Revisions:
+    9/24/22
+		Revision: Move this code to here from another file for modularity
+		Authort: Connor Sullivan
+Preconditions: None
+Postconditions: None
+Errors: None
+Side Effects: None
+Invariants: None
+Faults: None
+*/
+
+//import what we need
 import React from "react"
 import '../App.css';
 
 import { Navbar } from "react-bootstrap"
 import { Nav } from "react-bootstrap"
-import DataInput from "./Tabs/DataInput"
-import Training from "./Tabs/Training"
-import ModelUsage from "./Tabs/ModelUsage"
-import ModelMetrics from "./Tabs/ModelMetrics"
-import Dashboard from "./Dashboard";
 
 
 function NavigationBar() {
+
+	//pretty straight forward, just using the bootstrap navbar component
+	//handles the buttons and references for us, does some light styling through classname, bg (background) and expand (where to collapse nav)
 	return (
 	<div className="App">
         <header className="App-header">
