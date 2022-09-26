@@ -5,7 +5,7 @@ Programmers: Amith Panuganti Connor Sullivan
 Creation Date: 9/24/22
 Revisions:
     9/24/22:
-        Revision: I wrote this all in one sitting
+        Revision: Initial creation
         Author: Connor Sullivan 
     9/24/22: 
         Revision: Fix error where a tab is printed twice
