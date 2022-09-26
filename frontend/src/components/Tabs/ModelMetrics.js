@@ -1,10 +1,9 @@
 /*
 Name: ModelMetrics.js
 Description: Output metrics of a model after training
-Programmers: Amith Panuganti, TODO 
-Creation Date: TODO
+Programmers: Amith Panuganti
+Creation Date: 9/25/22
 Revisions:
-    TODO
 	9/25/22: 
         Revision: Impliment Interface for Model Metrics
         Author: Amith Panuganti 
