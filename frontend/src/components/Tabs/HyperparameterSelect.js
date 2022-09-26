@@ -26,7 +26,7 @@ class HyperparameterSelect extends React.Component {
 	//the handler for the selection of a hyperparam - updates the selected hyperparam state
 	handleHyperparameterSelect = (event) => {
 		
-		this.setState({selectedHyperparameter: event.target.value});
+		this.setState({selectedHyperparameter: event.target.value}); //this sets the selected hyperparam
 		
 	}
 	
@@ -35,7 +35,7 @@ class HyperparameterSelect extends React.Component {
 		super(props);
 		this.state = {
 			hyperparameters: [],
-			selectedHyperparameter: "hyp1",
+			selectedHyperparameter: "hyp1", //sets the hyperparam that is selected by default
 			selectedMetrics: [],
 		};
 	}
@@ -43,10 +43,10 @@ class HyperparameterSelect extends React.Component {
 	//this function is called after the component is inserted into the DOM, after the first render cycle
 	componentDidMount() {
 		this.setState({
-			hyperparameters: [{name: 'hyp1'}, 
+			hyperparameters: [{name: 'hyp1'},  
 						{name: 'hyp2'},
 						{name: 'hyp3'},
-						{name: 'hyp4'}]
+						{name: 'hyp4'}]  //sets the default list of hyperparams, could be later populated from the database
 		});
 	}
 	
@@ -54,11 +54,11 @@ class HyperparameterSelect extends React.Component {
 	//the render function populates the selection options and checks which one is selected to determine which options 
 	//should be displayed
 	render () {
-		const { hyperparameters } = this.state;
+		const { hyperparameters } = this.state; //hyperparameters represents the state, which contains the list of hyperparams
 		
 		//populate the selection options
 		let hyperparameterList = hyperparameters.length > 0 && hyperparameters.map((item, i) => {
-			return (<option key={i} value={item.name}>{item.name}</option>)
+			return (<option key={i} value={item.name}>{item.name}</option>) //adds the options to the dropdown
 		}, this);
 
 
@@ -68,7 +68,7 @@ class HyperparameterSelect extends React.Component {
 		//later, different options should be made for each kind of hyperparameter, and which one is rendered and populated would be determined here
 		this.state.hyperparameters.forEach((x, i) => {
 			if(this.state.selectedHyperparameter === x.name){
-				moreHypOptions = <span>(hyperparameter options for <span>{x.name}</span>)</span>
+				moreHypOptions = <span>(hyperparameter options for <span>{x.name}</span>)</span> //right now this is just text
 			}
 		});
 
@@ -78,9 +78,11 @@ class HyperparameterSelect extends React.Component {
 			<Container>
 			<Row>
 			<Col>
+				{/*the dropdown with the hyperparams*/}
 				<select id="hyperparametersel" onChange={this.handleHyperparameterSelect}>{hyperparameterList}</select>
 			</Col>
 			<Col>
+				{/*the additional options for a selected hyperparameter*/}
 				<div><span>options for {this.state.selectedHyperparameter}:</span>< HyperparametersOptions /></div>
 			</Col>
 			</Row>

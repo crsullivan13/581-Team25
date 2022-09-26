@@ -24,6 +24,7 @@ class HyperparametersOptions extends React.Component {
 		return (
 		<span>
 		<form>
+		{/*two text inputs */}
 		<label>Value 1:
 			<input type="text"/>
 		</label>
@@ -33,6 +34,7 @@ class HyperparametersOptions extends React.Component {
 		</label>
 		<br/>
 		<label>type:
+			{/*one dropdown input*/}
 			<select>
 			<option>option1</option>
 			<option>option2</option>

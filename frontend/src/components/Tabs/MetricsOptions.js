@@ -15,7 +15,7 @@ Faults: None
 import React, { Component } from "react"
 
 class MetricsOptions extends React.Component {
-	constructor(props){
+	constructor(props){//calls the superclass constructor
 		super(props);
 	}	
 	//the options include one text input and a drop down with two options
@@ -24,10 +24,12 @@ class MetricsOptions extends React.Component {
 		<span>
 		<form>
 		<label>name:
+			{/*name of the metric*/}
 			<input type="text"/>
 		</label>
 		<br/>
 		<label>type:
+			{/*two options for a drop down*/}
 			<select>
 			<option>option1</option>
 			<option>option2</option>

@@ -32,20 +32,24 @@ function Training() {
   return (
 	<Container>
 	<Row>
+		{/*option to choose model to train*/}
 		Choose Model:
 		<ModelSelect />
 	</Row>
 
 	<Row>
+		{/*option to choose hyperparameter to edit*/}
 		Change Hyperparameters:
 		<HyperparameterSelect />
 	</Row>
 	
 	<Row>
+		{/*option to choose what metrics to record*/}
 		Choose Recorded Metrics:
 		<MetricsSelect />
 	</Row>
 	<Row>
+		{/*button to begin training*/}
 	<button onClick={handleTrain}>Begin Training</button>
 	</Row>
 	</Container>

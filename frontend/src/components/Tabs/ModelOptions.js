@@ -24,10 +24,12 @@ class ModelOptions extends React.Component {
 		<span>
 		<form>
 		<label>name:
+			{/*name for the model*/}
 			<input type="text"/>
 		</label>
 		<br/>
 		<label>type:
+			{/*types of models that can be created*/}
 			<select>
 			<option>option1</option>
 			<option>option2</option>

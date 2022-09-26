@@ -27,42 +27,39 @@ function DataInput() {
 	//the states that keep track of the selected files and whether files have been selected
 	
 	//These states keep track of the Training file
-	const [selectedTrainFile, setSelectedTrainFile] = useState();
-	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);
+	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
+	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
 	
 	//these track the label file
-	const [selectedLabelFile, setSelectedLabelFile] = useState();
-	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);
+	const [selectedLabelFile, setSelectedLabelFile] = useState();//keeps track of what label file is selected
+	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);//keeps track of whether a label file is selected
 	
 	
 	//these track the feature file
-	const [selectedFeatureFile, setSelectedFeatureFile] = useState();
-	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);
+	const [selectedFeatureFile, setSelectedFeatureFile] = useState();//keeps track of what feature file is selected
+	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
 
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeTrainHandler = (event) => {
 
 		//these two lines update the state of the page
-		setSelectedTrainFile(event.target.files[0]);
-		setIsTrainFileSelec(true);
-		console.log(event.target.files[0]);
+		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
+		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
 	}
 
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeLabelHandler = (event) => {
 
 		//these two lines update the state of the page
-		setSelectedLabelFile(event.target.files[0]);
-		setIsLabelFileSelec(true);
-		console.log(event.target.files[0]);
+		setSelectedLabelFile(event.target.files[0]);//sets the selected file
+		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
 	}
 
 	let changeFeatureHandler = (event) => {
 
 		//these two lines update the state of the page
-		setSelectedFeatureFile(event.target.files[0]);
-		setIsFeatureFileSelec(true);
-		console.log(event.target.files[0]);
+		setSelectedFeatureFile(event.target.files[0]);//sets the selected file
+		setIsFeatureFileSelec(true);//a file has been selected, so this is set to true
 	}
 	
 	//this function will be used to upload/apply the data to train the model - it will need to be sent to the GCE
@@ -75,14 +72,17 @@ function DataInput() {
 	  <div >
       Training Data File:
 	<br/>
+	{/*first file input for training data*/}
 	<input type="file" name="file" onChange={changeTrainHandler} />
 	<br/>
 	Data Label File:
 	<br/>
+	{/*file input for label data*/}
 	<input type="file" name="file" onChange={changeLabelHandler} />
 	<br/>
 	Feature File:
 	<br/>
+	{/*first file input for features*/}
 	<input type="file" name="file" onChange={changeFeatureHandler} />
 	<br/>
 	<button onClick={handleSubmit}>Submit</button>
