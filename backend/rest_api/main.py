@@ -1,5 +1,6 @@
 # main.py by Derrick Quinn
 # main.py runs the http server that processes rest api requests
+# log: created Sep 25: Implements HTTP server that runs on google cloud's app engine
 
 from communications import PushToFront, ReadCommand
 from flask import Flask, request, jsonify
