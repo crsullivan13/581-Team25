@@ -1,3 +1,7 @@
+# cloudbuild.yaml by Derrick Quinn
+# contains specifications used by gcloud build to deploy the app to gcloud
+# log: created Sep 25: Created initial settings
+
 steps:
 - name: "gcr.io/cloud-builders/gcloud"
   args: ["app", "deploy"]
