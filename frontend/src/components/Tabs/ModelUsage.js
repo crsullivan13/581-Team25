@@ -1,10 +1,9 @@
 /*
 Name: ModelUsage.js
 Description: Allows the user to use model they made
-Programmers: Amith Panuganti, TODO 
-Creation Date: TODO
+Programmers: Amith Panuganti
+Creation Date: 9/25/22
 Revisions:
-    TODO
 	9/25/22: 
         Revision: Impliment Interface for Model Usage
         Author: Amith Panuganti 
