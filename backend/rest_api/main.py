@@ -2,8 +2,9 @@
 # main.py runs the http server that processes rest api requests
 # log: created Sep 25: Implements HTTP server that runs on google cloud's app engine
 
-from communications import PushToFront, ReadCommand
+from src.communications import PushToFront, ReadCommand
 from flask import Flask, request, jsonify
+import json 
 
 #Create flask app
 app = Flask(__name__)
@@ -16,7 +17,7 @@ app = Flask(__name__)
 def index():
 	return "works" 
 
-@app_route('/command', methods=['POST']) #Handle running commpands with no responses
+@app.route('/command', methods=['POST']) #Handle running commpands with no responses
 	#input: request.data: the post request body
 	#output: boolean success value
 def HandleCommand():
