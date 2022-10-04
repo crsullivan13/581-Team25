@@ -4,6 +4,6 @@ To deploy, you'll need to login to gcloud:
 
 and run gcloud app deploy 
 
-alternatively, ./deploy.sh should do everything.
+alternatively, ./deploy.sh or ./debug.sh should do everything. To use these, run 'chmod +x deploy.sh' or 'chmod +x debug.sh' to add run permissions. and then execute
 
 
