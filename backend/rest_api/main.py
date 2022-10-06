@@ -1,10 +1,11 @@
 # main.py by Derrick Quinn
 # main.py runs the http server that processes rest api requests
-# log: created Sep 25: Implements HTTP server that runs on google cloud's app engine
+# log: Edited Sep 30: Extended to allow fitting to model 
 
-from src.communications import PushToFront, ReadCommand
-from flask import Flask, request, jsonify
-import json 
+from communications import PushToFront, ReadCommand
+import json
+from regressions import LinearMethod
+from flask import Flask, request, jsonify, make_response
 
 #Create flask app
 app = Flask(__name__)
@@ -17,6 +18,22 @@ app = Flask(__name__)
 def index():
 	return "works" 
 
+
+@app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
+def fit(): 
+	try:
+		data = json.loads(request.data.decode("utf-8"))
+		print(data)
+
+		X = data["X"]
+		y = data['y']
+		w,b = LinearMethod(X,y)
+		
+		return make_response(jsonify({"w": str(w), "b": str(b)}), 200,) 
+		
+	except:
+		return jsonify(success=False) #Request failed, return an error
+	
 @app.route('/command', methods=['POST']) #Handle running commpands with no responses
 	#input: request.data: the post request body
 	#output: boolean success value
