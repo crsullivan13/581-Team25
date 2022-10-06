@@ -1,10 +1,15 @@
 # main.py by Derrick Quinn, Amith Panuganti 
 # main.py runs the http server that processes rest api requests
 # log: Edited Sep 30: Extended to allow fitting to model 
+# log: Edited Oct 5
+# 			Author: Amith Panuganti 
+# 			Description: Modfied fit to tarin model in different python file
+
 
 from communications import PushToFront, ReadCommand
 import json
 from regressions import LinearMethod
+from train import trainModel
 from flask import Flask, request, jsonify, make_response
 
 #Create flask app
@@ -20,16 +25,28 @@ def index():
 
 
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
+# Handle fit
 def fit(): 
+	# Catch any errors 
 	try:
+		# Load data from request
 		data = json.loads(request.data.decode("utf-8"))
 		print(data)
 
+		# Get the features from data
 		X = data["X"]
+
+		# Get the labels from data
 		y = data['y']
-		w,b = LinearMethod(X,y)
+
+		# Get the model from data
+		model = data['model']
+
+		# Create a model and get its params
+		params = trainModel(X, y, model)
 		
-		return make_response(jsonify({"w": str(w), "b": str(b)}), 200,) 
+		# Return params back to frontend
+		return make_response(json.dumps(params), 200,) 
 		
 	except:
 		return jsonify(success=False) #Request failed, return an error
