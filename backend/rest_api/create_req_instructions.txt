@@ -1,0 +1,13 @@
+
+
+To create an http request in javascript:
+
+let url = "http://127.0.0.1:5000/fit" // for testing locally
+let x = [ [x_11,x_12,...,x_1n], [x_21,x_22,...,x_2n],...] // list of input vectors where x_11,x_12 are features
+let y = [ y_1, y_2, ... ] // list of output values
+let data = {"X": x, "y": y}
+let xhr = new XMLHttpRequest()
+xhr.open("POST", url)
+xhr.send(JSON.stringify(data))
+
+xhr.response // read response
