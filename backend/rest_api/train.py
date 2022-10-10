@@ -11,6 +11,12 @@ Revisions:
         Revision: Create train model function which will
         train a model give features and labels
         Author: Amith Panuganti
+    10/7/22
+        Revision: Re-edit params since for all possible models
+        from sklearn, we will only get weight and biases
+    10/10/22
+        Revision: Convert features and labels into numpy arrays so that the regressions
+        model will run properl
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
 Errors: None
@@ -22,6 +28,7 @@ Faults: None
 
 # Import regressions
 import regressions
+import numpy as np
 
 # Create a dictionary that will contain both model name and its regression function
 model_dict = {
@@ -35,22 +42,18 @@ model_dict = {
 def trainModel(features, labels, modelName):
     # Do everything in a try block
     try:
-        # Create a list that will cotain model parameters
-        modelParms = []
-
         # Get model using model
         model = model_dict[modelName]
 
-        # Train the model and get params
-        params = model(features, labels)
+        # Convert x and y to be numpy arrays
+        features = np.array(features)
+        labels = np.array(labels)
 
-        # Go through each param in params
-        for param in params:
-            # Add param to modelParams
-            modelParms.append(param)
+        # Train the model and get params
+        w,b = model(features, labels)
         
         # Return parameters of model
-        return modelParms
+        return w,b
         
     # If there is an exception
     except:

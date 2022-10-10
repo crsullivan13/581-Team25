@@ -3,7 +3,14 @@
 # log: Edited Sep 30: Extended to allow fitting to model 
 # log: Edited Oct 5
 # 			Author: Amith Panuganti 
-# 			Description: Modfied fit to tarin model in different python file
+# 			Description: Modfied fit to train model in different python file
+# log: Edited Oct 6
+#			Auhtor: Amith Panuganti
+#			Description: Modified fit again to send paramaters back to front end
+#log: Edited Oct 10
+#			Author: Amith Panuganti
+#			Description: Modified fit to recieve correct paramaters in correct format
+
 
 
 from communications import PushToFront, ReadCommand
@@ -21,7 +28,7 @@ app = Flask(__name__)
 #input: Nothing
 #output: simple success message
 def index():
-	return "works" 
+	return "works"
 
 
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
@@ -43,10 +50,10 @@ def fit():
 		model = data['model']
 
 		# Create a model and get its params
-		params = trainModel(X, y, model)
+		w,b = trainModel(X, y, model)
 		
 		# Return params back to frontend
-		return make_response(json.dumps(params), 200,) 
+		return make_response(jsonify({"w":str(w), "b":str(b)}), 200) 
 		
 	except:
 		return jsonify(success=False) #Request failed, return an error
