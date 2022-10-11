@@ -1,9 +1,23 @@
-# main.py by Derrick Quinn
+# main.py by Derrick Quinn, Amith Panuganti 
 # main.py runs the http server that processes rest api requests
-# log: created Sep 25: Implements HTTP server that runs on google cloud's app engine
+# log: Edited Sep 30: Extended to allow fitting to model 
+# log: Edited Oct 5
+# 			Author: Amith Panuganti 
+# 			Description: Modfied fit to train model in different python file
+# log: Edited Oct 6
+#			Auhtor: Amith Panuganti
+#			Description: Modified fit again to send paramaters back to front end
+#log: Edited Oct 10
+#			Author: Amith Panuganti
+#			Description: Modified fit to recieve correct paramaters in correct format
+
+
 
 from communications import PushToFront, ReadCommand
-from flask import Flask, request, jsonify
+import json
+from regressions import LinearMethod
+from train import trainModel
+from flask import Flask, request, jsonify, make_response
 
 #Create flask app
 app = Flask(__name__)
@@ -14,9 +28,37 @@ app = Flask(__name__)
 #input: Nothing
 #output: simple success message
 def index():
-	return "works" 
+	return "works"
 
-@app_route('/command', methods=['POST']) #Handle running commpands with no responses
+
+@app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
+# Handle fit
+def fit(): 
+	# Catch any errors 
+	try:
+		# Load data from request
+		data = json.loads(request.data.decode("utf-8"))
+		print(data)
+
+		# Get the features from data
+		X = data["X"]
+
+		# Get the labels from data
+		y = data['y']
+
+		# Get the model from data
+		model = data['model']
+
+		# Create a model and get its params
+		w,b = trainModel(X, y, model)
+		
+		# Return params back to frontend
+		return make_response(jsonify({"w":str(w), "b":str(b)}), 200) 
+		
+	except:
+		return jsonify(success=False) #Request failed, return an error
+	
+@app.route('/command', methods=['POST']) #Handle running commpands with no responses
 	#input: request.data: the post request body
 	#output: boolean success value
 def HandleCommand():
@@ -29,8 +71,6 @@ def HandleCommand():
 	except:
 		return jsonify(success=False) #Request failed, return an error
 	
-		
-
 #Create entry point for the app engine
 if __name__ == "__main__":
 
