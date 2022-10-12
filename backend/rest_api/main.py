@@ -18,12 +18,29 @@ app = Flask(__name__)
 def index():
 	return "works" 
 
+@app.route('/fit_predict', methods = ['POST']) #Fit model and predict on a batch of data
+def fit_predict():
+	try:
+		data = json.loads(request.data.decode("utf-8"))
+		X_train = data["X_train"]
+		y_train = data["y_train"]
+		X_test = data["X_test"]
+
+		w,b = LinearMethod(X_train, y_train)
+
+		y_test = sum([x_i * w_i for x_i, w_y in zip(X_test, w)])+b
+
+		return make_response(jsonify({"y_test" : str(y_test)}))
+
+	except:
+		return jsonify(success= False)
+
+
 
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
 def fit(): 
 	try:
 		data = json.loads(request.data.decode("utf-8"))
-		print(data)
 
 		X = data["X"]
 		y = data['y']
