@@ -1,7 +1,7 @@
 /*
 Name: DataInput.js
 Description: Tab where user can upload data files to be used for training, also 
-Programmers: Griffin Keeter
+Programmers: Griffin Keeter, Connor Sullivan
 Creation Date: 9/23/2022
 Revisions: 9/24 - added buttons for feature, data, and label file upload, and a button for submit
 Preconditions: None
@@ -69,6 +69,8 @@ function DataInput() {
 
 	//this function will be used to upload/apply the data to train the model - it will need to be sent to the GCE
 	let handleSubmit = () => {
+		let url = "https://team-25-362714.uc.r.appspot.com"
+
 		parseCSV(selectedTrainFile, 'train')
 		parseCSV(selectedLabelFile, 'label')
 
@@ -80,6 +82,12 @@ function DataInput() {
 		let jsonString = JSON.stringify(data)
 
 		console.log(jsonString)
+
+		let xhr = new XMLHttpRequest()
+		xhr.open("POST", url)
+		xhr.send(jsonString)
+
+		console.log(xhr.response)
 	}
 	
 	let parseCSV = (file, type) => {
