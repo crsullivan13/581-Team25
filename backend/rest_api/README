@@ -6,4 +6,6 @@ and run gcloud app deploy
 
 alternatively, ./deploy.sh or ./debug.sh should do everything. To use these, run 'chmod +x deploy.sh' or 'chmod +x debug.sh' to add run permissions. and then execute
 
+This will deploy to:
+https://team-25-362714.uc.r.appspot.com
 
