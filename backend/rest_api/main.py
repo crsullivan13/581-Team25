@@ -1,6 +1,6 @@
 # main.py by Derrick Quinn
 # main.py runs the http server that processes rest api requests
-# log: Edited Sep 30: Extended to allow fitting to model 
+# log: Edited Oct 12: Extended to allow
 
 from communications import PushToFront, ReadCommand
 import json
@@ -18,7 +18,10 @@ app = Flask(__name__)
 def index():
 	return "works" 
 
+#Create route for fitting a model and predicting it on a batch of data
 @app.route('/fit_predict', methods = ['POST']) #Fit model and predict on a batch of data
+	#input: X_train, y_train, X_test
+	#output: y_test, the predicted value
 def fit_predict():
 	try:
 		data = json.loads(request.data.decode("utf-8"))
@@ -37,7 +40,10 @@ def fit_predict():
 
 
 
+#Create route for just fitting a model and returning its output
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
+	#input: request.data: the data to fit the model
+	#output: w,b : the fitted model
 def fit(): 
 	try:
 		data = json.loads(request.data.decode("utf-8"))
