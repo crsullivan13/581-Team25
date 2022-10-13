@@ -1,10 +1,26 @@
-# main.py by Derrick Quinn
+# main.py by Derrick Quinn, Amith Panuganti 
 # main.py runs the http server that processes rest api requests
-# log: Edited Oct 12: Extended to allow
+
+# log: Edited Sep 30: Extended to allow fitting to model 
+# log: Edited Oct 5
+# 			Author: Amith Panuganti 
+# 			Description: Modfied fit to train model in different python file
+# log: Edited Oct 6
+#			Auhtor: Amith Panuganti
+#			Description: Modified fit again to send paramaters back to front end
+#log: Edited Oct 10
+#			Author: Amith Panuganti
+#			Description: Modified fit to recieve correct paramaters in correct format
+# log: Edited Oct 12:
+#     Author: Derrick Quinn
+#     Description: added fit_predict method to predict on a batch of data
+
+
 
 from communications import PushToFront, ReadCommand
 import json
 from regressions import LinearMethod
+from train import trainModel
 from flask import Flask, request, jsonify, make_response
 
 #Create flask app
@@ -16,7 +32,7 @@ app = Flask(__name__)
 #input: Nothing
 #output: simple success message
 def index():
-	return "works" 
+	return "works"
 
 #Create route for fitting a model and predicting it on a batch of data
 @app.route('/fit_predict', methods = ['POST']) #Fit model and predict on a batch of data
@@ -45,14 +61,25 @@ def fit_predict():
 	#input: request.data: the data to fit the model
 	#output: w,b : the fitted model
 def fit(): 
+	# Catch any errors 
 	try:
+		# Load data from request
 		data = json.loads(request.data.decode("utf-8"))
 
+		# Get the features from data
 		X = data["X"]
+
+		# Get the labels from data
 		y = data['y']
-		w,b = LinearMethod(X,y)
+
+		# Get the model from data
+		model = data['model']
+
+		# Create a model and get its params
+		w,b = trainModel(X, y, model)
 		
-		return make_response(jsonify({"w": str(w), "b": str(b)}), 200,) 
+		# Return params back to frontend
+		return make_response(jsonify({"w":str(w), "b":str(b)}), 200) 
 		
 	except:
 		return jsonify(success=False) #Request failed, return an error
@@ -70,8 +97,6 @@ def HandleCommand():
 	except:
 		return jsonify(success=False) #Request failed, return an error
 	
-		
-
 #Create entry point for the app engine
 if __name__ == "__main__":
 
