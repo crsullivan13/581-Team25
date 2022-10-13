@@ -33,16 +33,19 @@ function Training() {
 	//These states keep track of the Training file
 	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
 	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
+	//trainData stores the content of the training file
 	const [trainData, setTrainData] = useState();
 	
 	//these track the label file
 	const [selectedLabelFile, setSelectedLabelFile] = useState();//keeps track of what label file is selected
 	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);//keeps track of whether a label file is selected
+	//labelData stores the content of the label file
 	const [labelData, setLabelData] = useState();
 	
 	//these track the feature file
 	const [selectedFeatureFile, setSelectedFeatureFile] = useState();//keeps track of what feature file is selected
 	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
+	//featureData stores the content of the feature file
 	const [featureData, setFeatureData] = useState();
 
 
@@ -52,6 +55,7 @@ function Training() {
 		//these two lines update the state of the page
 		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
 		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
+		//parseCSV parses the train file, then updates the trainingData state
 		parseCSV(event.target.files[0], 'train');
 	}
 
@@ -61,6 +65,7 @@ function Training() {
 		//these two lines update the state of the page
 		setSelectedLabelFile(event.target.files[0]);//sets the selected file
 		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
+		//the label file is parsed, then the labelData state is updated
 		parseCSV(event.target.files[0], 'label');
 	}
 
@@ -69,6 +74,7 @@ function Training() {
 		//these two lines update the state of the page
 		setSelectedFeatureFile(event.target.files[0]);//sets the selected file
 		setIsFeatureFileSelec(true);//a file has been selected, so this is set to true
+		//the feature file is parsed and the featureData state is updated
 		parseCSV(event.target.files[0], 'feature');
 	}
 
@@ -78,6 +84,7 @@ function Training() {
 
 				//call the csv parser
 				parseCSV(selectedTrainFile, 'train')
+				//the parsing functions update the trainData and labelData states which are used to create the data object
 				parseCSV(selectedLabelFile, 'label')
 		
 				//setup js object in the json format
@@ -112,10 +119,12 @@ function Training() {
 					complete: function(results) {
 						if(type == 'train')
 						{
+							//update the trainData state
 							setTrainData(results.data)
 						}
 						else if(type == 'label')
 						{
+							//update the trainData state
 							setLabelData(results.data)
 						}
 					}

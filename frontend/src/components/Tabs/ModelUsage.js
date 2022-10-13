@@ -35,16 +35,19 @@ function ModelUsage() {
 	//These states keep track of the Training file
 	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
 	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
+  //trainData stores the parsed information from the training file
 	const [trainData, setTrainData] = useState();
 	
 	//these track the label file
 	const [selectedLabelFile, setSelectedLabelFile] = useState();//keeps track of what label file is selected
 	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);//keeps track of whether a label file is selected
+  //labelData stores the parsed information from the data file
 	const [labelData, setLabelData] = useState();
 	
 	//these track the feature file
 	const [selectedTestFile, setSelectedTestFile] = useState();//keeps track of what feature file is selected
 	const [isTestFileSelect, setIsTestFileSelec] = useState(false);//keeps track of whether a label file is selected
+  //testData stores the parsed information from the test file
 	const [testData, setTestData] = useState();
 
   const [model_output, setModelOutput] = useState("default output");
@@ -54,6 +57,7 @@ function ModelUsage() {
 		//these two lines update the state of the page
 		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
 		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
+    //updates the trainData state
 		parseCSV(event.target.files[0], 'train');
 	}
 
@@ -71,6 +75,7 @@ function ModelUsage() {
 		//these two lines update the state of the page
 		setSelectedTestFile(event.target.files[0]);//sets the selected file
 		setIsTestFileSelec(true);//a file has been selected, so this is set to true
+    //parses the test file, then stores the result in testData
 		parseCSV(event.target.files[0], 'test');
 	}
 
@@ -80,14 +85,15 @@ function ModelUsage() {
 
 		//call the csv parser
 		parseCSV(selectedTrainFile, 'train')
-		parseCSV(selectedLabelFile, 'label')
-    parseCSV(selectedLabelFile, 'test')
+    //parses the files and stores the results in the data states
+		parseCSV(selectedLabelFile, 'label') //same for labels
+    parseCSV(selectedLabelFile, 'test') //same for test
 		
 		//setup js object in the json format
 		let data = {
-				X_Train: trainData,
-				y_Train: labelData,
-        X_Test: testData
+				X_Train: trainData, //data used to train the model
+				y_Train: labelData, //labels used to train the model
+        X_Test: testData //data that the model is run on after training
 		}
 		
 		//turn object into json object
@@ -116,15 +122,15 @@ function ModelUsage() {
         complete: function(results) {
           if(type == 'train')
           {
-            setTrainData(results.data)
+            setTrainData(results.data) //update Traindata state
           }
           else if(type == 'label')
           {
-            setLabelData(results.data)
+            setLabelData(results.data) //update LabelData state
           }
           else if(type == 'test')
           {
-            setTestData(results.data)
+            setTestData(results.data) //update TestData state
           }
         }
       });
