@@ -1,9 +1,10 @@
 /*
 Name: DataInput.js
 Description: Tab where user can upload data files to be used for training, also 
-Programmers: Griffin Keeter
+Programmers: Griffin Keeter, Connor Sullivan
 Creation Date: 9/23/2022
 Revisions: 9/24 - added buttons for feature, data, and label file upload, and a button for submit
+10/11 - add ability to unparse the csv file into JSON, for now the data goes no where, it will eventually be stored as a state
 Preconditions: None
 Postconditions: None
 Errors: None
@@ -15,6 +16,7 @@ Faults: None
 */
 
 //imports
+import Papa from "papaparse";
 import React from "react"
 import { useState } from 'react';
 
@@ -23,21 +25,23 @@ import { useState } from 'react';
 //Inputs: None
 //Output: Form to Input Data
 function DataInput() {
-
+	//data input
 	//the states that keep track of the selected files and whether files have been selected
 	
 	//These states keep track of the Training file
 	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
 	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
+	const [trainData, setTrainData] = useState();
 	
 	//these track the label file
 	const [selectedLabelFile, setSelectedLabelFile] = useState();//keeps track of what label file is selected
 	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);//keeps track of whether a label file is selected
-	
+	const [labelData, setLabelData] = useState();
 	
 	//these track the feature file
 	const [selectedFeatureFile, setSelectedFeatureFile] = useState();//keeps track of what feature file is selected
 	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
+	const [featureData, setFeatureData] = useState();
 
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeTrainHandler = (event) => {
@@ -62,10 +66,29 @@ function DataInput() {
 		setIsFeatureFileSelec(true);//a file has been selected, so this is set to true
 	}
 	
+
+
 	//this function will be used to upload/apply the data to train the model - it will need to be sent to the GCE
 	let handleSubmit = () => {
 	}
 	
+	//simple function to parse a csv into json, takes in the file and the input type to set the correct state
+	let parseCSV = (file, type) => {
+		return Papa.parse(file,
+			{
+				complete: function(results) {
+					if(type == 'train')
+					{
+						setTrainData(results.data)
+					}
+					else if(type == 'label')
+					{
+						setLabelData(results.data)
+					}
+				}
+			});
+	}
+
 	//the html contains the three file inputs and a submit button
   return (
 	
