@@ -45,6 +45,9 @@ function Training() {
 	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
 	const [featureData, setFeatureData] = useState();
 
+	const [returnedModel, setReturnedModel] = useState("model here after trained");
+	const [isModelReturned, setIsModelReturned] = useState(false);
+
 
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeTrainHandler = (event) => {
@@ -99,11 +102,24 @@ function Training() {
 				xhr.open("POST", url)
 				//send with json object
 				xhr.send(jsonString)
-		
-				//output response for debugging
-				console.log(xhr.response.y_test)
 
+				console.log(xhr.response)
+
+
+				try{
+					let model = JSON.parse(xhr.response)
+
+					//output resonse for debugging
+					console.log(model)
+
+					setReturnedModel(model)
+
+					setIsModelReturned(true)
+				} catch {
+					console.log("couldn't parse json response")
+				}
 	}
+
 
 		//simple function to parse a csv into json, takes in the file and the input type to set the correct state
 		let parseCSV = (file, type) => {
@@ -126,6 +142,9 @@ function Training() {
   return (
 
 	<>
+
+	<Container>
+
 	<div >
       Training Data File:
 	<br/>
@@ -146,7 +165,7 @@ function Training() {
 	
     	</div>
 
-	<Container>
+
 	<Row>
 		{/*option to choose model to train*/}
 		Choose Model:
@@ -168,7 +187,12 @@ function Training() {
 		{/*button to begin training*/}
 	<button onClick={handleTrain}>Begin Training</button>
 	</Row>
+
+	<br></br>
+	{returnedModel}
 	</Container>
+
+	
 	</>
   );
 }
