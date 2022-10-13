@@ -52,6 +52,7 @@ function Training() {
 		//these two lines update the state of the page
 		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
 		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
+		parseCSV(event.target.files[0], 'train');
 	}
 
 	//this function handles the even that is triggered when someone changes the file they want to use
@@ -60,6 +61,7 @@ function Training() {
 		//these two lines update the state of the page
 		setSelectedLabelFile(event.target.files[0]);//sets the selected file
 		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
+		parseCSV(event.target.files[0], 'label');
 	}
 
 	let changeFeatureHandler = (event) => {
@@ -67,6 +69,7 @@ function Training() {
 		//these two lines update the state of the page
 		setSelectedFeatureFile(event.target.files[0]);//sets the selected file
 		setIsFeatureFileSelec(true);//a file has been selected, so this is set to true
+		parseCSV(event.target.files[0], 'feature');
 	}
 
 	let handleTrain = () => {
@@ -88,6 +91,7 @@ function Training() {
 		
 				//print for debugging
 				console.log(jsonString)
+				console.log(data);
 		
 				//create http request object
 				let xhr = new XMLHttpRequest()

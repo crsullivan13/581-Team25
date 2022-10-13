@@ -24,7 +24,7 @@ import { useState } from 'react';
 //Inputs: None
 //Output: Form to Input Data
 function DataInput() {
-
+	//data input
 	//the states that keep track of the selected files and whether files have been selected
 	
 	//These states keep track of the Training file
