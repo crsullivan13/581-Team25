@@ -16,20 +16,113 @@ import React from "react"
 import ModelSelect from "./ModelSelect"
 import HyperparameterSelect from "./HyperparameterSelect"
 import MetricsSelect from "./MetricsSelect"
+import Papa from "papaparse";
 
 import './Training.css';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import DataInput from "./DataInput";
 
+import { useState } from 'react';
 
 function Training() {
 
-	let handleTrain = () => {
+	//the states that keep track of the selected files and whether files have been selected
+	
+	//These states keep track of the Training file
+	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
+	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
+	const [trainData, setTrainData] = useState();
+	
+	//these track the label file
+	const [selectedLabelFile, setSelectedLabelFile] = useState();//keeps track of what label file is selected
+	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);//keeps track of whether a label file is selected
+	const [labelData, setLabelData] = useState();
+	
+	//these track the feature file
+	const [selectedFeatureFile, setSelectedFeatureFile] = useState();//keeps track of what feature file is selected
+	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
+	const [featureData, setFeatureData] = useState();
+
+	//this function handles the even that is triggered when someone changes the file they want to use
+	let changeTrainHandler = (event) => {
+
+		//these two lines update the state of the page
+		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
+		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
 	}
+
+	//this function handles the even that is triggered when someone changes the file they want to use
+	let changeLabelHandler = (event) => {
+
+		//these two lines update the state of the page
+		setSelectedLabelFile(event.target.files[0]);//sets the selected file
+		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
+	}
+
+	let changeFeatureHandler = (event) => {
+
+		//these two lines update the state of the page
+		setSelectedFeatureFile(event.target.files[0]);//sets the selected file
+		setIsFeatureFileSelec(true);//a file has been selected, so this is set to true
+	}
+
+	let handleTrain = () => {
+				//url for training
+				let url = "https://team-25-362714.uc.r.appspot.com"
+
+				//call the csv parser
+				parseCSV(selectedTrainFile, 'train')
+				parseCSV(selectedLabelFile, 'label')
+		
+				//setup js object in the json format
+				let data = {
+					X: trainData,
+					y: labelData
+				}
+		
+				//turn object into json object
+				let jsonString = JSON.stringify(data)
+		
+				//print for debugging
+				console.log(jsonString)
+		
+				//create http request object
+				let xhr = new XMLHttpRequest()
+				//build out the header
+				xhr.open("POST", url)
+				//send with json object
+				xhr.send(jsonString)
+		
+				//output resonse for debugging
+				console.log(xhr.response)
+
+	}
+
+		//simple function to parse a csv into json, takes in the file and the input type to set the correct state
+		let parseCSV = (file, type) => {
+			return Papa.parse(file,
+				{
+					complete: function(results) {
+						if(type == 'train')
+						{
+							setTrainData(results.data)
+						}
+						else if(type == 'label')
+						{
+							setLabelData(results.data)
+						}
+					}
+				});
+		}
 
 	//this page currently has areas to choose and adjust options for the model, the hyperparameters, and the recorded metrics
   return (
+
+	<>
+	<DataInput />
+	
 	<Container>
 	<Row>
 		{/*option to choose model to train*/}
@@ -53,7 +146,7 @@ function Training() {
 	<button onClick={handleTrain}>Begin Training</button>
 	</Row>
 	</Container>
-	
+	</>
   );
 }
 

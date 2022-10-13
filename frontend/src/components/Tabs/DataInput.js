@@ -69,27 +69,37 @@ function DataInput() {
 
 	//this function will be used to upload/apply the data to train the model - it will need to be sent to the GCE
 	let handleSubmit = () => {
+		//url for training
 		let url = "https://team-25-362714.uc.r.appspot.com"
 
+		//call the csv parser
 		parseCSV(selectedTrainFile, 'train')
 		parseCSV(selectedLabelFile, 'label')
 
+		//setup js object in the json format
 		let data = {
 			X: trainData,
 			y: labelData
 		}
 
+		//turn object into json object
 		let jsonString = JSON.stringify(data)
 
+		//print for debugging
 		console.log(jsonString)
 
+		//create http request object
 		let xhr = new XMLHttpRequest()
+		//build out the header
 		xhr.open("POST", url)
+		//send with json object
 		xhr.send(jsonString)
 
+		//output resonse for debugging
 		console.log(xhr.response)
 	}
 	
+	//simple function to parse a csv into json, takes in the file and the input type to set the correct state
 	let parseCSV = (file, type) => {
 		return Papa.parse(file,
 			{
