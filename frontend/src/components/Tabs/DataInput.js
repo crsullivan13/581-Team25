@@ -4,6 +4,7 @@ Description: Tab where user can upload data files to be used for training, also
 Programmers: Griffin Keeter, Connor Sullivan
 Creation Date: 9/23/2022
 Revisions: 9/24 - added buttons for feature, data, and label file upload, and a button for submit
+10/11 - add ability to unparse the csv file into JSON, for now the data goes no where, it will eventually be stored as a state
 Preconditions: None
 Postconditions: None
 Errors: None
@@ -69,34 +70,6 @@ function DataInput() {
 
 	//this function will be used to upload/apply the data to train the model - it will need to be sent to the GCE
 	let handleSubmit = () => {
-		//url for training
-		let url = "https://team-25-362714.uc.r.appspot.com"
-
-		//call the csv parser
-		parseCSV(selectedTrainFile, 'train')
-		parseCSV(selectedLabelFile, 'label')
-
-		//setup js object in the json format
-		let data = {
-			X: trainData,
-			y: labelData
-		}
-
-		//turn object into json object
-		let jsonString = JSON.stringify(data)
-
-		//print for debugging
-		console.log(jsonString)
-
-		//create http request object
-		let xhr = new XMLHttpRequest()
-		//build out the header
-		xhr.open("POST", url)
-		//send with json object
-		xhr.send(jsonString)
-
-		//output resonse for debugging
-		console.log(xhr.response)
 	}
 	
 	//simple function to parse a csv into json, takes in the file and the input type to set the correct state
