@@ -1,5 +1,6 @@
 # main.py by Derrick Quinn, Amith Panuganti 
 # main.py runs the http server that processes rest api requests
+
 # log: Edited Sep 30: Extended to allow fitting to model 
 # log: Edited Oct 5
 # 			Author: Amith Panuganti 
@@ -10,6 +11,9 @@
 #log: Edited Oct 10
 #			Author: Amith Panuganti
 #			Description: Modified fit to recieve correct paramaters in correct format
+# log: Edited Oct 12:
+#     Author: Derrick Quinn
+#     Description: added fit_predict method to predict on a batch of data
 
 
 
@@ -30,7 +34,10 @@ app = Flask(__name__)
 def index():
 	return "works"
 
+#Create route for fitting a model and predicting it on a batch of data
 @app.route('/fit_predict', methods = ['POST']) #Fit model and predict on a batch of data
+	#input: X_train, y_train, X_test
+	#output: y_test, the predicted value
 def fit_predict():
 	try:
 		data = json.loads(request.data.decode("utf-8"))
@@ -49,8 +56,10 @@ def fit_predict():
 
 
 
+#Create route for just fitting a model and returning its output
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
-# Handle fit
+	#input: request.data: the data to fit the model
+	#output: w,b : the fitted model
 def fit(): 
 	# Catch any errors 
 	try:
