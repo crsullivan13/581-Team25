@@ -74,7 +74,7 @@ function Training() {
 
 	let handleTrain = () => {
 				//url for training
-				let url = "https://team-25-362714.uc.r.appspot.com"
+				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
 				//call the csv parser
 				parseCSV(selectedTrainFile, 'train')

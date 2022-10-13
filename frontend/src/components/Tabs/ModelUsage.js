@@ -18,17 +18,138 @@ Faults: None
 import React from "react"
 import { Form, Button, Container } from "react-bootstrap";
 
+import { useState } from 'react';
+import Papa from "papaparse";
+
+
 //Represents the interface for Model Usage
 //Inputs: None
 //Output: HTML to represent Interface for Model Usage
 function ModelUsage() {
 	
+
+
+
+  //the states that keep track of the selected files and whether files have been selected
+	
+	//These states keep track of the Training file
+	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
+	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
+	const [trainData, setTrainData] = useState();
+	
+	//these track the label file
+	const [selectedLabelFile, setSelectedLabelFile] = useState();//keeps track of what label file is selected
+	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);//keeps track of whether a label file is selected
+	const [labelData, setLabelData] = useState();
+	
+	//these track the feature file
+	const [selectedTestFile, setSelectedTestFile] = useState();//keeps track of what feature file is selected
+	const [isTestFileSelect, setIsTestFileSelec] = useState(false);//keeps track of whether a label file is selected
+	const [testData, setTestData] = useState();
+
+
+
+  let changeTrainHandler = (event) => {
+
+		//these two lines update the state of the page
+		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
+		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
+		parseCSV(event.target.files[0], 'train');
+	}
+
+	//this function handles the even that is triggered when someone changes the file they want to use
+	let changeLabelHandler = (event) => {
+
+		//these two lines update the state of the page
+		setSelectedLabelFile(event.target.files[0]);//sets the selected file
+		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
+		parseCSV(event.target.files[0], 'label');
+	}
+
+	let changeTestHandler = (event) => {
+
+		//these two lines update the state of the page
+		setSelectedTestFile(event.target.files[0]);//sets the selected file
+		setIsTestFileSelec(true);//a file has been selected, so this is set to true
+		parseCSV(event.target.files[0], 'test');
+	}
+
+
+  let handleRun = () => {
+    let url = "https://team-25-362714.uc.r.appspot.com/fit_predict"
+
+		//call the csv parser
+		parseCSV(selectedTrainFile, 'train')
+		parseCSV(selectedLabelFile, 'label')
+    parseCSV(selectedLabelFile, 'test')
+		
+		//setup js object in the json format
+		let data = {
+				X_Train: trainData,
+				y_Train: labelData,
+        X_Test: testData
+		}
+		
+		//turn object into json object
+		let jsonString = JSON.stringify(data)
+		
+		//print for debugging
+		console.log(jsonString)
+		console.log(data);
+		
+		//create http request object
+		let xhr = new XMLHttpRequest()
+		//build out the header
+		xhr.open("POST", url)
+		//send with json object
+		xhr.send(jsonString)
+		
+		//output resonse for debugging
+		console.log(xhr.response)
+  }
+
+  let parseCSV = (file, type) => {
+    return Papa.parse(file,
+      {
+        complete: function(results) {
+          if(type == 'train')
+          {
+            setTrainData(results.data)
+          }
+          else if(type == 'label')
+          {
+            setLabelData(results.data)
+          }
+          else if(type == 'test')
+          {
+            setTestData(results.data)
+          }
+        }
+      });
+  }
   //Returns the following html
   return (
   
     //Create a Form to contain all of our inputs
   <Container>
+
+      Training Data File:
+	<br/>
+	{/*first file input for training data*/}
+	<input type="file" name="file" onChange={changeTrainHandler} />
+	<br/>
+	Data Label File:
+	<br/>
+	{/*file input for label data*/}
+	<input type="file" name="file" onChange={changeLabelHandler} />
+	<br/>
+	Test Input File:
+	<br/>
+	{/*first file input for features*/}
+	{/*<input type="file" name="file" onChange={changeTestHandler} />*/}
+	<br/>
 	<Form>
+    
     {/* Create a new Form Group For Getting Model */}
     <Form.Group className="mb-3" controlId="modelChoice">
     {/* Label For Choose Model */}
@@ -47,10 +168,10 @@ function ModelUsage() {
       {/* Another label for File Select */}
       <Form.Label>Input File</Form.Label>
       {/* File Select Button */}
-      <Form.Control type="file"></Form.Control>
+      <Form.Control type="file" name="file" onChange={changeTestHandler}></Form.Control>
 
     {/* Create a button that runs the model with the input file*/}
-    <Button type="button">Run</Button>
+    <Button type="button" onClick={handleRun}>Run</Button>
     </Form.Group>
 
     <Form.Label>Download Model</Form.Label>
