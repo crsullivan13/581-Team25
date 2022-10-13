@@ -1,9 +1,10 @@
 /*
 Name: Training.js
 Description: Tab which allows users to select a model, change hyperparameters, and choose what metrics will be recorded
-Programmers: Griffin Keeter
+Programmers: Griffin Keeter, Connor Sullivan
 Creation Date: 9/24/22
 Revisions:
+	10/11/22 - TEMPORARY CHANGES: bring data input into this page for now for S2 POC, add ability to see returned model
 Preconditions: None
 Errors: None
 Side Effects: When the begin training button is pressed, the training will start in the gce
@@ -25,6 +26,7 @@ import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput";
 
 import { useState } from 'react';
+import { warning } from "@remix-run/router";
 
 function Training() {
 
@@ -45,6 +47,7 @@ function Training() {
 	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
 	const [featureData, setFeatureData] = useState();
 
+	//track state of returned model
 	const [returnedModel, setReturnedModel] = useState("model here after trained");
 	const [isModelReturned, setIsModelReturned] = useState(false);
 
@@ -67,6 +70,7 @@ function Training() {
 		parseCSV(event.target.files[0], 'label');
 	}
 
+	//handles changing features file
 	let changeFeatureHandler = (event) => {
 
 		//these two lines update the state of the page
@@ -75,48 +79,57 @@ function Training() {
 		parseCSV(event.target.files[0], 'feature');
 	}
 
+	//on click function for training button
 	let handleTrain = () => {
 				//url for training
 				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
-				//call the csv parser
-				parseCSV(selectedTrainFile, 'train')
-				parseCSV(selectedLabelFile, 'label')
-		
-				//setup js object in the json format
-				let data = {
-					X: trainData,
-					y: labelData
-				}
-		
-				//turn object into json object
-				let jsonString = JSON.stringify(data)
-		
-				//print for debugging
-				console.log(jsonString)
-				console.log(data);
-		
-				//create http request object
-				let xhr = new XMLHttpRequest()
-				//build out the header
-				xhr.open("POST", url)
-				//send with json object
-				xhr.send(jsonString)
-
-				console.log(xhr.response)
-
-
+				//catches case where no files selected, TODO add state to avoid needing this
 				try{
-					let model = JSON.parse(xhr.response)
+					//call the csv parser
+					parseCSV(selectedTrainFile, 'train')
+					parseCSV(selectedLabelFile, 'label')
+			
+					//setup js object in the json format
+					let data = {
+						X: trainData,
+						y: labelData
+					}
+			
+					//turn object into json object
+					let jsonString = JSON.stringify(data)
+			
+					//print for debugging
+					console.log(jsonString)
+					console.log(data);
+			
+					//create http request object
+					let xhr = new XMLHttpRequest()
+					//build out the header
+					xhr.open("POST", url)
+					//send with json object
+					xhr.send(jsonString)
 
-					//output resonse for debugging
-					console.log(model)
+					//output response for debugging
+					console.log(xhr.response)
 
-					setReturnedModel(model)
+					//try to parse the respnse, if we can't then log that
+					try{
+						let model = JSON.parse(xhr.response)
 
-					setIsModelReturned(true)
+						//output resonse for debugging
+						console.log(model)
+
+						//set the model so we can output it
+						setReturnedModel(model)
+
+						//change state
+						setIsModelReturned(true)
+					} catch {
+						console.log("couldn't parse json response")
+					}
 				} catch {
-					console.log("couldn't parse json response")
+					alert("no files selected")
 				}
 	}
 
