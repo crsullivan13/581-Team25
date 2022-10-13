@@ -45,6 +45,7 @@ function Training() {
 	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
 	const [featureData, setFeatureData] = useState();
 
+
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeTrainHandler = (event) => {
 
@@ -121,8 +122,26 @@ function Training() {
   return (
 
 	<>
-	<DataInput />
+	<div >
+      Training Data File:
+	<br/>
+	{/*first file input for training data*/}
+	<input type="file" name="file" onChange={changeTrainHandler} />
+	<br/>
+	Data Label File:
+	<br/>
+	{/*file input for label data*/}
+	<input type="file" name="file" onChange={changeLabelHandler} />
+	<br/>
+	Feature File:
+	<br/>
+	{/*first file input for features*/}
+	<input type="file" name="file" onChange={changeFeatureHandler} />
+	<br/>
+
 	
+    	</div>
+
 	<Container>
 	<Row>
 		{/*option to choose model to train*/}
