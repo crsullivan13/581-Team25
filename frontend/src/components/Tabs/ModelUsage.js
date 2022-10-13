@@ -88,7 +88,7 @@ function ModelUsage() {
       parseCSV(selectedTrainFile, 'train')
       //parses the files and stores the results in the data states
       parseCSV(selectedLabelFile, 'label') //same for labels
-      parseCSV(selectedLabelFile, 'test') //same for test
+      parseCSV(selectedTestFile, 'test') //same for test
       
       //setup js object in the json format
       let data = {
@@ -148,21 +148,6 @@ function ModelUsage() {
     //Create a Form to contain all of our inputs
   <Container>
 
-      Training Data File:
-	<br/>
-	{/*first file input for training data*/}
-	<input type="file" name="file" onChange={changeTrainHandler} />
-	<br/>
-	Data Label File:
-	<br/>
-	{/*file input for label data*/}
-	<input type="file" name="file" onChange={changeLabelHandler} />
-	<br/>
-	Test Input File:
-	<br/>
-	{/*first file input for features*/}
-	{/*<input type="file" name="file" onChange={changeTestHandler} />*/}
-	<br/>
 	<Form>
     
     {/* Create a new Form Group For Getting Model */}
@@ -181,7 +166,17 @@ function ModelUsage() {
     {/* Create a Form Group For Using Model */}
     <Form.Group className="mb-3" controlId="modelUsage">
       {/* Another label for File Select */}
-      <Form.Label>Input File</Form.Label>
+      <Form.Label>Training Data File</Form.Label>
+      {/* File Select Button */}
+      <Form.Control type="file" name="file" onChange={changeTrainHandler}></Form.Control>
+      
+      {/* Another label for File Select */}
+      <Form.Label>Label File</Form.Label>
+      {/* File Select Button */}
+      <Form.Control type="file" name="file" onChange={changeLabelHandler}></Form.Control>
+
+      {/* Another label for File Select */}
+      <Form.Label>Test File</Form.Label>
       {/* File Select Button */}
       <Form.Control type="file" name="file" onChange={changeTestHandler}></Form.Control>
 
