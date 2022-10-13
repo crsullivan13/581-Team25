@@ -100,8 +100,8 @@ function Training() {
 				//send with json object
 				xhr.send(jsonString)
 		
-				//output resonse for debugging
-				console.log(xhr.response)
+				//output response for debugging
+				console.log(xhr.response.y_test)
 
 	}
 

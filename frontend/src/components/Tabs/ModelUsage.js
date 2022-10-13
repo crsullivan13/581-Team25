@@ -47,7 +47,7 @@ function ModelUsage() {
 	const [isTestFileSelect, setIsTestFileSelec] = useState(false);//keeps track of whether a label file is selected
 	const [testData, setTestData] = useState();
 
-
+  const [model_output, setModelOutput] = useState("default output");
 
   let changeTrainHandler = (event) => {
 
@@ -105,7 +105,9 @@ function ModelUsage() {
 		xhr.send(jsonString)
 		
 		//output resonse for debugging
-		console.log(xhr.response)
+    let resp = xhr.response
+
+		console.log(resp)
   }
 
   let parseCSV = (file, type) => {
@@ -182,6 +184,8 @@ function ModelUsage() {
       {/* Create a button that downloads the model */}
       <Button type="button">Download</Button>
       </Form.Group>
+    <Form.Label>Output</Form.Label>
+		  <p>{model_output}</p>
   </Form>
   </Container>
   );
