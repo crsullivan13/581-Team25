@@ -1,7 +1,13 @@
 # regressions.py by Junyi Zhao
 # regressions.py should be including all methods to deal with regression calls when finished. 
-# log: created Sep 25 - includes a basic linear regression method for the group to discuss with inputs and outputs, others still under construction
+# log: created Sep 25 - includes a basic linear regression method for the group to discuss with inputs and outputs, others still under construction - Junyi
+# log: modified Oct 12 - added a demo function to play with test and train size and random state for MNIST classifier - Junyi
 from sklearn.linear_model import LinearRegression #input linear regression methods
+from sklearn.linear_model import SGDClassifier #input linear regression methods
+from sklearn.datasets import fetch_openml #for MNIST Demo
+from sklearn.metrics import accuracy_score # for regression accuracy
+from sklearn.model_selection import train_test_split # to spilt test data
+import numpy as np #typical numpy import
 import matplotlib #just in case for drawing a graph
 def LinearMethod(vector_x, vector_y): #easily call linear regression method
     #input: two vectors (vector_x, vector_y), showing correlating two vectors on the plane.
@@ -13,4 +19,23 @@ def LinearMethod(vector_x, vector_y): #easily call linear regression method
     w = model.coef_ #as wx+b
     b = model.intercept_ #generate linear regression result
     return w, b #return the req'd values
+
+def MNIST_SGDDemo(test_size: float, random_state: int):#a demo of MNIST to fetch interest for K-12 students
+    # input: percentage to test to let kids know test size and train size's difference and the random state (just in case, not really used)
+    # output: the test accuracy score, for students to see how different test size can alter the accuracy of the training
+    # errors: wrongful test size - sorted with raising error, wrongful random state - unknown yet
+    #side effects and known faults not found yet
+    mnist_data = fetch_openml('MNIST_784') # download MNIST vectors from scikit database
+    if (test_size >= 1 or test_size <= 0): # find out wrongful test size
+        raise IndexError("Please enter a proper test percentage between 0 and 1, not inclusive") # if it happens halt the function and raise error
+    x, y = mnist_data['data'], mnist_data['target'] #separate data for fitting
+    x_train,x_test,y_train,y_test=train_test_split (x, y, test_size = test_size, random_state = 1) #randomly select some data for training and some for testing by input test size
+    mnist_sgd = SGDClassifier(random_state = random_state) # start a SGD classifier, by official demo. let students choose their own random state
+    mnist_sgd.fit (x_train, y_train) #fit the tree
+    y_predict = mnist_sgd.predict(x_test) #predict the model using the test data
+    return accuracy_score(y_predict, y_test) #return predict accuracy percentage
+
+#print(MNIST_SGDDemo(0.5, 42)) - for testing
+
+
 
