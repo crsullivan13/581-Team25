@@ -82,38 +82,45 @@ function ModelUsage() {
 
   let handleRun = () => {
     let url = "https://team-25-362714.uc.r.appspot.com/fit_predict"
-
-		//call the csv parser
-		parseCSV(selectedTrainFile, 'train')
-    //parses the files and stores the results in the data states
-		parseCSV(selectedLabelFile, 'label') //same for labels
-    parseCSV(selectedLabelFile, 'test') //same for test
-		
-		//setup js object in the json format
-		let data = {
-				X_Train: trainData, //data used to train the model
-				y_Train: labelData, //labels used to train the model
-        X_Test: testData //data that the model is run on after training
-		}
-		
-		//turn object into json object
-		let jsonString = JSON.stringify(data)
-		
-		//print for debugging
-		console.log(jsonString)
-		console.log(data);
-		
-		//create http request object
-		let xhr = new XMLHttpRequest()
-		//build out the header
-		xhr.open("POST", url)
-		//send with json object
-		xhr.send(jsonString)
-		
-		//output resonse for debugging
-    let resp = xhr.response
-
-		console.log(resp)
+    //catches case where no files selected, TODO add state to avoid needing this
+    try{
+      //call the csv parser
+      parseCSV(selectedTrainFile, 'train')
+      //parses the files and stores the results in the data states
+      parseCSV(selectedLabelFile, 'label') //same for labels
+      parseCSV(selectedLabelFile, 'test') //same for test
+      
+      //setup js object in the json format
+      let data = {
+          X_Train: trainData, //data used to train the model
+          y_Train: labelData, //labels used to train the model
+          X_Test: testData //data that the model is run on after training
+      }
+      
+      //turn object into json object
+      let jsonString = JSON.stringify(data)
+      
+      //print for debugging
+      console.log(jsonString)
+      console.log(data);
+      try{
+        //create http request object
+        let xhr = new XMLHttpRequest()
+        //build out the header
+        xhr.open("POST", url)
+        //send with json object
+        xhr.send(jsonString)
+        
+        //output resonse for debugging
+        let resp = xhr.response
+        //output string directly for now
+        console.log(resp)
+      } catch {
+        console.log("bad response");
+      }
+    } catch {
+      alert("no files selected")
+    }
   }
 
   let parseCSV = (file, type) => {
