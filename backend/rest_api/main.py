@@ -14,6 +14,10 @@
 # log: Edited Oct 12:
 #     Author: Derrick Quinn
 #     Description: added fit_predict method to predict on a batch of data
+# log: Edited Oct 18:
+#	  Author: Amith Panuganti
+#	  Description: Modify /fit to send entire model back to frontend
+
 
 
 
@@ -21,7 +25,9 @@ from communications import PushToFront, ReadCommand
 import json
 from regressions import LinearMethod
 from train import trainModel
+import jsonpickle as jp
 from flask import Flask, request, jsonify, make_response
+import pickle
 
 #Create flask app
 app = Flask(__name__)
@@ -45,7 +51,7 @@ def fit_predict():
 		y_train = data["y_train"]
 		X_test = data["X_test"]
 
-		w,b = LinearMethod(X_train, y_train)
+		w,b = LinearMethod(X_train, y_train, data)
 
 		y_test = sum([x_i * w_i for x_i, w_y in zip(X_test, w)])+b
 
@@ -66,20 +72,14 @@ def fit():
 		# Load data from request
 		data = json.loads(request.data.decode("utf-8"))
 
-		# Get the features from data
-		X = data["X"]
-
-		# Get the labels from data
-		y = data['y']
-
-		# Get the model from data
-		model = data['model']
-
 		# Create a model and get its params
-		w,b = trainModel(X, y, model)
+		model = trainModel(data)
+
+		# Pickle and json the model
+		modelJson = jp.encode(model) 
 		
 		# Return params back to frontend
-		return make_response(jsonify({"w":str(w), "b":str(b)}), 200) 
+		return make_response({"model" : modelJson}, 200) 
 		
 	except:
 		return jsonify(success=False) #Request failed, return an error

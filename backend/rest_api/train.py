@@ -32,16 +32,23 @@ import numpy as np
 
 # Create a dictionary that will contain both model name and its regression function
 model_dict = {
-    "Linear Regression": regressions.LinearMethod
+    "Linear Regression": regressions.LinearMethod,
+    "Logistic Regression": regressions.LogisiticsRegressionMethod,
+    "Decision Tree Regression": regressions.DecisionTreeRegression
 }
 
 # Will handle training the model 
-# Inputs: features, labels, and model type
+# Inputs: data. Will always contain features, labels, and modelName
 # Output: Model
 # Errors: Model does not exist. Features dim and labels dim are incorrect
-def trainModel(features, labels, modelName):
+def trainModel(data):
     # Do everything in a try block
     try:
+        # Get the features, names, and labels of the model
+        features = data["X"]
+        labels = data["y"]
+        modelName = data["model"]
+
         # Get model using model
         model = model_dict[modelName]
 
@@ -49,11 +56,11 @@ def trainModel(features, labels, modelName):
         features = np.array(features)
         labels = np.array(labels)
 
-        # Train the model and get params
-        w,b = model(features, labels)
+        # Train the model and get model
+        model = model(features, labels, data)
         
         # Return parameters of model
-        return w,b
+        return model
         
     # If there is an exception
     except:
