@@ -2,11 +2,15 @@
 Name: logisticsRegressionTest.py
 Description: Tests fit by passing logistic regression
 Programmers: Amith Panuganti 
-Creation Date: 10/9/22
+Creation Date: 10/19/22
 Revisions:
-    10/9/22
+    10/19/22
     Author: Amith Panuganti
-    Description: Tested logistics regression 
+    Description: Tested logistics regression
+
+    10/21/22
+    Author: Amith Panuganti
+    Description: Tested logisitcs regression with more parameters
 
 Preconditions: Can only be run if server is up
 Postconditions: None
@@ -42,7 +46,24 @@ fit_intercept = True
 model = "Logistic Regression"
 
 # Create dictionary to send parameters
-dictToSend = {"X": x, "y":y, "penalty":penalty, "C":C, "fit_intercept":fit_intercept, "model":model}
+dictToSend = {"X": x, 
+              "y":y, 
+              "penalty":penalty,
+              "dual":False,
+              "tol":0.0001, 
+              "C":C, 
+              "fit_intercept":fit_intercept, 
+              "intercept_scaling":1,
+              "class_weight":None,
+              "random_state":None,
+              "solver":"saga",
+              "max_iter":100,
+              "multi_class":"auto",
+              "verbose":1,
+              "warm_start":False,
+              "n_jobs":None,
+              "l1_ratio":None,
+              "model":model}
 
 # Send post request to back end
 res = requests.post('http://127.0.0.1:5000/fit', json=dictToSend)

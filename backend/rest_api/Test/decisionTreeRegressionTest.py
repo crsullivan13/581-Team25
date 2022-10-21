@@ -5,7 +5,12 @@ Programmers: Amith Panuganti
 Creation Date: 10/19/22
 Revisions:
     10/19/22
-    Tested Decision Tree Regression
+    Author: Amith Panuganti
+    Description: Tested Decision Tree Regression
+
+    10/21/22
+    Author: Amith Panuganti
+    Description: Tested Decision Tree Regression with more parameters
 Preconditions: Can only be run if server is up
 Postconditions: None
 Errors: None
@@ -46,10 +51,16 @@ dictToSend = {
     "y" : y,
     "model" : model,
     "criterion" : criterion,
+    "splitter" : "best",
     "max_depth" : None,
     "min_samples_split": 2,
+    "min_weight_fraction_leaf": 0.0,
+    "max_features": None,
     "min_samples_leaf" : 1,
-    "ccp_alpha" : 0.0
+    "ccp_alpha" : 0.0,
+    "random_state": None,
+    "max_leaf_nodes": None,
+    "min_impurity_decrease": 0.0
 }
 
 # Send post request to back end
