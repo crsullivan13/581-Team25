@@ -20,7 +20,7 @@ import MetricsSelect from "./MetricsSelect"
 import Papa from "papaparse";
 
 import './Training.css';
-import Container from 'react-bootstrap/Container'
+import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput";
@@ -53,6 +53,9 @@ function Training() {
 	//track state of returned model
 	const [returnedModel, setReturnedModel] = useState("model here after trained");
 	const [isModelReturned, setIsModelReturned] = useState(false);
+
+	//state that represents the kind of model being trained
+	const [ModelType, setModelType] = useState("Linear Regression");
 
 
 	//this function handles the even that is triggered when someone changes the file they want to use
@@ -159,54 +162,132 @@ function Training() {
 				});
 		}
 
+	let modelTypeChanged = () =>
+	{
+		let modelType = document.getElementById("modelTypeInput").value;
+		setModelType(modelType);//page should update
+	}
+	let HyperparameterOptions = () =>
+	{
+		
+		//check the state representing the kind of model
+		switch(ModelType){
+			case "Linear Regression":
+				return(
+				<Form.Group>
+					<Row>
+					<Form.Label>Linear Regression Hyperparameters</Form.Label>
+					<Col>
+						<Form.Label>Dual</Form.Label>
+						<Form.Select>
+							<option>True</option>
+							<option>False</option>
+						</Form.Select>
+					</Col>
+					<Col>
+						<Form.Label>Tolerance</Form.Label>
+						<input type="text" value="0.001"></input>
+					</Col>
+					<Col>
+						<Form.Label>C</Form.Label>
+						<input type="text" value="0.001"></input>
+					</Col>
+					<Col>
+						<Form.Label>Dual</Form.Label>
+						<Form.Select>
+							<option>True</option>
+							<option>False</option>
+						</Form.Select>
+					</Col>
+					<Col>
+						<Form.Label>Max Iterations</Form.Label>
+						<input type="text" value="1"></input>
+					</Col>
+					<Col>
+						<Form.Label>Fit Intercept</Form.Label>
+						<input type="text" value="1"></input>
+					</Col>
+					</Row>
+				</Form.Group>
+				);
+				break;
+			case "Decision Tree":
+				return(
+					<Form.Group>
+						<Form.Label>Decision Tree Hyperparameters</Form.Label>
+						<Col>
+						
+						</Col>
+					</Form.Group>
+					);
+				break;
+			case "MNIST Classifier":
+				return(
+					<Form.Group>
+						<Form.Label>MNIST Classifier Hyperparameters</Form.Label>
+						<Col>
+						
+						</Col>
+					</Form.Group>
+					);
+			default:
+
+		}
+		//check state of kind of model
+	}
 	//this page currently has areas to choose and adjust options for the model, the hyperparameters, and the recorded metrics
   return (
+
 
 	<>
 
 	<Container>
 
-	<div >
-      Training Data File:
-	<br/>
-	{/*first file input for training data*/}
-	<input type="file" name="file" onChange={changeTrainHandler} />
-	<br/>
-	Data Label File:
-	<br/>
-	{/*file input for label data*/}
-	<input type="file" name="file" onChange={changeLabelHandler} />
-	<br/>
-	Feature File:
-	<br/>
-	{/*first file input for features*/}
-	<input type="file" name="file" onChange={changeFeatureHandler} />
-	<br/>
+		<Form.Group className="mb-3" controlId="trainingUpload">
+		<Form.Label>Upload Training Data File</Form.Label>
+		<Form.Control type="file" name="file" onChange={changeTrainHandler}></Form.Control>{/* File input for Training data */}
+		</Form.Group>
 
-	
-    	</div>
+		<Form.Group className="mb-3" controlId="labelUpload">{/* A form group used to separate different sections of the form*/}
+		<Form.Label>Upload Label File</Form.Label>
+		<Form.Control type="file" name="file" onChange={changeLabelHandler}></Form.Control>{/* */}
+		</Form.Group>
+
+		<Form.Group className="mb-3" controlId="featureUpload">{/* A form group used to separate different sections of the form*/}
+		<Form.Label>Upload Feature Data File</Form.Label>
+		<Form.Control type="file" name="file" onChange={changeFeatureHandler}></Form.Control>{/*The file input for the feature handler*/}
+		</Form.Group>
 
 
 	<Row>
 		{/*option to choose model to train*/}
-		Choose Model:
-		<ModelSelect />
+		<Form.Label>Choose type of model to train:</Form.Label>
+		<Form.Select id="modelTypeInput" aria-label="Model Select" onChange={modelTypeChanged}>
+      	{/* Placeholder for actual model */}
+			<option>Linear Regression</option>
+			<option>Decision Tree</option>
+			<option>MNIST Classifier</option>
+    	</Form.Select>
 	</Row>
 
 	<Row>
 		{/*option to choose hyperparameter to edit*/}
-		Change Hyperparameters:
-		<HyperparameterSelect />
+		<Form.Label>Set additional hyperparameters:</Form.Label>
+		<HyperparameterOptions />
 	</Row>
 	
 	<Row>
 		{/*option to choose what metrics to record*/}
 		Choose Recorded Metrics:
-		<MetricsSelect />
+		<Form.Select multiple={true}>
+			<option>Error</option>
+			<option>Metric 2</option>
+			<option>Metric 3</option>
+		</Form.Select>
 	</Row>
 	<Row>
 		{/*button to begin training*/}
-	<button onClick={handleTrain}>Begin Training</button>
+	<Button type="button" onClick={handleTrain}>Train</Button>
 	</Row>
 
 	<br></br>
