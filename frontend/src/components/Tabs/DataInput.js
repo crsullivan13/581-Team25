@@ -19,6 +19,7 @@ Faults: None
 import Papa from "papaparse";
 import React from "react"
 import { useState } from 'react';
+import { Form, Button, Container } from "react-bootstrap";
 
 
 //Returns the page for Inputting Data
@@ -91,26 +92,25 @@ function DataInput() {
 
 	//the html contains the three file inputs and a submit button
   return (
-	
-	  <div >
-      Training Data File:
-	<br/>
-	{/*first file input for training data*/}
-	<input type="file" name="file" onChange={changeTrainHandler} />
-	<br/>
-	Data Label File:
-	<br/>
-	{/*file input for label data*/}
-	<input type="file" name="file" onChange={changeLabelHandler} />
-	<br/>
-	Feature File:
-	<br/>
-	{/*first file input for features*/}
-	<input type="file" name="file" onChange={changeFeatureHandler} />
-	<br/>
-	<button onClick={handleSubmit}>Submit</button>
-	
-    	</div>
+	<Container>
+		{/* A form group used to separate different sections of the form - one for training data upload, one for label upload, one for feature upload*/}
+		<Form.Group className="mb-3" controlId="trainingUpload">
+		<Form.Label>Upload Training Data File</Form.Label>
+		<Form.Control type="file" name="file" onChange={changeTrainHandler}></Form.Control>{/* File input for Training data */}
+		</Form.Group>
+
+		<Form.Group className="mb-3" controlId="labelUpload">{/* A form group used to separate different sections of the form*/}
+		<Form.Label>Upload Label File</Form.Label>
+		<Form.Control type="file" name="file" onChange={changeLabelHandler}></Form.Control>{/* */}
+		</Form.Group>
+
+		<Form.Group className="mb-3" controlId="featureUpload">{/* A form group used to separate different sections of the form*/}
+		<Form.Label>Upload Feature Data File</Form.Label>
+		<Form.Control type="file" name="file" onChange={changeFeatureHandler}></Form.Control>{/*The file input for the feature handler*/}
+		</Form.Group>
+
+		<Button type="button" onClick={handleSubmit}>Submit</Button>{/*The button that is pressed to submit the data*/}
+	</Container>
 	
   );
 }

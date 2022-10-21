@@ -41,6 +41,8 @@ function App() {
 
 	//buckle up
 
+	
+
 	//the router tag allows us to handle page routing without using href stuff
 	//wrap it in auth provider so we can ensure that the context is accessible
 	//exact path is used because otherwise all routing will match the first / and then bail out
