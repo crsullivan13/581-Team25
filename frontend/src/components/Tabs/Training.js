@@ -14,9 +14,7 @@ Faults: None
 
 //imports
 import React from "react"
-import ModelSelect from "./ModelSelect"
-import HyperparameterSelect from "./HyperparameterSelect"
-import MetricsSelect from "./MetricsSelect"
+
 import Papa from "papaparse";
 
 import './Training.css';
@@ -70,7 +68,6 @@ function Training() {
 
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeLabelHandler = (event) => {
-
 		//these two lines update the state of the page
 		setSelectedLabelFile(event.target.files[0]);//sets the selected file
 		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
@@ -178,34 +175,96 @@ function Training() {
 					<Row>
 					<Form.Label>Linear Regression Hyperparameters</Form.Label>
 					<Col>
+						<Form.Label>Penalty</Form.Label>
+						<Form.Select defaultValue="l2">
+							<option>l1</option>
+							<option>l2</option>
+							<option>elasticnet</option>
+							<option>none</option>
+						</Form.Select>
+					</Col>
+					<Col>
 						<Form.Label>Dual</Form.Label>
-						<Form.Select>
+						<Form.Select defaultValue="False">
 							<option>True</option>
 							<option>False</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Tolerance</Form.Label>
-						<input type="text" value="0.001"></input>
+						<Form.Label>Tolerance</Form.Label><br/>
+						<input type="number" placeholder="0.00001"></input>
 					</Col>
 					<Col>
 						<Form.Label>C</Form.Label>
-						<input type="text" value="0.001"></input>
+						<br/>
+						<input type="number" placeholder="1.0"></input>
 					</Col>
+					</Row><Row>
 					<Col>
-						<Form.Label>Dual</Form.Label>
-						<Form.Select>
+						<Form.Label>Fit Intercept</Form.Label>
+						<Form.Select defaultValue="True">
 							<option>True</option>
 							<option>False</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Max Iterations</Form.Label>
-						<input type="text" value="1"></input>
+						<Form.Label>Intercept Scaling</Form.Label>
+						<input type="number" placeholder="1.0"></input>
 					</Col>
 					<Col>
-						<Form.Label>Fit Intercept</Form.Label>
-						<input type="text" value="1"></input>
+						<Form.Label>Class Weight</Form.Label>
+						<Form.Select defaultValue="None">
+							<option>None</option>
+							<option>Balanced</option>
+							<option>Custom</option>
+						</Form.Select>
+					</Col>
+					<Col>
+						<Form.Label>Random State</Form.Label>
+						<input type="number" placeholder="-1"></input>
+					</Col>
+					</Row><Row>
+					<Col>
+						<Form.Label>Solver</Form.Label>
+						<Form.Select defaultValue="lbfgs">
+							<option>newton-cg</option>
+							<option>lbfgs</option>
+							<option>liblinear</option>
+							<option>sag</option>
+							<option>saga</option>
+						</Form.Select>
+					</Col>
+					<Col>
+						<Form.Label>Max Iterations</Form.Label><br/>
+						<input type="number" placeholder="100"></input>
+					</Col>
+					<Col>
+						<Form.Label>Multi Class</Form.Label>
+						<Form.Select defaultValue="auto">
+							<option>auto</option>
+							<option>ovr</option>
+							<option>multinomial</option>
+						</Form.Select>
+					</Col>
+					<Col>
+						<Form.Label>Verbose</Form.Label><br/>
+						<input type="number" placeholder="0"></input>
+					</Col>
+					</Row><Row>
+					<Col>
+						<Form.Label>Warm Start</Form.Label>
+						<Form.Select defaultValue="False">
+							<option>True</option>
+							<option>False</option>
+						</Form.Select>
+					</Col>
+					<Col>
+						<Form.Label>N Jobs</Form.Label><br/>
+						<input type="number" placeholder="1"></input>
+					</Col>
+					<Col>
+						<Form.Label>L1 Ratio</Form.Label><br/>
+						<input type="number" placeholder="1"></input>
 					</Col>
 					</Row>
 				</Form.Group>
@@ -215,9 +274,66 @@ function Training() {
 				return(
 					<Form.Group>
 						<Form.Label>Decision Tree Hyperparameters</Form.Label>
+						<Row>
 						<Col>
-						
+							<Form.Label>Criterion</Form.Label>
+							<Form.Select defaultValue="squared_error">
+								<option>squared_error</option>
+								<option>friedman_mse</option>
+								<option>absolute_error</option>
+								<option>poisson</option>
+							</Form.Select>
 						</Col>
+						<Col>
+							<Form.Label>Splitter</Form.Label>
+							<Form.Select defaultValue="best">
+								<option>best</option>
+								<option>random</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Max Depth</Form.Label><br/>
+							<input type="number" placeholder="-1"></input>
+						</Col>
+						<Col>
+							<Form.Label>Min Samples Split</Form.Label><br/>
+							<input type="number" placeholder="2"></input>
+						</Col>
+						</Row><Row>
+						<Col>
+							<Form.Label>Min Samples Leaf</Form.Label><br/>
+							<input type="number" placeholder="1"></input>
+						</Col>
+						<Col>
+							<Form.Label>Min Weight Fraction Leaf</Form.Label><br/>
+							<input type="number" placeholder="0.0"></input>
+						</Col>
+						<Col>
+							<Form.Label>Max Features</Form.Label>
+							<Form.Select defaultValue="">
+								<option>auto</option>
+								<option>sqrt</option>
+								<option>log2</option>
+							</Form.Select>
+						</Col>
+						<Col>
+							<Form.Label>Random State</Form.Label><br/>
+							<input type="number" placeholder="-1"></input>
+						</Col>
+						</Row><Row>
+						<Col>
+							<Form.Label>Max Leaf Nodes</Form.Label><br/>
+							<input type="number" placeholder="-1"></input>
+						</Col>
+						<Col>
+							<Form.Label>Min Impurity Decrease</Form.Label><br/>
+							<input type="number" placeholder="0"></input>
+						</Col>
+						<Col>
+							<Form.Label>CCP Alpha</Form.Label><br/>
+							<input type="number" placeholder="0"></input>
+						</Col>
+						</Row>
 					</Form.Group>
 					);
 				break;
