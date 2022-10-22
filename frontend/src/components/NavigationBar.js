@@ -6,7 +6,10 @@ Creation Date: 9/24/22
 Revisions:
     9/24/22
 		Revision: Move this code to here from another file for modularity
-		Authort: Connor Sullivan
+		Author: Connor Sullivan
+	10/22/22
+		Revision: Update navbar to collapse down into a drop down
+		Author: Connor Sullivan
 Preconditions: None
 Postconditions: None
 Errors: None
@@ -19,7 +22,7 @@ Faults: None
 import React from "react"
 import '../App.css';
 
-import { Navbar } from "react-bootstrap"
+import { Container, Navbar } from "react-bootstrap"
 import { Nav } from "react-bootstrap"
 
 
@@ -30,19 +33,22 @@ function NavigationBar() {
 	return (
 	<div className="App">
         <header className="App-header">
-		<Navbar bg = "light" expand="lg">
-		<Navbar.Brand href="/">ML for Everyone</Navbar.Brand>
-		<Nav className="me-auto">
-			<Nav.Link href="/datainput">Data Input</Nav.Link>
-			<Nav.Link href="/training">Training</Nav.Link>
-			<Nav.Link href="/modelusage">Model Usage</Nav.Link>
-			<Nav.Link href="/modelmetrics">Model Metrics</Nav.Link>
-		</Nav>
-		</Navbar>
-            
+			<Navbar collapseOnSelect bg = "light" expand="lg">
+				<Container>
+					<Navbar.Brand href="/">ML for Everyone</Navbar.Brand>
+					<Navbar.Toggle aria-controls='responsive-navbar-vav' />
+					<Navbar.Collapse id='responsive-navbar-nav'>
+					<Nav className="me-auto">
+						<Nav.Link href="/datainput">Data Input</Nav.Link>
+						<Nav.Link href="/training">Training</Nav.Link>
+						<Nav.Link href="/modelusage">Model Usage</Nav.Link>
+						<Nav.Link href="/modelmetrics">Model Metrics</Nav.Link>
+					</Nav>
+					</Navbar.Collapse>
+				</Container>
+			</Navbar>
         </header>
-        </div>
-	
+    </div>
   )
 }
 
