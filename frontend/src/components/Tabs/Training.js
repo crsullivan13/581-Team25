@@ -55,6 +55,11 @@ function Training() {
 	//state that represents the kind of model being trained
 	const [ModelType, setModelType] = useState("Linear Regression");
 
+	//state that represents the data object that is passed into the regression method for Linear Regression
+	const [linearRegressionData, setLinearRegressionData] = useState({});
+
+	//TODO - make handlers for each hyperparameter input, and in the handlers update the data state
+
 
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeTrainHandler = (event) => {
@@ -173,61 +178,61 @@ function Training() {
 				return(
 				<Form.Group>
 					<Row>
-					<Form.Label>Linear Regression Hyperparameters</Form.Label>
+					<Form.Label>Linear Regression Hyperparameters</Form.Label>{/* There are descriptions of each hyperparameter in regressions.py*/}
 					<Col>
-						<Form.Label>Penalty</Form.Label>
+						<Form.Label>Penalty</Form.Label>{/* The penalty hyperparameter*/}
 						<Form.Select defaultValue="l2">
-							<option>l1</option>
+							<option>l1</option>{/*Options for the penalty hyperparameter*/}
 							<option>l2</option>
 							<option>elasticnet</option>
 							<option>none</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Dual</Form.Label>
+						<Form.Label>Dual</Form.Label>{/*The dual hyperparameter*/}
 						<Form.Select defaultValue="False">
-							<option>True</option>
+							<option>True</option>{/*True and false options for dual*/}
 							<option>False</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Tolerance</Form.Label><br/>
-						<input type="number" placeholder="0.00001"></input>
+						<Form.Label>Tolerance</Form.Label><br/>{/*Tolerance Hyperparameter*/}
+						<input type="number" placeholder="0.00001"></input>{/*numerical input for tolerance*/}
 					</Col>
 					<Col>
-						<Form.Label>C</Form.Label>
+						<Form.Label>C</Form.Label>{/*C hyperparameter*/}
 						<br/>
-						<input type="number" placeholder="1.0"></input>
+						<input type="number" placeholder="1.0"></input> {/*Numerical input for C*/}
 					</Col>
 					</Row><Row>
 					<Col>
-						<Form.Label>Fit Intercept</Form.Label>
+						<Form.Label>Fit Intercept</Form.Label>{/*Fit intercept hyperparameter*/}
 						<Form.Select defaultValue="True">
-							<option>True</option>
+							<option>True</option>{/*True/false options for fit intercept*/}
 							<option>False</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Intercept Scaling</Form.Label>
-						<input type="number" placeholder="1.0"></input>
+						<Form.Label>Intercept Scaling</Form.Label>{/*Intercept Scaling */}
+						<input type="number" placeholder="1.0"></input>{/*numerical input for intercept scaling*/}
 					</Col>
 					<Col>
-						<Form.Label>Class Weight</Form.Label>
-						<Form.Select defaultValue="None">
-							<option>None</option>
+						<Form.Label>Class Weight</Form.Label>{/*class weight hyperparameter - Weights associated with classes in the form {class_label: weight}. If not given, all classes are supposed to have weight one.*/}
+						<Form.Select defaultValue="None">{/**/}
+							<option>None</option>{/*options for class weight*/}
 							<option>Balanced</option>
 							<option>Custom</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Random State</Form.Label>
-						<input type="number" placeholder="-1"></input>
+						<Form.Label>Random State</Form.Label>{/*random state hyperparameter Used when solver == ‘sag’, ‘saga’ or ‘liblinear’ to shuffle the data.*/}
+						<input type="number" placeholder="-1"></input>{/*numerical input*/}
 					</Col>
 					</Row><Row>
 					<Col>
-						<Form.Label>Solver</Form.Label>
+						<Form.Label>Solver</Form.Label>{/*solver hyperparameter - Algorithm to use in the optimization problem. Default is ‘lbfgs’. To choose a solver, you might want to consider the following aspects:*/}
 						<Form.Select defaultValue="lbfgs">
-							<option>newton-cg</option>
+							<option>newton-cg</option>{/*options for solver hyperparameter*/}
 							<option>lbfgs</option>
 							<option>liblinear</option>
 							<option>sag</option>
@@ -235,35 +240,35 @@ function Training() {
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Max Iterations</Form.Label><br/>
-						<input type="number" placeholder="100"></input>
+						<Form.Label>Max Iterations</Form.Label><br/>{/*Max iterations - Maximum number of iterations taken for the solvers to converge.*/}
+						<input type="number" placeholder="100"></input>{/*numerical input*/}
 					</Col>
 					<Col>
-						<Form.Label>Multi Class</Form.Label>
+						<Form.Label>Multi Class</Form.Label>{/*Multi Class - If the option chosen is ‘ovr’, then a binary problem is fit for each label. For ‘multinomial’ the loss minimised is the multinomial loss fit across the entire probability distribution, even when the data is binary. */}
 						<Form.Select defaultValue="auto">
-							<option>auto</option>
+							<option>auto</option>{/*options*/}
 							<option>ovr</option>
 							<option>multinomial</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>Verbose</Form.Label><br/>
-						<input type="number" placeholder="0"></input>
+						<Form.Label>Verbose</Form.Label><br/>{/*Verbose hyperparameter - For the liblinear and lbfgs solvers set verbose to any positive number for verbosity.*/}
+						<input type="number" placeholder="0"></input>{/*numerical input*/}
 					</Col>
 					</Row><Row>
 					<Col>
-						<Form.Label>Warm Start</Form.Label>
+						<Form.Label>Warm Start</Form.Label>{/*Warm start hyperparameter - When set to True, reuse the solution of the previous call to fit as initialization, otherwise, just erase the previous solution.*/}
 						<Form.Select defaultValue="False">
-							<option>True</option>
+							<option>True</option>{/*true/false for warm start*/}
 							<option>False</option>
 						</Form.Select>
 					</Col>
 					<Col>
-						<Form.Label>N Jobs</Form.Label><br/>
+						<Form.Label>N Jobs</Form.Label><br/>{/*N Jobs hyperparameterNumber of CPU cores used when parallelizing over classes if multi_class=’ovr’”. This parameter is ignored when the solver is set to ‘liblinear’ regardless of whether ‘multi_class’ is specified or not. None means 1 unless in a joblib.parallel_backend context. -1 means using all processors. See Glossary for more details.*/}
 						<input type="number" placeholder="1"></input>
 					</Col>
 					<Col>
-						<Form.Label>L1 Ratio</Form.Label><br/>
+						<Form.Label>L1 Ratio</Form.Label><br/>{/**the Elastic-Net mixing parameter, with 0 <= l1_ratio <= 1. */}
 						<input type="number" placeholder="1"></input>
 					</Col>
 					</Row>
@@ -273,43 +278,43 @@ function Training() {
 			case "Decision Tree":
 				return(
 					<Form.Group>
-						<Form.Label>Decision Tree Hyperparameters</Form.Label>
+						<Form.Label>Decision Tree Hyperparameters</Form.Label>{/*Hyperparameter options for the decision tree model* */}
 						<Row>
 						<Col>
-							<Form.Label>Criterion</Form.Label>
-							<Form.Select defaultValue="squared_error">
-								<option>squared_error</option>
+							<Form.Label>Criterion</Form.Label>{/**The function to measure the quality of a split.  */}
+							<Form.Select defaultValue="squared_error">{/**select input for criterion */}
+								<option>squared_error</option>{/** options*/}
 								<option>friedman_mse</option>
 								<option>absolute_error</option>
 								<option>poisson</option>
 							</Form.Select>
 						</Col>
 						<Col>
-							<Form.Label>Splitter</Form.Label>
-							<Form.Select defaultValue="best">
-								<option>best</option>
+							<Form.Label>Splitter</Form.Label>{/**The strategy used to choose the split at each node.  */}
+							<Form.Select defaultValue="best">{/** */}
+								<option>best</option>{/** */}
 								<option>random</option>
 							</Form.Select>
 						</Col>
 						<Col>
-							<Form.Label>Max Depth</Form.Label><br/>
-							<input type="number" placeholder="-1"></input>
+							<Form.Label>Max Depth</Form.Label><br/>{/** The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.*/}
+							<input type="number" placeholder="-1"></input>{/** */}
 						</Col>
 						<Col>
-							<Form.Label>Min Samples Split</Form.Label><br/>
-							<input type="number" placeholder="2"></input>
+							<Form.Label>Min Samples Split</Form.Label><br/>{/** The minimum number of samples required to split an internal node:*/}
+							<input type="number" placeholder="2"></input>{/** */}
 						</Col>
 						</Row><Row>
 						<Col>
-							<Form.Label>Min Samples Leaf</Form.Label><br/>
-							<input type="number" placeholder="1"></input>
+							<Form.Label>Min Samples Leaf</Form.Label><br/>{/** The minimum number of samples required to be at a leaf node. */}
+							<input type="number" placeholder="1"></input>{/** */}
 						</Col>
 						<Col>
-							<Form.Label>Min Weight Fraction Leaf</Form.Label><br/>
-							<input type="number" placeholder="0.0"></input>
+							<Form.Label>Min Weight Fraction Leaf</Form.Label><br/>{/**The minimum weighted fraction of the sum total of weights (of all the input samples) required to be at a leaf node.  */}
+							<input type="number" placeholder="0.0"></input>{/** */}
 						</Col>
 						<Col>
-							<Form.Label>Max Features</Form.Label>
+							<Form.Label>Max Features</Form.Label>{/**The number of features to consider when looking for the best split: */}
 							<Form.Select defaultValue="">
 								<option>auto</option>
 								<option>sqrt</option>
@@ -317,21 +322,21 @@ function Training() {
 							</Form.Select>
 						</Col>
 						<Col>
-							<Form.Label>Random State</Form.Label><br/>
-							<input type="number" placeholder="-1"></input>
+							<Form.Label>Random State</Form.Label><br/>{/** Controls the randomness of the estimator. The features are always randomly permuted at each split, even if splitter is set to "best". */}
+							<input type="number" placeholder="-1"></input>{/** */}
 						</Col>
 						</Row><Row>
 						<Col>
-							<Form.Label>Max Leaf Nodes</Form.Label><br/>
-							<input type="number" placeholder="-1"></input>
+							<Form.Label>Max Leaf Nodes</Form.Label><br/>{/**Grow a tree with max_leaf_nodes in best-first fashion. Best nodes are defined as relative reduction in impurity.  */}
+							<input type="number" placeholder="-1"></input>{/** */}
 						</Col>
 						<Col>
-							<Form.Label>Min Impurity Decrease</Form.Label><br/>
-							<input type="number" placeholder="0"></input>
+							<Form.Label>Min Impurity Decrease</Form.Label><br/>{/**A node will be split if this split induces a decrease of the impurity greater than or equal to this value. */}
+							<input type="number" placeholder="0"></input>{/** */}
 						</Col>
 						<Col>
-							<Form.Label>CCP Alpha</Form.Label><br/>
-							<input type="number" placeholder="0"></input>
+							<Form.Label>CCP Alpha</Form.Label><br/>{/*Complexity parameter used for Minimal Cost-Complexity Pruning. The subtree with the largest cost complexity that is smaller than ccp_alpha will be chosen. By default, no pruning is performed. * */}
+							<input type="number" placeholder="0"></input>{/** */}
 						</Col>
 						</Row>
 					</Form.Group>
@@ -377,7 +382,7 @@ function Training() {
 
 	<Row>
 		{/*option to choose model to train*/}
-		<Form.Label>Choose type of model to train:</Form.Label>
+		<h1 className="w-100 mt-2">Choose Model To Train</h1>
 		<Form.Select id="modelTypeInput" aria-label="Model Select" onChange={modelTypeChanged}>
       	{/* Placeholder for actual model */}
 			<option>Linear Regression</option>
@@ -388,7 +393,7 @@ function Training() {
 
 	<Row>
 		{/*option to choose hyperparameter to edit*/}
-		<Form.Label>Set additional hyperparameters:</Form.Label>
+		<h1 className="w-100 mt-2">Hyperparameter Input</h1>
 		<HyperparameterOptions />
 	</Row>
 	
