@@ -21,15 +21,18 @@ import './Training.css';
 import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import DataInput from "./DataInput";
 
 import { useState } from 'react';
 import { warning } from "@remix-run/router";
 
+import {useAuth} from "../../contexts/AuthContext"
+
 function Training() {
 
+	const { currentUser } = useAuth()
+
 	//the states that keep track of the selected files and whether files have been selected
-	
+
 	//These states keep track of the Training file
 	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
 	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
@@ -54,9 +57,6 @@ function Training() {
 
 	//state that represents the kind of model being trained
 	const [ModelType, setModelType] = useState("Linear Regression");
-
-	//state that represents the data object that is passed into the regression method for Linear Regression
-	const [linearRegressionData, setLinearRegressionData] = useState({});
 
 	//TODO - make handlers for each hyperparameter input, and in the handlers update the data state
 
@@ -90,58 +90,27 @@ function Training() {
 		parseCSV(event.target.files[0], 'feature');
 	}
 
+
+
 	//on click function for training button
 	let handleTrain = () => {
 				//url for training
 				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
-				//catches case where no files selected, TODO add state to avoid needing this
-				try{
-					//call the csv parser
-					parseCSV(selectedTrainFile, 'train')
-					parseCSV(selectedLabelFile, 'label')
-			
-					//setup js object in the json format
+				if(isTrainFileSelect && isLabelFileSelect){
 					let data = {
 						X: trainData,
-						y: labelData
+						y: labelData[0],
+						uuid: currentUser.uid
 					}
-			
-					//turn object into json object
+
 					let jsonString = JSON.stringify(data)
-			
-					//print for debugging
+
 					console.log(jsonString)
-					console.log(data);
-			
-					//create http request object
-					let xhr = new XMLHttpRequest()
-					//build out the header
-					xhr.open("POST", url)
-					//send with json object
-					xhr.send(jsonString)
-
-					//output response for debugging
-					console.log(xhr.response)
-
-					//try to parse the respnse, if we can't then log that
-					try{
-						let model = JSON.parse(xhr.response)
-
-						//output resonse for debugging
-						console.log(model)
-
-						//set the model so we can output it
-						setReturnedModel(model)
-
-						//change state
-						setIsModelReturned(true)
-					} catch {
-						console.log("couldn't parse json response")
-					}
-				} catch {
-					alert("no files selected")
+				} else {
+					alert("Must select train data first")
 				}
+
 	}
 
 
@@ -361,9 +330,12 @@ function Training() {
 
 
 	<>
+	
+
 
 	<Container>
 
+		<h1 className="w-100 mt-2">Select Training Data</h1>
 		<Form.Group className="mb-3" controlId="trainingUpload">
 		<Form.Label>Upload Training Data File</Form.Label>
 		<Form.Control type="file" name="file" onChange={changeTrainHandler}></Form.Control>{/* File input for Training data */}

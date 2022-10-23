@@ -17,7 +17,7 @@ Faults: None
 
 //imports
 import Papa from "papaparse";
-import React from "react"
+import React, { useContext, useEffect } from 'react'
 import { useState } from 'react';
 import { Form, Button, Container } from "react-bootstrap";
 
@@ -28,7 +28,7 @@ import { Form, Button, Container } from "react-bootstrap";
 function DataInput() {
 	//data input
 	//the states that keep track of the selected files and whether files have been selected
-	
+
 	//These states keep track of the Training file
 	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
 	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
@@ -44,12 +44,16 @@ function DataInput() {
 	const [isFeatureFileSelect, setIsFeatureFileSelec] = useState(false);//keeps track of whether a label file is selected
 	const [featureData, setFeatureData] = useState();
 
+	const [inputData, setInputData] = useState();
+
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeTrainHandler = (event) => {
 
 		//these two lines update the state of the page
 		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
 		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
+
+		parseCSV(event.target.files[0], 'train');
 	}
 
 	//this function handles the even that is triggered when someone changes the file they want to use
@@ -58,6 +62,8 @@ function DataInput() {
 		//these two lines update the state of the page
 		setSelectedLabelFile(event.target.files[0]);//sets the selected file
 		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
+
+		parseCSV(event.target.files[0], 'label');
 	}
 
 	let changeFeatureHandler = (event) => {
@@ -70,7 +76,24 @@ function DataInput() {
 
 
 	//this function will be used to upload/apply the data to train the model - it will need to be sent to the GCE
-	let handleSubmit = () => {
+	let handleSubmit = (e) => {
+		e.preventDefault();
+
+		let data = {
+			X: trainData,
+			y: labelData[0]
+		}
+
+		//turn object into json object
+		let jsonString = JSON.stringify(data)
+
+		console.log(jsonString)
+
+		setInputData(jsonString)
+
+		//setData(jsonString)
+
+		//console.log(getData())
 	}
 	
 	//simple function to parse a csv into json, takes in the file and the input type to set the correct state
@@ -92,6 +115,7 @@ function DataInput() {
 
 	//the html contains the three file inputs and a submit button
   return (
+	  <>
 	<Container>
 		{/* A form group used to separate different sections of the form - one for training data upload, one for label upload, one for feature upload*/}
 		<Form.Group className="mb-3" controlId="trainingUpload">
@@ -111,7 +135,7 @@ function DataInput() {
 
 		<Button type="button" onClick={handleSubmit}>Submit</Button>{/*The button that is pressed to submit the data*/}
 	</Container>
-	
+	</>
   );
 }
 

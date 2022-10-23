@@ -41,8 +41,6 @@ function App() {
 
 	//buckle up
 
-	
-
 	//the router tag allows us to handle page routing without using href stuff
 	//wrap it in auth provider so we can ensure that the context is accessible
 	//exact path is used because otherwise all routing will match the first / and then bail out
@@ -53,12 +51,11 @@ function App() {
 		<>
 		<Router>
 			<AuthProvider>
-			
 				<Routes>
 					<Route exact path="/" element={<><PrivateRoute><NavigationBar /> <Dashboard /></PrivateRoute> </>} />
 					<Route path="/signup" element={<Signup/>} />
 					<Route path="/login" element={<Login/>} />
-					<Route path="/datainput" element={<><PrivateRoute><NavigationBar /><DataInput></DataInput></PrivateRoute></>} />
+					{/*<Route path="/datainput" element={<><PrivateRoute><NavigationBar /><DataInput handleCallback={handleCallback}></DataInput></PrivateRoute></>} />*/}
 					<Route path="/modelmetrics" element={<><PrivateRoute><NavigationBar /><ModelMetrics></ModelMetrics></PrivateRoute></>} />
 					<Route path="/modelusage" element={<><PrivateRoute><NavigationBar /><ModelUsage></ModelUsage></PrivateRoute></>} />
 					<Route path="/training" element={<><PrivateRoute><NavigationBar /><Training></Training></PrivateRoute></>} />
