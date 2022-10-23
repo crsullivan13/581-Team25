@@ -39,7 +39,7 @@ function NavigationBar() {
 					<Navbar.Toggle aria-controls='responsive-navbar-vav' />
 					<Navbar.Collapse id='responsive-navbar-nav'>
 					<Nav className="me-auto">
-						<Nav.Link href="/datainput">Data Input</Nav.Link>
+						{/*<Nav.Link href="/datainput">Data Input</Nav.Link>*/}
 						<Nav.Link href="/training">Training</Nav.Link>
 						<Nav.Link href="/modelusage">Model Usage</Nav.Link>
 						<Nav.Link href="/modelmetrics">Model Metrics</Nav.Link>
