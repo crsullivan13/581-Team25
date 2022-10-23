@@ -1,6 +1,6 @@
 /*
-Name: LinearRegressHypParams.js
-Description: A collection of inputs that will change the parent state - the inputs are the hyperparameters for the linearregression model
+Name: LogisticRegressHypParams.js
+Description: A collection of inputs that will change the parent state - the inputs are the hyperparameters for the Logisticregression model
 Programmers: Griffin Keeter
 Creation Date: 10/21/22
 Preconditions: 
@@ -12,7 +12,7 @@ Faults: None
 */
 
 //Import React
-import React from "react"
+import {React, useState, useEffect} from "react"
 import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -21,12 +21,24 @@ import DataInput from "./DataInput";
 // Return The html form with hyperparameter options
 //Input: None
 //Output: HTML Page of hyperparamater inputs
-function LinearRegressHypParams() {
-  //Return following HTML code
+function LogisticRegressHypParams(props) {
+
+  //TODO - add handlers for each hyperparameter input
+ 
+  let setModelDataLiR = () => {
+    let data = {"newdatatest": "three"}
+    console.log("in child: parent state is");
+    console.log(props.model_data_p); //the value of the parent before being updated
+    props.setModelDataLoR(data); //updated the value of the parent state
+  }
+
+  //Return following HTML code, containing all the inputs
   return(
     <Form.Group>
+      <input value={props.model_data_LiR} 
+               onChange={setModelDataLiR} />
       <Row>
-      <Form.Label>Linear Regression Hyperparameters</Form.Label>{/* There are descriptions of each hyperparameter in regressions.py*/}
+      <Form.Label>Logistic Regression Hyperparameters</Form.Label>{/* There are descriptions of each hyperparameter in regressions.py*/}
       <Col>
         <Form.Label>Penalty</Form.Label>{/* The penalty hyperparameter*/}
         <Form.Select defaultValue="l2">
@@ -124,5 +136,5 @@ function LinearRegressHypParams() {
     );
 }
 
-//Export LinearRegressHypParams for Dashboard
-export default LinearRegressHypParams;
+//Export LogisticRegressHypParams for Dashboard
+export default LogisticRegressHypParams;

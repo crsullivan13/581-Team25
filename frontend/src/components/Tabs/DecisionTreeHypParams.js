@@ -22,6 +22,9 @@ import DataInput from "./DataInput";
 //Input: None
 //Output: HTML Page of hyperparamater inputs
 function DecisionTreeHypParams() {
+
+  //TODO - add handlers for each input
+
   //Return following HTML code
   return(
     <Form.Group>

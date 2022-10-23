@@ -18,7 +18,7 @@ import React from "react"
 import Papa from "papaparse";
 
 import './Training.css';
-import LinearRegressHypParams from "./LinearRegressHypParams"
+import LogisticRegressHypParams from "./LogisticRegressHypParams"
 import DecisionTreeHypParams from "./DecisionTreeHypParams"
 import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
@@ -57,12 +57,9 @@ function Training() {
 	//state that represents the kind of model being trained
 	const [ModelType, setModelType] = useState("Linear Regression");
 
-	//state that represents the data object that is passed into the regression method for Linear Regression
-	const [linearRegressionData, setLinearRegressionData] = useState({});
+	//state that represents the data object that is passed into the trainModel method
+	const [model_data, setModelData] = useState({});
 
-	//state that represents the data object that is passed into the regression method for Linear Regression
-	const [decisionTreeData, setDecisiontTreeData] = useState({});
-	//TODO - make handlers for each hyperparameter input, and in the handlers update the data state
 
 
 	//this function handles the even that is triggered when someone changes the file they want to use
@@ -96,6 +93,8 @@ function Training() {
 
 	//on click function for training button
 	let handleTrain = () => {
+				console.log("heyo");
+				console.log(model_data);
 				//url for training
 				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
@@ -178,14 +177,14 @@ function Training() {
 		
 		//check the state representing the kind of model
 		switch(ModelType){
-			case "Linear Regression":
+			case "Logistic Regression":
 				return(
-				<LinearRegressHypParams />
+				<LogisticRegressHypParams setModelDataLoR = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the LinearRegressHypParams component
 				);
 				break;
 			case "Decision Tree":
 				return(
-				<DecisionTreeHypParams />
+				<DecisionTreeHypParams setModelData_DTree = {setModelData}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
 			case "MNIST Classifier":
@@ -231,7 +230,7 @@ function Training() {
 		<h1 className="w-100 mt-2">Choose Model To Train</h1>
 		<Form.Select id="modelTypeInput" aria-label="Model Select" onChange={modelTypeChanged}>
       	{/* Placeholder for actual model */}
-			<option>Linear Regression</option>
+			<option>Logistic Regression</option>
 			<option>Decision Tree</option>
 			<option>MNIST Classifier</option>
     	</Form.Select>
