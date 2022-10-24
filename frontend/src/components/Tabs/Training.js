@@ -58,7 +58,7 @@ function Training() {
 	const [isModelReturned, setIsModelReturned] = useState(false);
 
 	//state that represents the kind of model being trained
-	const [ModelType, setModelType] = useState("Logistic Regression");
+	const [ModelType, setModelType] = useState("Linear Regression");
 
 	//state that represents the data object that is passed into the trainModel method
 	//TODO - get rid of passing setModelData to children
@@ -97,6 +97,7 @@ function Training() {
 	}
 
 	let handleTrain =  () => {
+		console.log(model_data);
 				//url for training
 				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
@@ -144,13 +145,17 @@ function Training() {
 	{
 		let modelType = document.getElementById("modelTypeInput").value;
 		setModelType(modelType);//page should update
-		console.log(model_data);
 	}
 	let HyperparameterOptions = () =>
 	{
 		
 		//check the state representing the kind of model
 		switch(ModelType){
+			case "Linear Regression":
+				//setModelDataHypOptions({"model": "Linear Regression"});
+				model_data["model"] = "Linear Regression";
+				return(<></>);
+				break;
 			case "Logistic Regression":
 				return(
 				<LogisticRegressHypParams setModelDataLoR = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the LinearRegressHypParams component
@@ -207,6 +212,7 @@ function Training() {
 		<h1 className="w-100 mt-2">Choose Model To Train</h1>
 		<Form.Select id="modelTypeInput" aria-label="Model Select" onChange={modelTypeChanged}>
       	{/* Placeholder for actual model */}
+		  	<option>Linear Regression</option>
 			<option>Logistic Regression</option>
 			<option>Decision Tree</option>
 			<option>MNIST Classifier</option>
