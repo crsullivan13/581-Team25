@@ -58,9 +58,10 @@ function Training() {
 	const [isModelReturned, setIsModelReturned] = useState(false);
 
 	//state that represents the kind of model being trained
-	const [ModelType, setModelType] = useState("Linear Regression");
+	const [ModelType, setModelType] = useState("Logistic Regression");
 
 	//state that represents the data object that is passed into the trainModel method
+	//TODO - get rid of passing setModelData to children
 	const [model_data, setModelData] = useState({});
 
 	//TODO - make handlers for each hyperparameter input, and in the handlers update the data state
@@ -99,7 +100,7 @@ function Training() {
 
 	//on click function for training button
 	let handleTrain = () => {
-				console.log("heyo");
+				
 				console.log(model_data);
 				//url for training
 				let url = "https://team-25-362714.uc.r.appspot.com/fit"
@@ -117,7 +118,6 @@ function Training() {
 				} else {
 					alert("Must select train data first")
 				}
-
 	}
 
 
@@ -157,7 +157,7 @@ function Training() {
 				break;
 			case "Decision Tree":
 				return(
-				<DecisionTreeHypParams setModelData_DTree = {setModelData}/>//makes the setModelData function callable from the linearRegressHypParams
+				<DecisionTreeHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
 			case "MNIST Classifier":
