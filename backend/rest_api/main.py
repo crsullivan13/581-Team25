@@ -12,37 +12,28 @@
 #			Author: Amith Panuganti
 #			Description: Modified fit to recieve correct paramaters in correct format
 # log: Edited Oct 12:
-<<<<<<< HEAD
 #     Author: Derrick Quinn
 #     Description: added fit_predict method to predict on a batch of data
 # log: Edited Oct 18:
 #	  Author: Amith Panuganti
 #	  Description: Modify /fit to send entire model back to frontend
-
-=======
+# log: Edited Oct 23:
 #	 Author: Derrick Quinn
-#	 Description: added fit_predict method to predict on a batch of data
->>>>>>> backend_updates_3
+#	 Description: Resolved server error issues and added storage functionality
 
 
 
 from lib.communications import PushToFront, ReadCommand
 import json
-<<<<<<< HEAD
-from regressions import LinearMethod
-from train import trainModel
-import jsonpickle as jp
+
+
 from flask import Flask, request, jsonify, make_response
 import pickle
-=======
 from lib.regressions import LinearMethod
 from lib.train import trainModel
-from flask import Flask, request, jsonify, make_response
 import firebase_admin
 from firebase_admin import credentials, firestore
->>>>>>> backend_updates_3
 
-import pickle
 #Create flask app
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)
@@ -127,19 +118,7 @@ def predict():
 		# Load data from request
 		data = json.loads(request.data.decode("utf-8"))
 
-<<<<<<< HEAD
-		# Create a model and get its params
-		model = trainModel(data)
 
-		# Pickle and json the model
-		modelJson = jp.encode(model) 
-		
-		# Return params back to frontend
-		return make_response({"model" : modelJson}, 200) 
-		
-	except:
-		return jsonify(success=False) #Request failed, return an error
-=======
 		# Get the features from data
 		X = data["X"]
 
@@ -161,7 +140,6 @@ def predict():
 	except Exception as e:
 		return make_response(jsonify({"Error",e}),500) #Request failed, return an error
 
->>>>>>> backend_updates_3
 	
 @app.route('/command', methods=['POST']) #Handle running commpands with no responses
 @cross_origin()
