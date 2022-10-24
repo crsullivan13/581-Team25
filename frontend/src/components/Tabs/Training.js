@@ -106,15 +106,28 @@ function Training() {
 				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
 				if(isTrainFileSelect && isLabelFileSelect){
-					let data = {
-						X: trainData,
-						y: labelData[0],
-						uuid: currentUser.uid
-					}
+					model_data["X"] = trainData
+					model_data["y"] = labelData[0]
+					model_data["uuid"] = currentUser.uid
+			
 
-					let jsonString = JSON.stringify(data)
+					let jsonString = JSON.stringify(model_data)
 
-					console.log(jsonString)
+					try{
+						//create http request object
+						let xhr = new XMLHttpRequest()
+						//build out the header
+						xhr.open("POST", url)
+						//send with json object
+						xhr.send(jsonString)
+						
+						//output resonse for debugging
+						let resp = xhr.response
+						//output string directly for now
+						console.log(resp)
+					  } catch {
+						console.log("bad response");
+					  }
 				} else {
 					alert("Must select train data first")
 				}
@@ -144,6 +157,7 @@ function Training() {
 	{
 		let modelType = document.getElementById("modelTypeInput").value;
 		setModelType(modelType);//page should update
+		console.log(model_data);
 	}
 	let HyperparameterOptions = () =>
 	{

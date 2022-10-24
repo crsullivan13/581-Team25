@@ -91,6 +91,7 @@ function LogisticRegressHypParams(props) {
   React.useEffect(() => {
     // Runs after the first render() lifecycle
     //set default values:*/
+    props.model_data_p["model"] = "Logistic Regression";
     penalty_change() //call the handler for criterion*/
     dual_change()//call the handler for splitter*/
     tol_change() //call the handler for max_depth*/
