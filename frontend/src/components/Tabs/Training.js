@@ -24,7 +24,7 @@ import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { warning } from "@remix-run/router";
 
 import {useAuth} from "../../contexts/AuthContext"
@@ -143,16 +143,18 @@ function Training() {
 
 	let modelTypeChanged = () =>
 	{
+		setModelData({});
 		let modelType = document.getElementById("modelTypeInput").value;
 		setModelType(modelType);//page should update
+
+
 	}
-	let HyperparameterOptions = () =>
+
+	let HyperparameterOptions = (props) =>
 	{
-		
 		//check the state representing the kind of model
 		switch(ModelType){
 			case "Linear Regression":
-				//setModelDataHypOptions({"model": "Linear Regression"});
 				model_data["model"] = "Linear Regression";
 				return(<></>);
 				break;
