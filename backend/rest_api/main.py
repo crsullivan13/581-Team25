@@ -12,29 +12,50 @@
 #			Author: Amith Panuganti
 #			Description: Modified fit to recieve correct paramaters in correct format
 # log: Edited Oct 12:
+<<<<<<< HEAD
 #     Author: Derrick Quinn
 #     Description: added fit_predict method to predict on a batch of data
 # log: Edited Oct 18:
 #	  Author: Amith Panuganti
 #	  Description: Modify /fit to send entire model back to frontend
 
+=======
+#	 Author: Derrick Quinn
+#	 Description: added fit_predict method to predict on a batch of data
+>>>>>>> backend_updates_3
 
 
 
-from communications import PushToFront, ReadCommand
+from lib.communications import PushToFront, ReadCommand
 import json
+<<<<<<< HEAD
 from regressions import LinearMethod
 from train import trainModel
 import jsonpickle as jp
 from flask import Flask, request, jsonify, make_response
 import pickle
+=======
+from lib.regressions import LinearMethod
+from lib.train import trainModel
+from flask import Flask, request, jsonify, make_response
+import firebase_admin
+from firebase_admin import credentials, firestore
+>>>>>>> backend_updates_3
 
+import pickle
 #Create flask app
+from flask_cors import CORS, cross_origin
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
+auth = credentials.Certificate('team-25-362714-623f2b1f64ab.json')
+firebase_admin.initialize_app(auth)
+db = firestore.client()
 #Create default route, for an easy check of the status of web server
 #Not used otherwise
 @app.route('/')
+@cross_origin()
 #input: Nothing
 #output: simple success message
 def index():
@@ -42,10 +63,12 @@ def index():
 
 #Create route for fitting a model and predicting it on a batch of data
 @app.route('/fit_predict', methods = ['POST']) #Fit model and predict on a batch of data
+@cross_origin()
 	#input: X_train, y_train, X_test
 	#output: y_test, the predicted value
 def fit_predict():
 	try:
+		
 		data = json.loads(request.data.decode("utf-8"))
 		X_train = data["X_train"]
 		y_train = data["y_train"]
@@ -57,21 +80,54 @@ def fit_predict():
 
 		return make_response(jsonify({"y_test" : str(y_test)}))
 
-	except:
-		return jsonify(success= False)
+	except Exception as e:
+		return make_response(jsonify({"Error",e}), 500)
 
 
 
 #Create route for just fitting a model and returning its output
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 
+@cross_origin()
 	#input: request.data: the data to fit the model
 	#output: w,b : the fitted model
 def fit(): 
 	# Catch any errors 
 	try:
+# Load data from request
+		data = json.loads(request.data.decode("utf-8"))
+
+# Get the features from data
+		X = data["X"]
+
+# Get the labels from data
+		y = data['y']
+
+# Get the model from data
+		model = data['model']
+		user = data['uuid']
+
+# Create a model and get its params
+		w,b = trainModel(X, y, model)
+		user_ref = db.collection(u'Models').document(uuid)
+		user_ref.set({"model": pickle.dumps(model)})
+
+		# Return params back to frontend
+		return make_response(jsonify({"w":str(w), "b":str(b)}), 200) 
+		
+	except Exception as e:
+		return make_response(jsonify({"Error",e}),500) #Request failed, return an error
+
+#Create route for predicting on the stored model for a user
+@app.route('/predict', methods=['POST']) 
+@cross_origin()
+    #input: request.data - JSONified request data
+    #output: y: the prediction data
+def predict():
+	try:
 		# Load data from request
 		data = json.loads(request.data.decode("utf-8"))
 
+<<<<<<< HEAD
 		# Create a model and get its params
 		model = trainModel(data)
 
@@ -83,8 +139,32 @@ def fit():
 		
 	except:
 		return jsonify(success=False) #Request failed, return an error
+=======
+		# Get the features from data
+		X = data["X"]
+
+		# Get the model from data
+		user = data['uuid']
+
+        #Get the reference to the user's document in firebase
+		user_ref = db.collection(u'Models').document(uuid)
+
+        #Read the stored model. If this fails, then we catch the exception
+		ser_model = user_ref.get().to_dict()['model']
+
+        #Deserialize the model
+		model = pickle.loads(ser_model)
+		y = model.predict(X)
+			# Return Prediction back to frontend
+		return make_response(jsonify({"y":y}), 200) 
+		
+	except Exception as e:
+		return make_response(jsonify({"Error",e}),500) #Request failed, return an error
+
+>>>>>>> backend_updates_3
 	
 @app.route('/command', methods=['POST']) #Handle running commpands with no responses
+@cross_origin()
 	#input: request.data: the post request body
 	#output: boolean success value
 def HandleCommand():
