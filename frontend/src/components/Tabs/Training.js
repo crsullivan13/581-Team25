@@ -96,12 +96,7 @@ function Training() {
 		parseCSV(event.target.files[0], 'feature');
 	}
 
-
-
-	//on click function for training button
-	let handleTrain = () => {
-				
-				console.log(model_data);
+	let handleTrain =  () => {
 				//url for training
 				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
@@ -113,21 +108,13 @@ function Training() {
 
 					let jsonString = JSON.stringify(model_data)
 
-					try{
-						//create http request object
-						let xhr = new XMLHttpRequest()
-						//build out the header
-						xhr.open("POST", url)
-						//send with json object
-						xhr.send(jsonString)
-						
-						//output resonse for debugging
-						let resp = xhr.response
-						//output string directly for now
-						console.log(resp)
-					  } catch {
-						console.log("bad response");
-					  }
+					console.log(jsonString)
+
+					let xhr = new XMLHttpRequest()
+					xhr.open("POST", url, false)
+					xhr.send(jsonString)
+
+					console.log(xhr.response)
 				} else {
 					alert("Must select train data first")
 				}

@@ -20,6 +20,7 @@ import { Form, Button, Container } from "react-bootstrap";
 
 import { useState } from 'react';
 import Papa from "papaparse";
+import { useAuth } from "../../contexts/AuthContext";
 
 
 //Represents the interface for Model Usage
@@ -27,7 +28,7 @@ import Papa from "papaparse";
 //Output: HTML to represent Interface for Model Usage
 function ModelUsage() {
 	
-
+  const {currentUser} = useAuth()
 
 
   //the states that keep track of the selected files and whether files have been selected
@@ -82,45 +83,25 @@ function ModelUsage() {
 
   let handleRun = () => {
     let url = "https://team-25-362714.uc.r.appspot.com/fit_predict"
-    //catches case where no files selected, TODO add state to avoid needing this
-    try{
-      //call the csv parser
-      parseCSV(selectedTrainFile, 'train')
-      //parses the files and stores the results in the data states
-      parseCSV(selectedLabelFile, 'label') //same for labels
-      parseCSV(selectedTestFile, 'test') //same for test
-      
-      //setup js object in the json format
+ 
+    if(isTestFileSelect){
       let data = {
-          X_Train: trainData, //data used to train the model
-          y_Train: labelData, //labels used to train the model
-          X_Test: testData //data that the model is run on after training
+        X: testData,
+        uuid: currentUser.uid
       }
-      
-      //turn object into json object
+
       let jsonString = JSON.stringify(data)
-      
-      //print for debugging
+
       console.log(jsonString)
-      console.log(data);
-      try{
-        //create http request object
-        let xhr = new XMLHttpRequest()
-        //build out the header
-        xhr.open("POST", url)
-        //send with json object
-        xhr.send(jsonString)
-        
-        //output resonse for debugging
-        let resp = xhr.response
-        //output string directly for now
-        console.log(resp)
-      } catch {
-        console.log("bad response");
-      }
-    } catch {
-      alert("no files selected")
+
+      let xhr = new XMLHttpRequest()
+      xhr.open("POST", url)
+      xhr.send(jsonString)
+
+    } else {
+      alert("Must select test data first")
     }
+
   }
 
   let parseCSV = (file, type) => {
@@ -165,15 +146,6 @@ function ModelUsage() {
     <Form.Label>Use Model</Form.Label>
     {/* Create a Form Group For Using Model */}
     <Form.Group className="mb-3" controlId="modelUsage">
-      {/* Another label for File Select */}
-      <Form.Label>Training Data File</Form.Label>
-      {/* File Select Button */}
-      <Form.Control type="file" name="file" onChange={changeTrainHandler}></Form.Control>
-      
-      {/* Another label for File Select */}
-      <Form.Label>Label File</Form.Label>
-      {/* File Select Button */}
-      <Form.Control type="file" name="file" onChange={changeLabelHandler}></Form.Control>
 
       {/* Another label for File Select */}
       <Form.Label>Test File</Form.Label>
