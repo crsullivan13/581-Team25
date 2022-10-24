@@ -82,7 +82,7 @@ function ModelUsage() {
 
 
   let handleRun = () => {
-    let url = "https://team-25-362714.uc.r.appspot.com/fit_predict"
+    let url = "https://team-25-362714.uc.r.appspot.com/predict"
  
     if(isTestFileSelect){
       let data = {
@@ -98,6 +98,7 @@ function ModelUsage() {
       xhr.open("POST", url)
       xhr.send(jsonString)
 
+      console.log(xhr.response)
     } else {
       alert("Must select test data first")
     }
