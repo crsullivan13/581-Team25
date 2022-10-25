@@ -95,10 +95,12 @@ function ModelUsage() {
       console.log(jsonString)
 
       let xhr = new XMLHttpRequest()
-      xhr.open("POST", url)
+      xhr.open("POST", url, false)
       xhr.send(jsonString)
 
       console.log(xhr.response)
+
+      setModelOutput(xhr.response)
     } else {
       alert("Must select test data first")
     }
@@ -121,7 +123,7 @@ function ModelUsage() {
           {
             setTestData(results.data) //update TestData state
           }
-        }
+        }, dynamicTyping: true
       });
   }
   //Returns the following html

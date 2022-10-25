@@ -116,6 +116,8 @@ function Training() {
 					xhr.send(jsonString)
 
 					console.log(xhr.response)
+
+					setReturnedModel(xhr.response)
 				} else {
 					alert("Must select train data first")
 				}
@@ -137,7 +139,7 @@ function Training() {
 							//update the trainData state
 							setLabelData(results.data)
 						}
-					}
+					}, dynamicTyping: true
 				});
 		}
 
