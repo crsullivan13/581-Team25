@@ -29,62 +29,77 @@ function LogisticRegressHypParams(props) {
   let penalty_change = ()=>{
     let val = document.getElementById("penalty").value;
     props.model_data_p["penalty"] = val;
+    console.log(props.model_data_p["penalty"]);
   }
   let dual_change = ()=>{
     let val = document.getElementById("dual").value;
     props.model_data_p["dual"] = (val.toLowerCase() == "true");
+    console.log(props.model_data_p["dual"]);
   }
   let tol_change = ()=>{
     let val = document.getElementById("tol").value;
     props.model_data_p["tol"] = Number(val);
+    console.log(props.model_data_p["tol"]);
   }
   let C_change = ()=>{
     let val = document.getElementById("C").value;
     props.model_data_p["C"] = Number(val);
+    console.log(props.model_data_p["C"]);
   }
   let fit_intercept_change = ()=>{
     let val = document.getElementById("fit_intercept").value;
     props.model_data_p["fit_intercept"] = (val.toLowerCase() == "true");
+    console.log(props.model_data_p["fit_intercept"]);
   }
   let intercept_scaling_change = ()=>{
     let val = document.getElementById("intercept_scaling").value;
-    props.model_data_p["intercept_scaling"] = Number(val);
+    //props.model_data_p["intercept_scaling"] = Number(val);
+    console.log(props.model_data_p["intercept_scaling"]);
   }
   let class_weight_change = ()=>{
     let val = document.getElementById("class_weight").value;
     props.model_data_p["class_weight"] = val;
+    console.log(props.model_data_p["class_weight"]);
   }
   let random_state_change = ()=>{
     let val = document.getElementById("random_state").value;
-    props.model_data_p["random_state"] = parseInt(val);
+    //props.model_data_p["random_state"] = parseInt(val);
+    console.log(props.model_data_p["random_state"]);
   }
   let solver_change = ()=>{
     let val = document.getElementById("solver").value;
     props.model_data_p["solver"] = val;
+    console.log(props.model_data_p["solver"]);
   }
   let max_iter_change = ()=>{
     let val = document.getElementById("max_iter").value;
     props.model_data_p["max_iter"] = parseInt(val);
+    console.log(props.model_data_p["max_iter"]);
   }
   let multi_class_change = ()=>{
     let val = document.getElementById("multi_class").value;
     props.model_data_p["multi_class"] = val;
+    console.log(props.model_data_p["multi_class"]);
   }
   let verbose_change = ()=>{
     let val = document.getElementById("verbose").value;
     props.model_data_p["verbose"] = parseInt(val);
+    console.log(props.model_data_p["verbose"]);
   }
   let warm_start_change = ()=>{
     let val = document.getElementById("warm_start").value;
     props.model_data_p["warm_start"] = (val.toLowerCase() == "true");
+    console.log(props.model_data_p["warm_start"]);
   }
   let n_jobs_change = ()=>{
     let val = document.getElementById("n_jobs").value;
     props.model_data_p["n_jobs"] = parseInt(val);
+    console.log(props.model_data_p["n_jobs"]);
   }
   let l1_ratio_change = ()=>{
     let val = document.getElementById("l1_ratio").value;
-    props.model_data_p["l1_ratio"] = Number(val);
+    //props.model_data_p["l1_ratio"] = Number(val);
+    console.log(props.model_data_p["l1_ratio"]);
   }
 
 
@@ -97,15 +112,15 @@ function LogisticRegressHypParams(props) {
     tol_change() //call the handler for max_depth*/
     C_change() //call the handler for min_samples_split*/
     fit_intercept_change() //call the handler for min_samples_leaf*
-    intercept_scaling_change() //call the handler for min_weight_frac_leaf*
+    //intercept_scaling_change() //call the handler for min_weight_frac_leaf*
     class_weight_change() //call the handler for max_features*/
-    random_state_change() //call the handler for random_state*/
+    //random_state_change() //call the handler for random_state*/
     solver_change() //call the handler for max_leaf_nodes*/
     max_iter_change()//call the handler for min_impurity_decrease*/
     verbose_change()//call the handler for ccp_alpha_change}*/
     warm_start_change();//call the handler for ccp_alpha_change}*/
     n_jobs_change();//call the handler for ccp_alpha_change}*/
-    l1_ratio_change();//call the handler for ccp_alpha_change}*/
+    //l1_ratio_change();//call the handler for ccp_alpha_change}*/
 
   }, []);
 
@@ -133,12 +148,12 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Tolerance</Form.Label><br/>{/*Tolerance Hyperparameter*/}
-        <input id="tol" onChange={tol_change} type="number" placeholder="0.00001"></input>{/*numerical input for tolerance*/}
+        <input id="tol" onChange={tol_change} type="number" defaultValue="0.00001"></input>{/*numerical input for tolerance*/}
       </Col>
       <Col>
         <Form.Label>C</Form.Label>{/*C hyperparameter*/}
         <br/>
-        <input id="C" onChange={C_change} type="number" placeholder="1.0"></input> {/*Numerical input for C*/}
+        <input id="C" onChange={C_change} type="number" defaultValue="1.0"></input> {/*Numerical input for C*/}
       </Col>
       </Row><Row>
       <Col>
@@ -150,19 +165,19 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Intercept Scaling</Form.Label>{/*Intercept Scaling */}
-        <input id="intercept_scaling" onChange={intercept_scaling_change} type="number" placeholder="1.0"></input>{/*numerical input for intercept scaling*/}
+        <input id="intercept_scaling" onChange={intercept_scaling_change} type="number" defaultValue="1.0"></input>{/*numerical input for intercept scaling*/}
       </Col>
       <Col>
         <Form.Label>Class Weight</Form.Label>{/*class weight hyperparameter - Weights associated with classes in the form {class_label: weight}. If not given, all classes are supposed to have weight one.*/}
-        <Form.Select id="class_weight" onChange={class_weight_change} defaultValue="None">{/**/}
-          <option>None</option>{/*options for class weight*/}
-          <option>Balanced</option>
-          <option>Custom</option>
+        <Form.Select id="class_weight" onChange={class_weight_change} defaultValue="balanced">{/**/}
+          <option>none</option>{/*options for class weight*/}
+          <option>balanced</option>
+          <option>custom</option>
         </Form.Select>
       </Col>
       <Col>
         <Form.Label>Random State</Form.Label>{/*random state hyperparameter Used when solver == ‘sag’, ‘saga’ or ‘liblinear’ to shuffle the data.*/}
-        <input id="random_state" onChange={random_state_change} type="number" placeholder="-1"></input>{/*numerical input*/}
+        <input id="random_state" onChange={random_state_change} type="number" defaultValue="2"></input>{/*numerical input*/}
       </Col>
       </Row><Row>
       <Col>
@@ -177,11 +192,11 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Max Iterations</Form.Label><br/>{/*Max iterations - Maximum number of iterations taken for the solvers to converge.*/}
-        <input id="max_iter" onChange={max_iter_change} type="number" placeholder="100"></input>{/*numerical input*/}
+        <input id="max_iter" onChange={max_iter_change} type="number" defaultValue="100"></input>{/*numerical input*/}
       </Col>
       <Col>
         <Form.Label>Multi Class</Form.Label>{/*Multi Class - If the option chosen is ‘ovr’, then a binary problem is fit for each label. For ‘multinomial’ the loss minimised is the multinomial loss fit across the entire probability distribution, even when the data is binary. */}
-        <Form.Select id="multi_class" onChange={multi_class_change} defaultValue="auto">
+        <Form.Select id="multi_class" onChange={multi_class_change} defaultValue="ovr">
           <option>auto</option>{/*options*/}
           <option>ovr</option>
           <option>multinomial</option>
@@ -189,7 +204,7 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Verbose</Form.Label><br/>{/*Verbose hyperparameter - For the liblinear and lbfgs solvers set verbose to any positive number for verbosity.*/}
-        <input id="verbose" onChange={verbose_change} type="number" placeholder="0"></input>{/*numerical input*/}
+        <input id="verbose" onChange={verbose_change} type="number" defaultValue="0"></input>{/*numerical input*/}
       </Col>
       </Row><Row>
       <Col>
@@ -201,14 +216,15 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>N Jobs</Form.Label><br/>{/*N Jobs hyperparameterNumber of CPU cores used when parallelizing over classes if multi_class=’ovr’”. This parameter is ignored when the solver is set to ‘liblinear’ regardless of whether ‘multi_class’ is specified or not. None means 1 unless in a joblib.parallel_backend context. -1 means using all processors. See Glossary for more details.*/}
-        <input id="n_jobs" onChange={n_jobs_change} type="number" placeholder="1"></input>
+        <input id="n_jobs" onChange={n_jobs_change} type="number" defaultValue="1"></input>
       </Col>
       <Col>
         <Form.Label>L1 Ratio</Form.Label><br/>{/**the Elastic-Net mixing parameter, with 0 <= l1_ratio <= 1. */}
-        <input id="l1_ratio" onChange={l1_ratio_change} type="number" placeholder="1"></input>
+        <input id="l1_ratio" onChange={l1_ratio_change} type="number" defaultValue="1"></input>
       </Col>
       </Row>
     </Form.Group>
+
     );
 }
 
