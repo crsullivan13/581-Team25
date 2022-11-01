@@ -20,13 +20,17 @@
 # log: Edited Oct 23:
 #    Author: Derrick Quinn
 #    Description: Resolved server error issues and added storage functionality
-# log: Edited Oct 30:
+# log: Edited Oct 31:
 #    Author: Derrick Quinn
 #    Description: Removed deprecated calls and fixed exception handling
+# log: Edited Nov 1:
+#    Auther: Derrick Quinn
+#    Description: Added kwarg integration, enabled returning loss, improved error handling
 
 
 
 from lib.communications import PushToFront 
+from lib.metrics import loss
 import json
 
 
@@ -68,20 +72,19 @@ def fit():
         data = json.loads(request.data.decode("utf-8"))
 
 
-
+        uuid = data["uuid"]
+        data = {k: data[k] for k in data if k != "uuid"}
 
 # Create a model and get its params
         trained = trainModel(data)
-
-
         #Store the model
-        uuid = data['uuid']
         user_ref = db.collection(u'Models').document(uuid)
 
         #Store as default
         user_ref.set({"model": pickle.dumps(trained)})
 
 
+        metrics = {"loss": loss(trained, data["X"], data["y"]) }
 
 
         # Return params back to frontend
@@ -89,9 +92,11 @@ def fit():
         if coefs:
             return make_response(jsonify({"w": list(trained.coef_),"b":trained.intercept_}), 200) 
         else:
-            return jsonify(success=True)
+            return make_response(jsonify(metrics))
         
-    except Exception as e:
+    except KeyError as e:
+        return make_response(jsonify({"Invalid key": str(e)}), 500)
+    except Exception as e: #Elsewhere
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error
 
 #Create route for predicting on the stored model for a user
@@ -121,7 +126,7 @@ def predict():
         model = pickle.loads(ser_model)
         y = model.predict(X)
             # Return Prediction back to frontend
-        return make_response(jsonify({"y":y}), 200) 
+        return make_response(jsonify({"y":list(y)}), 200) 
         
     except Exception as e:
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error

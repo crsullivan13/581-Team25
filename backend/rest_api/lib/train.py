@@ -1,7 +1,7 @@
 """
 Name: train.py
 Description: Trains the Model
-Programmers: Amith Panuganti 
+Programmers: Amith Panuganti, Derrick Quinn
 Creation Date: 10/5/22
 Revisions:
     10/5/22
@@ -16,7 +16,9 @@ Revisions:
         from sklearn, we will only get weight and biases
     10/10/22
         Revision: Convert features and labels into numpy arrays so that the regressions
-        model will run properl
+        model will run properly
+    11/1/22
+        Revision: Added descriptive error messages, kwarg integration
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
 Errors: None
@@ -42,27 +44,24 @@ model_dict = {
 # Output: Model
 # Errors: Model does not exist. Features dim and labels dim are incorrect
 def trainModel(data):
-    # Do everything in a try block
-    try:
-        # Get the features, names, and labels of the model
-        features = data["X"]
-        labels = data["y"]
-        modelName = data["model"]
+    # Get the features, names, and labels of the model
+    features = data['X']
+    labels = data['y']
+    modelName = data['model']
 
-        # Get model using model
-        model = model_dict[modelName]
+    # Get model using model
+    model = model_dict[modelName]
 
-        # Convert x and y to be numpy arrays
-        features = np.array(features)
-        labels = np.array(labels)
+    # Convert x and y to be numpy arrays
+    features = np.array(features)
+    labels = np.array(labels)
 
-        # Train the model and get model
-        model = model(features, labels, data)
+    # Get model kwargs
+    kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
+
+    # Train the model and get model
+    model = model(features, labels, kwargs)
+    
+    # Return parameters of model
+    return model
         
-        # Return parameters of model
-        return model
-        
-    # If there is an exception
-    except:
-        # Raise an exception that tell the user that model cannot be trained
-        raise Exception("Can't train model")
