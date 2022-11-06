@@ -4,13 +4,16 @@
 # log: modified Oct 12 - added a demo function to play with test and train size and random state for MNIST classifier - Junyi
 # log: modified Oct 18 - Modified Linear Regression to take in params and return model and added both Logistics and Decision Tree Regression - Amith Panuganti
 # log: modified Oct 21 - Add more Hyperparameters for Logistics and Decession Tree Regression - Amith Panuganti
+# log: modified Nov 6 - Create Metrics for all regressions models
+import matplotlib.pyplot as plt # For Plots
 from sklearn.linear_model import LinearRegression #input linear regression methods
 from sklearn.linear_model import SGDClassifier #input linear regression methods
 from sklearn.linear_model import LogisticRegression # input logistic regression
 from sklearn import tree # For decision tree
 from sklearn.datasets import fetch_openml #for MNIST Demo
-from sklearn.metrics import accuracy_score # for regression accuracy
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay # for regression accuracy and confusion matrix
 from sklearn.model_selection import train_test_split # to spilt test data
+from sklearn.tree import plot_tree # To plot decision trees
 import numpy as np #typical numpy import
 import matplotlib #just in case for drawing a graph
 def LinearMethod(vector_x, vector_y, data): #easily call linear regression method
@@ -20,7 +23,12 @@ def LinearMethod(vector_x, vector_y, data): #easily call linear regression metho
     #side effects and known faults not found yet
     model = LinearRegression() #define the model
     model.fit(vector_x, vector_y) #fit into linear regression model
-    return model # Return the model
+
+    # Set figure to be none
+    figure = None
+    
+
+    return model, figure # Return the model
 
 # Call Logisitcs Regression 
 # input: two vectors x and y, data containing parameters
@@ -106,8 +114,21 @@ def LogisiticsRegressionMethod(vector_x, vector_y, data):
     # Fit the model
     model.fit(vector_x, vector_y)
 
-    # Return the model
-    return model
+    # Next, create a confusion matrix witht the model
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Next, create a confusion matrix
+    confusion_matrx = confusion_matrix(vector_y, predict_y)
+
+    # Next display the image
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix, model.classes_)
+
+    # Next, get the figure for confusion_disp
+    figure = confusion_disp
+
+    # Return the model and figure
+    return model, figure
 
 # Call Decision Tree Regression
 # input: two vectors x and y, data containing parameters
@@ -164,8 +185,14 @@ def DecisionTreeRegression(vector_x, vector_y, data):
     # Fit the model
     model.fit(vector_x, vector_y)
 
-    # Return the model
-    return model
+    # Plot the tree
+    plot_tree(model)
+
+    # Get the current figure 
+    figure = plt.gcf()
+
+    # Return the model and figure
+    return model, figure
 
 
 def MNIST_SGDDemo(test_size: float, random_state: int):#a demo of MNIST to fetch interest for K-12 students

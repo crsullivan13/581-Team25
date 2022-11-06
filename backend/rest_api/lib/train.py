@@ -14,9 +14,14 @@ Revisions:
     10/7/22
         Revision: Re-edit params since for all possible models
         from sklearn, we will only get weight and biases
+        Author: Amith Panuganti
     10/10/22
         Revision: Convert features and labels into numpy arrays so that the regressions
-        model will run properl
+        model will run properly
+        Author: Amith Panuganti
+    11/6/22
+        Revision: Add support for getting metrics, specifically figures for training
+        Author: Amith Panuganti 
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
 Errors: None
@@ -57,10 +62,10 @@ def trainModel(data):
         labels = np.array(labels)
 
         # Train the model and get model
-        model = model(features, labels, data)
+        model, figure = model(features, labels, data)
         
         # Return parameters of model
-        return model
+        return model, figure
         
     # If there is an exception
     except:
