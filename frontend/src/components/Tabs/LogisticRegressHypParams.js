@@ -112,9 +112,9 @@ function LogisticRegressHypParams(props) {
     tol_change() //call the handler for max_depth*/
     C_change() //call the handler for min_samples_split*/
     fit_intercept_change() //call the handler for min_samples_leaf*
-    //intercept_scaling_change() //call the handler for min_weight_frac_leaf*
+    intercept_scaling_change() //call the handler for min_weight_frac_leaf*
     class_weight_change() //call the handler for max_features*/
-    //random_state_change() //call the handler for random_state*/
+    random_state_change() //call the handler for random_state*/
     solver_change() //call the handler for max_leaf_nodes*/
     max_iter_change()//call the handler for min_impurity_decrease*/
     verbose_change()//call the handler for ccp_alpha_change}*/

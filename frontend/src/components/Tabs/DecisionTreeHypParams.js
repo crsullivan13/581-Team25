@@ -13,10 +13,13 @@ Faults: None
 
 //Import React
 import React from "react"
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container } from "react-bootstrap"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import DataInput from "./DataInput";
+import DataInput from "./DataInput"
+import ReactTooltip from 'react-tooltip'
+import HyperparamInfo from './HyperparamInfo'
+
 
 // Return The html form with hyperparameter options
 //Input: None
@@ -92,7 +95,6 @@ function DecisionTreeHypParams(props) {
     console.log(props.model_data_p["ccp_alpha"]);
   }
 
-
   React.useEffect(() => {
     // Runs after the first render() lifecycle
     //set default values:*/
@@ -113,12 +115,13 @@ function DecisionTreeHypParams(props) {
 
   //Return following HTML code
   return(
+    
     <Form.Group>
-      <Form.Label>Decision Tree Hyperparameters</Form.Label>{/*Hyperparameter options for the decision tree model* */}
       <Row>
       <Col>
+        <ReactTooltip html={true}/>
         <Form.Label>Criterion</Form.Label>{/**The function to measure the quality of a split.  */}
-        <Form.Select id="crit" onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
+        <Form.Select data-tip={HyperparamInfo("")} id="crit" onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
           <option>squared_error</option>{/** options*/}
           <option>friedman_mse</option>
           <option>absolute_error</option>
