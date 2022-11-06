@@ -115,8 +115,6 @@ function Training() {
 					xhr.open("POST", url, false)
 					xhr.send(jsonString)
 
-					console.log(xhr.response)
-
 					setReturnedModel(xhr.response)
 				} else {
 					alert("Must select train data first")

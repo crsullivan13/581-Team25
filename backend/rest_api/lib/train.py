@@ -1,7 +1,7 @@
 """
 Name: train.py
 Description: Trains the Model
-Programmers: Amith Panuganti 
+Programmers: Amith Panuganti, Derrick Quinn
 Creation Date: 10/5/22
 Revisions:
     10/5/22
@@ -19,6 +19,8 @@ Revisions:
         Revision: Convert features and labels into numpy arrays so that the regressions
         model will run properly
         Author: Amith Panuganti
+    11/1/22
+        Revision: Added descriptive error messages, kwarg integration
     11/6/22
         Revision: Add support for getting metrics, specifically figures for training
         Author: Amith Panuganti 
@@ -47,27 +49,24 @@ model_dict = {
 # Output: Model
 # Errors: Model does not exist. Features dim and labels dim are incorrect
 def trainModel(data):
-    # Do everything in a try block
-    try:
-        # Get the features, names, and labels of the model
-        features = data["X"]
-        labels = data["y"]
-        modelName = data["model"]
+    # Get the features, names, and labels of the model
+    features = data['X']
+    labels = data['y']
+    modelName = data['model']
 
-        # Get model using model
-        model = model_dict[modelName]
+    # Get model using model
+    model = model_dict[modelName]
 
-        # Convert x and y to be numpy arrays
-        features = np.array(features)
-        labels = np.array(labels)
+    # Convert x and y to be numpy arrays
+    features = np.array(features)
+    labels = np.array(labels)
 
-        # Train the model and get model
-        model, figure = model(features, labels, data)
+    # Get model kwargs
+    kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
+
+    # Train the model and get model
+    model = model(features, labels, kwargs)
+    
+    # Return parameters of model
+    return model
         
-        # Return parameters of model
-        return model, figure
-        
-    # If there is an exception
-    except:
-        # Raise an exception that tell the user that model cannot be trained
-        raise Exception("Can't train model")
