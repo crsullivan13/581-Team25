@@ -18,6 +18,10 @@ import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput";
+import ReactTooltip from 'react-tooltip'
+import HyperparamInfo from './HyperparamInfo'
+
+import './LogisticRegressHypParams.css'
 
 // Return The html form with hyperparameter options
 //Input: None
@@ -128,11 +132,12 @@ function LogisticRegressHypParams(props) {
   //Return following HTML code, containing all the inputs
   return(
     <Form.Group>
+      <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
-      <Form.Label>Logistic Regression Hyperparameters</Form.Label>{/* There are descriptions of each hyperparameter in regressions.py*/}
       <Col>
+      
         <Form.Label>Penalty</Form.Label>{/* The penalty hyperparameter*/}
-        <Form.Select id="penalty" onChange={penalty_change} defaultValue="l2">
+        <Form.Select id="penalty" data-tip={"<p>Penalty Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "penalty")} onChange={penalty_change} defaultValue="l2">
           <option>l1</option>{/*Options for the penalty hyperparameter*/}
           <option>l2</option>
           <option>elasticnet</option>
@@ -141,35 +146,35 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Dual</Form.Label>{/*The dual hyperparameter*/}
-        <Form.Select id="dual" onChange={dual_change} defaultValue="False">
+        <Form.Select id="dual" data-tip={"<p>Dual Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "dual")} onChange={dual_change} defaultValue="False">
           <option>True</option>{/*True and false options for dual*/}
           <option>False</option>
         </Form.Select>
       </Col>
       <Col>
         <Form.Label>Tolerance</Form.Label><br/>{/*Tolerance Hyperparameter*/}
-        <input id="tol" onChange={tol_change} type="number" defaultValue="0.00001"></input>{/*numerical input for tolerance*/}
+        <input id="tol" data-tip={"<p>Tolerance Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "tol")} onChange={tol_change} type="number" defaultValue="0.00001"></input>{/*numerical input for tolerance*/}
       </Col>
       <Col>
         <Form.Label>C</Form.Label>{/*C hyperparameter*/}
         <br/>
-        <input id="C" onChange={C_change} type="number" defaultValue="1.0"></input> {/*Numerical input for C*/}
+        <input id="C" data-tip={"<p>C Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "C")} onChange={C_change} type="number" defaultValue="1.0"></input> {/*Numerical input for C*/}
       </Col>
       </Row><Row>
       <Col>
         <Form.Label>Fit Intercept</Form.Label>{/*Fit intercept hyperparameter*/}
-        <Form.Select id="fit_intercept" onChange={fit_intercept_change} defaultValue="True">
+        <Form.Select id="fit_intercept" data-tip={"<p>Fit Intercept Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "fit_intercept")} onChange={fit_intercept_change} defaultValue="True">
           <option>True</option>{/*True/false options for fit intercept*/}
           <option>False</option>
         </Form.Select>
       </Col>
       <Col>
         <Form.Label>Intercept Scaling</Form.Label>{/*Intercept Scaling */}
-        <input id="intercept_scaling" onChange={intercept_scaling_change} type="number" defaultValue="1.0"></input>{/*numerical input for intercept scaling*/}
+        <input id="intercept_scaling" data-tip={"<p>Intercept Scaling Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "intercept_scaling")} onChange={intercept_scaling_change} type="number" defaultValue="1.0"></input>{/*numerical input for intercept scaling*/}
       </Col>
       <Col>
         <Form.Label>Class Weight</Form.Label>{/*class weight hyperparameter - Weights associated with classes in the form {class_label: weight}. If not given, all classes are supposed to have weight one.*/}
-        <Form.Select id="class_weight" onChange={class_weight_change} defaultValue="balanced">{/**/}
+        <Form.Select id="class_weight" data-tip={"<p>Class Weight Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "class_weight")} onChange={class_weight_change} defaultValue="balanced">{/**/}
           <option>none</option>{/*options for class weight*/}
           <option>balanced</option>
           <option>custom</option>
@@ -177,12 +182,12 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Random State</Form.Label>{/*random state hyperparameter Used when solver == ‘sag’, ‘saga’ or ‘liblinear’ to shuffle the data.*/}
-        <input id="random_state" onChange={random_state_change} type="number" defaultValue="2"></input>{/*numerical input*/}
+        <input id="random_state" data-tip={"<p>Random State Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "random_state")} onChange={random_state_change} type="number" defaultValue="2"></input>{/*numerical input*/}
       </Col>
       </Row><Row>
       <Col>
         <Form.Label>Solver</Form.Label>{/*solver hyperparameter - Algorithm to use in the optimization problem. Default is ‘lbfgs’. To choose a solver, you might want to consider the following aspects:*/}
-        <Form.Select id="solver" onChange={solver_change} defaultValue="lbfgs">
+        <Form.Select id="solver" data-tip={"<p>Solver Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "solver")} onChange={solver_change} defaultValue="lbfgs">
           <option>newton-cg</option>{/*options for solver hyperparameter*/}
           <option>lbfgs</option>
           <option>liblinear</option>
@@ -192,11 +197,11 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Max Iterations</Form.Label><br/>{/*Max iterations - Maximum number of iterations taken for the solvers to converge.*/}
-        <input id="max_iter" onChange={max_iter_change} type="number" defaultValue="100"></input>{/*numerical input*/}
+        <input id="max_iter" data-tip={"<p>Max Iterations Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "max_iter")} onChange={max_iter_change} type="number" defaultValue="100"></input>{/*numerical input*/}
       </Col>
       <Col>
         <Form.Label>Multi Class</Form.Label>{/*Multi Class - If the option chosen is ‘ovr’, then a binary problem is fit for each label. For ‘multinomial’ the loss minimised is the multinomial loss fit across the entire probability distribution, even when the data is binary. */}
-        <Form.Select id="multi_class" onChange={multi_class_change} defaultValue="ovr">
+        <Form.Select id="multi_class" data-tip={"<p>Multi Class Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "multi_class")} onChange={multi_class_change} defaultValue="ovr">
           <option>auto</option>{/*options*/}
           <option>ovr</option>
           <option>multinomial</option>
@@ -204,23 +209,23 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Verbose</Form.Label><br/>{/*Verbose hyperparameter - For the liblinear and lbfgs solvers set verbose to any positive number for verbosity.*/}
-        <input id="verbose" onChange={verbose_change} type="number" defaultValue="0"></input>{/*numerical input*/}
+        <input id="verbose" data-tip={"<p>Verbose Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "verbose")} onChange={verbose_change} type="number" defaultValue="0"></input>{/*numerical input*/}
       </Col>
       </Row><Row>
       <Col>
         <Form.Label>Warm Start</Form.Label>{/*Warm start hyperparameter - When set to True, reuse the solution of the previous call to fit as initialization, otherwise, just erase the previous solution.*/}
-        <Form.Select id="warm_start" onChange={warm_start_change} defaultValue="False">
+        <Form.Select id="warm_start" data-tip={"<p>Warm Start Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "warm_start")} onChange={warm_start_change} defaultValue="False">
           <option>True</option>{/*true/false for warm start*/}
           <option>False</option>
         </Form.Select>
       </Col>
       <Col>
         <Form.Label>N Jobs</Form.Label><br/>{/*N Jobs hyperparameterNumber of CPU cores used when parallelizing over classes if multi_class=’ovr’”. This parameter is ignored when the solver is set to ‘liblinear’ regardless of whether ‘multi_class’ is specified or not. None means 1 unless in a joblib.parallel_backend context. -1 means using all processors. See Glossary for more details.*/}
-        <input id="n_jobs" onChange={n_jobs_change} type="number" defaultValue="1"></input>
+        <input id="n_jobs" data-tip={"<p>N Jobs Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "n_jobs")} onChange={n_jobs_change} type="number" defaultValue="1"></input>
       </Col>
       <Col>
         <Form.Label>L1 Ratio</Form.Label><br/>{/**the Elastic-Net mixing parameter, with 0 <= l1_ratio <= 1. */}
-        <input id="l1_ratio" onChange={l1_ratio_change} type="number" defaultValue="1"></input>
+        <input id="l1_ratio" data-tip={"<p>L1 Ratio Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "l1_ratio")} onChange={l1_ratio_change} type="number" defaultValue="1"></input>
       </Col>
       </Row>
     </Form.Group>

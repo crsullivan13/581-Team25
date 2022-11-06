@@ -115,13 +115,12 @@ function DecisionTreeHypParams(props) {
 
   //Return following HTML code
   return(
-    
     <Form.Group>
       <Row>
       <Col>
         <ReactTooltip html={true}/>
         <Form.Label>Criterion</Form.Label>{/**The function to measure the quality of a split.  */}
-        <Form.Select data-tip={HyperparamInfo("")} id="crit" onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
+        <Form.Select data-tip={HyperparamInfo("DecisionTreeRegression", "crit")} id="crit" onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
           <option>squared_error</option>{/** options*/}
           <option>friedman_mse</option>
           <option>absolute_error</option>
