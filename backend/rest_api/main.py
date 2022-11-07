@@ -24,15 +24,24 @@
 #    Author: Derrick Quinn
 #    Description: Removed deprecated calls and fixed exception handling
 # log: Edited Nov 1:
-#    Auther: Derrick Quinn
+#    Author: Derrick Quinn
 #    Description: Added kwarg integration, enabled returning loss, improved error handling
-
+# log: Edited Nov 6
+#	 Author: Amith Panuganti
+#    Descript: Added support for fit to return figures
 
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
 import json
 
+# Both modules io and matplotlib will be use to send figure to forntend
+import io
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+from base64 import encodebytes
 
 from flask import Flask, request, jsonify, make_response
 import pickle
@@ -67,25 +76,40 @@ def index():
     #output: w,b : the fitted model
 def fit(): 
     # Catch any errors 
-    try:
-# Load data from request
+    try:	
+		# Load data from request
         data = json.loads(request.data.decode("utf-8"))
 
 
         uuid = data["uuid"]
         data = {k: data[k] for k in data if k != "uuid"}
 
-# Create a model and get its params
-        trained = trainModel(data)
+		# Create a model and figure get its params
+        trained, figure = trainModel(data)
+
         #Store the model
         user_ref = db.collection(u'Models').document(uuid)
 
         #Store as default
         user_ref.set({"model": pickle.dumps(trained)})
 
+        # Set bytes to be None
+        bytes = None
 
-        metrics = {"loss": loss(trained, data["X"], data["y"]) }
+		# if the figure is not none
+        if figure != None:
+			# Create output to get figures
+            output = io.BytesIO()
+            FigureCanvas(figure).print_png(output)
 
+		    # Get bytes
+            bytes = encodebytes(output.getvalue()).decode('ascii')
+
+		#Next, create metircs with loss and figure
+        metrics = {
+			"loss": loss(trained, data["X"], data["y"]),
+			"figure" : bytes
+		} 
 
         # Return params back to frontend
         coefs = False 
