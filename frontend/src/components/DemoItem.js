@@ -35,6 +35,58 @@ function DemoItem(props){
     //currently not in use, but could set the data values
     let dataSetChange = () => {
         let dataSet = document.getElementById('dataSetInput').value;
+        if(dataSet != 'None'){
+            console.log(document.getElementById('dataSetInput').value)
+            switch(props.modelType){
+                case "Linear Regression":
+                    if(dataSet === 'Set One'){
+                        //set x data from config file
+                        setXData(configData.LINEAR_DEMO_DATA.ONE.X);
+                        //set y data from config file
+                        setYData(configData.LINEAR_DEMO_DATA.ONE.y);
+                        //return the text info fro the model
+                    } else {
+                            //set x data from config file
+                        setXData(configData.LINEAR_DEMO_DATA.TWO.X);
+                        //set y data from config file
+                        setYData(configData.LINEAR_DEMO_DATA.TWO.y);
+                        //return the text info fro the model
+                    }
+
+                    break;
+                case "Logistic Regression":
+                    if(dataSet === 'Set One'){
+                        //set x data from config file
+                        setXData(configData.LOGISTIC_DEMO_DATA.ONE.X);
+                        //set y data from config file
+                        setYData(configData.LOGTISITC_DEMO_DATA.ONE.y);
+                        //return the text info fro the model
+                    } else {
+                            //set x data from config file
+                        setXData(configData.LOGTISTIC_DEMO_DATA.TWO.X);
+                        //set y data from config file
+                        setYData(configData.LOGTISTIC_DEMO_DATA.TWO.y);
+                        //return the text info fro the model
+                    }
+                    break;
+                case "Decision Tree Regression":
+                    if(dataSet === 'Set One'){
+                        //set x data from config file
+                        setXData(configData.DTREE_DEMO_DATA.ONE.X);
+                        //set y data from config file
+                        setYData(configData.DTREE_DEMO_DATA.ONE.y);
+                        //return the text info fro the model
+                    } else {
+                            //set x data from config file
+                        setXData(configData.DTREE_DEMO_DATA.TWO.X);
+                        //set y data from config file
+                        setYData(configData.DTREE_DEMO_DATA.TWO.y);
+                        //return the text info fro the model
+                    }
+                    break;
+                default:
+            }
+		}
     }
 
     //internal component, this sets the data that we want to use and the text to display
@@ -43,21 +95,16 @@ function DemoItem(props){
 		//check the state representing the kind of model
 		switch(props.modelType){
 			case "Linear Regression":
-                //set x data from config file
-                setXData(configData.LINEAR_DEMO_DATA.ONE.X);
-                //set y data from config file
-                setYData(configData.LINEAR_DEMO_DATA.ONE.y);
+                //dataSetChange()
                 //return the text info fro the model
 				return(<><p>{configData.DEMOS.LINEAR_TXT}</p></>);
 				break;
 			case "Logistic Regression":
-                setXData(configData.LINEAR_DEMO_DATA.ONE.X);
-                setYData(configData.LINEAR_DEMO_DATA.ONE.y);
+                //dataSetChange()
 				return(<><p>{configData.DEMOS.LOGISTIC_TXT}</p></>);
 				break;
 			case "Decision Tree Regression":
-                setXData(configData.LINEAR_DEMO_DATA.ONE.X);
-                setYData(configData.LINEAR_DEMO_DATA.ONE.y);
+                //dataSetChange()
 				return(<><p>{configData.DEMOS.DTREE_TXT}</p></>);
 				break;
 			default:
@@ -65,8 +112,10 @@ function DemoItem(props){
 		}
 	}
 
+    let image;
     //http request builder, sender and reciever
     let handleTrain =  () => {
+            if(document.getElementById('dataSetInput').value != 'None'){
                 //log data for debug
 		        console.log(model_data);
 				//url for training
@@ -90,6 +139,17 @@ function DemoItem(props){
                     //log the response, pull out the loss value and set the return state
                     console.log(xhr.response)
 					setReturnedModel(JSON.parse(xhr.response).loss)
+
+                    //for dtree we want to display the image, if it is dtree convert the bytes to png and set the image
+                    if(props.modelType === 'Decision Tree Regression'){
+                        image = new Image();
+                        image.src = JSON.parse(xhr.response).figure
+                    } else {
+                        image = '';
+                    }
+            }else {
+                alert("Select data set first")
+            }
 	}
 
     return(
@@ -104,9 +164,9 @@ function DemoItem(props){
                     <h3 className='w-100 mt-2'>Select a data set to demo</h3>
                     {/*simple drop down for data set selection*/}
                     <Form.Select id="dataSetInput" aria-label="Model Select" onChange={dataSetChange}>
+                        <option>None</option>
                         <option>Set One</option>
                         <option>Set Two</option>
-                        <option>Set Three</option>
                     </Form.Select>
                 </Row>
                 <Row>
@@ -120,6 +180,7 @@ function DemoItem(props){
                 {/*show return values*/}
 	            <p>{ReturnedModel}</p>
                 </Row>
+                {image}
             </Container>
         </>
     )
