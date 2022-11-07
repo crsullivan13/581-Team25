@@ -64,9 +64,9 @@ def trainModel(data):
     # Get model kwargs
     kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
 
-    # Train the model and get model
-    model = model(features, labels, kwargs)
+    # Train the model and get model and figure
+    model,figure = model(features, labels, kwargs)
     
     # Return parameters of model
-    return model
+    return model,figure
         

@@ -11,7 +11,7 @@ from sklearn.linear_model import SGDClassifier #input linear regression methods
 from sklearn.linear_model import LogisticRegression # input logistic regression
 from sklearn import tree # For decision tree
 from sklearn.datasets import fetch_openml #for MNIST Demo
-from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay # for regression accuracy and confusion matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay # for regression accuracy and confusion matrix
 from sklearn.model_selection import train_test_split # to spilt test data
 from sklearn.tree import plot_tree # To plot decision trees
 import matplotlib.pyplot as plt # For Plots
@@ -50,10 +50,11 @@ def LogisiticsRegressionMethod(vector_x, vector_y, data):
     matrix = confusion_matrix(vector_y, predict_y)
 
     # Next display the image
-    confusion_disp = ConfusionMatrixDisplay(matrix, model.classes_)
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot()
 
-    # Next, get the figure for confusion_disp
-    figure = confusion_disp
+    # Then, get teh figure
+    figure = plt.gcf()
 
     # Return the model and figure
     return model, figure
