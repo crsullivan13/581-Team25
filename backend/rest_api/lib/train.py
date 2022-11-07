@@ -14,11 +14,16 @@ Revisions:
     10/7/22
         Revision: Re-edit params since for all possible models
         from sklearn, we will only get weight and biases
+        Author: Amith Panuganti
     10/10/22
         Revision: Convert features and labels into numpy arrays so that the regressions
         model will run properly
+        Author: Amith Panuganti
     11/1/22
         Revision: Added descriptive error messages, kwarg integration
+    11/6/22
+        Revision: Add support for getting metrics, specifically figures for training
+        Author: Amith Panuganti 
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
 Errors: None
@@ -59,9 +64,9 @@ def trainModel(data):
     # Get model kwargs
     kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
 
-    # Train the model and get model
-    model = model(features, labels, kwargs)
+    # Train the model and get model and figure
+    model,figure = model(features, labels, kwargs)
     
     # Return parameters of model
-    return model
+    return model,figure
         

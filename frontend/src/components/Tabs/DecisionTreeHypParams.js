@@ -13,10 +13,13 @@ Faults: None
 
 //Import React
 import React from "react"
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container } from "react-bootstrap"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import DataInput from "./DataInput";
+import DataInput from "./DataInput"
+import ReactTooltip from 'react-tooltip'
+import HyperparamInfo from './HyperparamInfo'
+
 
 // Return The html form with hyperparameter options
 //Input: None
@@ -92,7 +95,6 @@ function DecisionTreeHypParams(props) {
     console.log(props.model_data_p["ccp_alpha"]);
   }
 
-
   React.useEffect(() => {
     // Runs after the first render() lifecycle
     //set default values:*/
@@ -114,11 +116,11 @@ function DecisionTreeHypParams(props) {
   //Return following HTML code
   return(
     <Form.Group>
-      <Form.Label>Decision Tree Hyperparameters</Form.Label>{/*Hyperparameter options for the decision tree model* */}
+      <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
         <Form.Label>Criterion</Form.Label>{/**The function to measure the quality of a split.  */}
-        <Form.Select id="crit" onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
+        <Form.Select id="crit" data-tip={HyperparamInfo("DecisionTreeRegression", "crit")} onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
           <option>squared_error</option>{/** options*/}
           <option>friedman_mse</option>
           <option>absolute_error</option>
@@ -127,31 +129,31 @@ function DecisionTreeHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Splitter</Form.Label>{/**The strategy used to choose the split at each node.  */}
-        <Form.Select id="splitter" onChange={splitter_change} defaultValue="best">{/** */}
+        <Form.Select id="splitter" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} onChange={splitter_change} defaultValue="best">{/** */}
           <option>best</option>{/** */}
           <option>random</option>
         </Form.Select>
       </Col>
       <Col>
         <Form.Label>Max Depth</Form.Label><br/>{/** The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.*/}
-        <input id="max_depth" onChange={max_depth_change} type="number" defaultValue="2"></input>{/** */}
+        <input id="max_depth" data-tip={HyperparamInfo("DecisionTreeRegression", "max_depth")} onChange={max_depth_change} type="number" defaultValue="2"></input>{/** */}
       </Col>
       <Col>
         <Form.Label>Min Samples Split</Form.Label><br/>{/** The minimum number of samples required to split an internal node:*/}
-        <input id="min_samples_split" onChange={min_samples_split_change} type="number" defaultValue="2"></input>{/** */}
+        <input id="min_samples_split" data-tip={HyperparamInfo("DecisionTreeRegression", "min_samples_split")} onChange={min_samples_split_change} type="number" defaultValue="2"></input>{/** */}
       </Col>
       </Row><Row>
       <Col>
         <Form.Label>Min Samples Leaf</Form.Label><br/>{/** The minimum number of samples required to be at a leaf node. */}
-        <input id="min_samples_leaf" onChange={min_samples_leaf_change} type="number" defaultValue="1"></input>{/** */}
+        <input id="min_samples_leaf" data-tip={HyperparamInfo("DecisionTreeRegression", "min_samples_leaf")} onChange={min_samples_leaf_change} type="number" defaultValue="1"></input>{/** */}
       </Col>
       <Col>
         <Form.Label>Min Weight Fraction Leaf</Form.Label><br/>{/**The minimum weighted fraction of the sum total of weights (of all the input samples) required to be at a leaf node.  */}
-        <input id="min_weight_frac_leaf" onChange={min_weight_frac_leaf_change} type="number" defaultValue="0.0"></input>{/** */}
+        <input id="min_weight_frac_leaf" data-tip={HyperparamInfo("DecisionTreeRegression", "min_weight_frac_leaf")} onChange={min_weight_frac_leaf_change} type="number" defaultValue="0.0"></input>{/** */}
       </Col>
       <Col>
         <Form.Label>Max Features</Form.Label>{/**The number of features to consider when looking for the best split: */}
-        <Form.Select id="max_features" onChange={max_features_change} defaultValue="auto">
+        <Form.Select id="max_features" data-tip={HyperparamInfo("DecisionTreeRegression", "max_features")} onChange={max_features_change} defaultValue="auto">
           <option>auto</option>
           <option>sqrt</option>
           <option>log2</option>
@@ -159,20 +161,20 @@ function DecisionTreeHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Random State</Form.Label><br/>{/** Controls the randomness of the estimator. The features are always randomly permuted at each split, even if splitter is set to "best". */}
-        <input id="random_state" onChange={random_state_change} type="number" defaultValue="2"></input>{/** */}
+        <input id="random_state" data-tip={HyperparamInfo("DecisionTreeRegression", "random_state")} onChange={random_state_change} type="number" defaultValue="2"></input>{/** */}
       </Col>
       </Row><Row>
       <Col>
         <Form.Label>Max Leaf Nodes</Form.Label><br/>{/**Grow a tree with max_leaf_nodes in best-first fashion. Best nodes are defined as relative reduction in impurity.  */}
-        <input id="max_leaf_nodes" onChange={max_leaf_nodes_change} type="number" defaultValue="5"></input>{/** */}
+        <input id="max_leaf_nodes" data-tip={HyperparamInfo("DecisionTreeRegression", "max_leaf_nodes")} onChange={max_leaf_nodes_change} type="number" defaultValue="5"></input>{/** */}
       </Col>
       <Col>
         <Form.Label>Min Impurity Decrease</Form.Label><br/>{/**A node will be split if this split induces a decrease of the impurity greater than or equal to this value. */}
-        <input id="min_impurity_decrease" onChange={min_impurity_decrease_change} type="number" defaultValue="0.5"></input>{/** */}
+        <input id="min_impurity_decrease" data-tip={HyperparamInfo("DecisionTreeRegression", "min_impurity_decrease")} onChange={min_impurity_decrease_change} type="number" defaultValue="0.5"></input>{/** */}
       </Col>
       <Col>
         <Form.Label>CCP Alpha</Form.Label><br/>{/*Complexity parameter used for Minimal Cost-Complexity Pruning. The subtree with the largest cost complexity that is smaller than ccp_alpha will be chosen. By default, no pruning is performed. * */}
-        <input id="ccp_alpha" type="number" onChange={ccp_alpha_change} defaultValue="0.3"></input>{/** */}
+        <input id="ccp_alpha" data-tip={HyperparamInfo("DecisionTreeRegression", "ccp_alpha")} type="number" onChange={ccp_alpha_change} defaultValue="0.3"></input>{/** */}
       </Col>
       </Row>
     </Form.Group>
