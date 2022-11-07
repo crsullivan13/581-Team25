@@ -43,6 +43,7 @@ function NavigationBar() {
 						<Nav.Link href="/training">Training</Nav.Link>
 						<Nav.Link href="/modelusage">Model Usage</Nav.Link>
 						<Nav.Link href="/modelmetrics">Model Metrics</Nav.Link>
+						<Nav.Link href="/demos">Demos</Nav.Link>
 					</Nav>
 					</Navbar.Collapse>
 				</Container>
