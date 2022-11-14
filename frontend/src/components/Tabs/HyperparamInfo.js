@@ -35,6 +35,12 @@ function HyperparamInfo(model_type, param_name) {
     case "DecisionTreeRegression":
       return DecisionTreeRegressionParamInfo(param_name);
     break;
+    case "DecisionTreeClassifier":
+      return DecisionTreeClassifierParamInfo(param_name);
+    break;
+    case "MultiLayerPerceptron":
+      return DecisionTreeClassifierParamInfo(param_name);
+    break;
 
   }
   
@@ -133,7 +139,20 @@ function LogisticRegressionParamInfo(param_name){
     break;
   }
 }
-
+function DecisionTreeClassifierParamInfo(param_name){
+  switch(param_name){
+    case "crit":
+      return ("The function to measure the quality of a split. Supported criteria are “squared_error” for the mean squared error, which is equal to variance reduction as feature selection criterion and minimizes the L2 loss using the mean of each terminal node, “friedman_mse”, which uses mean squared error with Friedman’s improvement score for potential splits, “absolute_error” for the mean absolute error, which minimizes the L1 loss using the median of each terminal node, and “poisson” which uses reduction in Poisson deviance to find splits.");
+    break;
+  }
+}
+function MultiLayerPerceptronParamInfo(param_name){
+  switch(param_name){
+    case "crit":
+      return ("The function to measure the quality of a split. Supported criteria are “squared_error” for the mean squared error, which is equal to variance reduction as feature selection criterion and minimizes the L2 loss using the mean of each terminal node, “friedman_mse”, which uses mean squared error with Friedman’s improvement score for potential splits, “absolute_error” for the mean absolute error, which minimizes the L1 loss using the median of each terminal node, and “poisson” which uses reduction in Poisson deviance to find splits.");
+    break;
+  }
+}
 //Export HyperparamInfo for Dashboard
 export default HyperparamInfo;
 

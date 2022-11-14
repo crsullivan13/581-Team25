@@ -20,6 +20,8 @@ import Papa from "papaparse";
 import './Training.css';
 import LogisticRegressHypParams from "./LogisticRegressHypParams"
 import DecisionTreeHypParams from "./DecisionTreeHypParams"
+import DecisionTreeClassifierHypParams from "./DecisionTreeClassifierHypParams"
+import MultiLayerPerceptronHypParams from "./MultiLayerPerceptronHypParams"
 import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -168,6 +170,21 @@ function Training() {
 				<DecisionTreeHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
+			case "Decision Tree Classifier":
+				return(
+				<DecisionTreeClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				);
+				break;
+			case "Multilayer Perceptron Classifier":
+				return(
+				<MultiLayerPerceptronHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				);
+				break;
+			case "Naive Bayes Classifier":
+				return(<></>
+				//<NaiveBayesClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				);
+				break;
 			case "MNIST Classifier":
 				return(
 					<Form.Group>
@@ -218,6 +235,9 @@ function Training() {
 			<option>Logistic Regression</option>
 			<option>Decision Tree</option>
 			<option>MNIST Classifier</option>
+			<option>Decision Tree Classifier</option>
+			<option>Multilayer Perceptron Classifier</option>
+			<option>Naive Bayes Classifier</option>
     	</Form.Select>
 	</Row>
 
