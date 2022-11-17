@@ -24,6 +24,9 @@ Revisions:
     11/6/22
         Revision: Add support for getting metrics, specifically figures for training
         Author: Amith Panuganti 
+    11/15/22
+        Revision: Add Supported for MLP, Naive Bayes, and Decesion Tree Algorithms
+    
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
 Errors: None
@@ -41,7 +44,11 @@ import numpy as np
 model_dict = {
     "Linear Regression": regressions.LinearMethod,
     "Logistic Regression": regressions.LogisiticsRegressionMethod,
-    "Decision Tree Regression": regressions.DecisionTreeRegression
+    "Decision Tree Regression": regressions.DecisionTreeRegression,
+    "MLP Regression": regressions.MLPRegression,
+    "MLP Classification":regressions.MLPClassification,
+    "Gaussian Naive Bayes":regressions.GaussianNaiveBayes,
+    "Decision Tree Classification": regressions.DecisionTreeClassification
 }
 
 # Will handle training the model 
@@ -61,6 +68,7 @@ def trainModel(data):
     features = np.array(features)
     labels = np.array(labels)
 
+    print("Hello\n")
     # Get model kwargs
     kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
 
