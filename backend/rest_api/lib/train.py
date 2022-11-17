@@ -68,7 +68,6 @@ def trainModel(data):
     features = np.array(features)
     labels = np.array(labels)
 
-    print("Hello\n")
     # Get model kwargs
     kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
 
