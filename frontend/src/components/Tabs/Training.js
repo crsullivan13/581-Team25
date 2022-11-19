@@ -22,6 +22,7 @@ import LogisticRegressHypParams from "./LogisticRegressHypParams"
 import DecisionTreeHypParams from "./DecisionTreeHypParams"
 import DecisionTreeClassifierHypParams from "./DecisionTreeClassifierHypParams"
 import MultiLayerPerceptronHypParams from "./MultiLayerPerceptronHypParams"
+import GenericHypParams from "./GenericHypParams"
 import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -208,6 +209,8 @@ function Training() {
 
 
 	<Container>
+
+		<GenericHypParams />
 
 		<h1 className="w-100 mt-2">Select Training Data</h1>
 		<Form.Group className="mb-3" controlId="trainingUpload">

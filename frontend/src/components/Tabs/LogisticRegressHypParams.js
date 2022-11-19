@@ -21,7 +21,7 @@ import DataInput from "./DataInput";
 import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 
-import './LogisticRegressHypParams.css'
+import './tooltipstyle.css'
 
 // Return The html form with hyperparameter options
 //Input: None
@@ -124,7 +124,7 @@ function LogisticRegressHypParams(props) {
     verbose_change()//call the handler for ccp_alpha_change}*/
     warm_start_change();//call the handler for ccp_alpha_change}*/
     n_jobs_change();//call the handler for ccp_alpha_change}*/
-    //l1_ratio_change();//call the handler for ccp_alpha_change}*/
+    l1_ratio_change();//call the handler for ccp_alpha_change}*/
 
   }, []);
 
