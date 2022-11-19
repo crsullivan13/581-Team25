@@ -1,10 +1,13 @@
 /*
 Name: Training.js
 Description: Tab which allows users to select a model, change hyperparameters, and choose what metrics will be recorded
-Programmers: Griffin Keeter, Connor Sullivan
+Programmers: Griffin Keeter, Connor Sullivan, Amith Panuganti
 Creation Date: 9/24/22
 Revisions:
 	10/11/22 - TEMPORARY CHANGES: bring data input into this page for now for S2 POC, add ability to see returned model
+	11/17/22 
+		Author: Amith Panuganti
+		Edit: Allowed metrics to be added
 Preconditions: None
 Errors: None
 Side Effects: When the begin training button is pressed, the training will start in the gce
@@ -118,7 +121,33 @@ function Training() {
 					xhr.open("POST", url, false)
 					xhr.send(jsonString)
 
-					setReturnedModel(xhr.response)
+					//Parse the response 
+					var jsonResponse = JSON.parse(xhr.responseText)
+				
+					//If the response does contain a figure
+					if(jsonResponse.hasOwnProperty('figure'))
+					{
+						//Create image that serves as sourc
+						const image = "data:image/png;base64,"+jsonResponse.figure;
+						
+						//Create imag tab 
+						let element = <img alt="Figure" src={image}></img>
+
+						//Set returnedModel with elemnt
+						setReturnedModel(element)
+					}
+					//Otherwise
+					else
+					{
+						//Create response 
+						var response = "Error: " + jsonResponse.Error 
+
+						//Set ReturnedMoDEL with response
+						setReturnedModel(response)
+					}
+					
+					
+					
 				} else {
 					alert("Must select train data first")
 				}
