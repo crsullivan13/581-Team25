@@ -25,6 +25,8 @@ import LogisticRegressHypParams from "./LogisticRegressHypParams"
 import DecisionTreeHypParams from "./DecisionTreeHypParams"
 import DecisionTreeClassifierHypParams from "./DecisionTreeClassifierHypParams"
 import MultiLayerPerceptronClassHypParams from "./MultiLayerPerceptronClassHypParams"
+import MultiLayerPerceptronRegressHypParams from "./MultiLayerPerceptronRegressHypParams"
+import NaiveBayesClassifierHypParams from "./NaiveBayesClassifierHypParams"
 import GenericHypParams from "./GenericHypParams"
 import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
@@ -195,7 +197,7 @@ function Training() {
 				<LogisticRegressHypParams setModelDataLoR = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the LinearRegressHypParams component
 				);
 				break;
-			case "Decision Tree":
+			case "Decision Tree Regressor":
 				return(
 				<DecisionTreeHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
@@ -211,13 +213,13 @@ function Training() {
 				);
 				break;
 			case "Multilayer Perceptron Regressor":
-				return(<></>
-				//<NaiveBayesClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				return(
+				<MultiLayerPerceptronRegressHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 					break;
 			case "Gaussian Naive Bayes Classifier":
-				return(<></>
-				//<NaiveBayesClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				return(
+				<NaiveBayesClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
 			case "MNIST Classifier":
@@ -270,11 +272,12 @@ function Training() {
       	{/* Placeholder for actual model */}
 		  	<option>Linear Regressor</option>
 			<option>Logistic Regressor</option>
-			<option>Decision Tree</option>
+			<option>Decision Tree Regressor</option>
 			<option>MNIST Classifier</option>
 			<option>Decision Tree Classifier</option>
 			<option>Multilayer Perceptron Classifier</option>
-			<option>Naive Bayes Classifier</option>
+			<option>Multilayer Perceptron Regressor</option>
+			<option>Gaussian Naive Bayes Classifier</option>
     	</Form.Select>
 	</Row>
 

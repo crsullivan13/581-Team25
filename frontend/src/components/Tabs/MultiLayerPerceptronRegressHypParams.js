@@ -1,5 +1,5 @@
 /*
-Name: MultiLayerPerceptronClassHypParams.js
+Name: MultiLayerPerceptronRegressHypParams.js
 Description: A collection of inputs that will change the parent state - the inputs are the hyperparameters for the decision tree classifier model
 Programmers: Griffin Keeter
 Creation Date: 11/13/22
@@ -25,7 +25,7 @@ import './tooltipstyle.css'
 // Return The html form with hyperparameter options
 //Input: None
 //Output: HTML Page of hyperparamater inputs
-function MultiLayerPerceptronClassHypParams(props) {
+function MultiLayerPerceptronRegressHypParams(props) {
   //TODO - add checks on the validity of each input for each input
 
 
@@ -127,7 +127,7 @@ function MultiLayerPerceptronClassHypParams(props) {
   React.useEffect(() => {
     // Runs after the first render() lifecycle
     //set default values:*/
-    props.model_data_p["model"] = "MLP Classification";
+    props.model_data_p["model"] = "MLP Regression";
     hidden_layer_sizes_change() //call the handler for hiddenlayer sizes*/
     activation_change();//for the activation
     solver_change();//for solver
@@ -301,4 +301,4 @@ function MultiLayerPerceptronClassHypParams(props) {
 }
 
 //Export DecisionTreeHypParams for Dashboard
-export default MultiLayerPerceptronClassHypParams;
+export default MultiLayerPerceptronRegressHypParams;
