@@ -24,7 +24,7 @@ import './Training.css';
 import LogisticRegressHypParams from "./LogisticRegressHypParams"
 import DecisionTreeHypParams from "./DecisionTreeHypParams"
 import DecisionTreeClassifierHypParams from "./DecisionTreeClassifierHypParams"
-import MultiLayerPerceptronHypParams from "./MultiLayerPerceptronHypParams"
+import MultiLayerPerceptronClassHypParams from "./MultiLayerPerceptronClassHypParams"
 import GenericHypParams from "./GenericHypParams"
 import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
@@ -186,11 +186,11 @@ function Training() {
 	{
 		//check the state representing the kind of model
 		switch(ModelType){
-			case "Linear Regression":
+			case "Linear Regressor":
 				model_data["model"] = "Linear Regression";
 				return(<></>);
 				break;
-			case "Logistic Regression":
+			case "Logistic Regressor":
 				return(
 				<LogisticRegressHypParams setModelDataLoR = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the LinearRegressHypParams component
 				);
@@ -207,10 +207,15 @@ function Training() {
 				break;
 			case "Multilayer Perceptron Classifier":
 				return(
-				<MultiLayerPerceptronHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				<MultiLayerPerceptronClassHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
-			case "Naive Bayes Classifier":
+			case "Multilayer Perceptron Regressor":
+				return(<></>
+				//<NaiveBayesClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				);
+					break;
+			case "Gaussian Naive Bayes Classifier":
 				return(<></>
 				//<NaiveBayesClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
@@ -239,7 +244,7 @@ function Training() {
 
 	<Container>
 
-		<GenericHypParams />
+		{/*<GenericHypParams />*/}
 
 		<h1 className="w-100 mt-2">Select Training Data</h1>
 		<Form.Group className="mb-3" controlId="trainingUpload">
@@ -263,8 +268,8 @@ function Training() {
 		<h1 className="w-100 mt-2">Choose Model To Train</h1>
 		<Form.Select id="modelTypeInput" aria-label="Model Select" onChange={modelTypeChanged}>
       	{/* Placeholder for actual model */}
-		  	<option>Linear Regression</option>
-			<option>Logistic Regression</option>
+		  	<option>Linear Regressor</option>
+			<option>Logistic Regressor</option>
 			<option>Decision Tree</option>
 			<option>MNIST Classifier</option>
 			<option>Decision Tree Classifier</option>
