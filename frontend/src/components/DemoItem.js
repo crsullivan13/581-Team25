@@ -19,6 +19,7 @@ import Row from 'react-bootstrap/Row'
 import { useState } from 'react';
 import configData from '../config/config.json'
 import {useAuth} from "../contexts/AuthContext"
+import Modal from 'react-bootstrap/Modal'
 
 function DemoItem(props){
     //need auth context to get uuid
@@ -31,6 +32,11 @@ function DemoItem(props){
 
     //sate for returned values
     const [ReturnedModel, setReturnedModel] = useState()
+
+    const [show, setShow] = useState(false);
+	const [requestError, setReqError] = useState();
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 
     //currently not in use, but could set the data values
     let dataSetChange = () => {
@@ -140,20 +146,47 @@ function DemoItem(props){
                     console.log(xhr.response)
 					setReturnedModel(JSON.parse(xhr.response).loss)
 
-                    //for dtree we want to display the image, if it is dtree convert the bytes to png and set the image
-                    if(props.modelType === 'Decision Tree Regression'){
-                        image = new Image();
-                        image.src = JSON.parse(xhr.response).figure
-                    } else {
-                        image = '';
+                    xhr.onload = function() {
+                        if(xhr.status == 200) {
+                            let jsonResponse = JSON.parse(xhr.responseText)
+                            if(jsonResponse.hasOwnProperty('figure'))
+                            {
+                                const image = "data:image/png;base64,"+jsonResponse.figure;
+                                let element = <img alt="Figure" src={image}></img>
+                                setReturnedModel(element)
+                            } else {
+                                var response = "Error: " + jsonResponse.Error 
+                                setReturnedModel(response)
+                            }
+                        } else {
+                            let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
+							handleReqError(error);
+                        }
                     }
+
+                    xhr.onerror = function() {
+						let error = 'Network error. Request was not made (most likely a CORS error).';
+						handleReqError(error);
+					}
             }else {
                 alert("Select data set first")
             }
 	}
 
+    let handleReqError = (error) => {
+		setReqError(error)
+		handleShow();
+	}
+
     return(
         <>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Request Error!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{requestError}</Modal.Body>
+            </Modal>
+
             <Container>
                 <Row>
                     <h1 className='w-100 mt-2'>{props.modelType}</h1>

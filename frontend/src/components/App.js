@@ -36,6 +36,7 @@ import ModelMetrics from "./Tabs/ModelMetrics";
 import ModelUsage from "./Tabs/ModelUsage";
 import Training from "./Tabs/Training";
 import Demo from "./Tabs/Demo";
+import DataSets from "./Tabs/DataSets";
 
 //function that gets exported to be used as a componenet
 function App() {
@@ -61,6 +62,7 @@ function App() {
 					<Route path="/modelusage" element={<><PrivateRoute><NavigationBar /><ModelUsage></ModelUsage></PrivateRoute></>} />
 					<Route path="/training" element={<><PrivateRoute><NavigationBar /><Training></Training></PrivateRoute></>} />
 					<Route path="/demos" element={<><PrivateRoute><NavigationBar /><Demo></Demo></PrivateRoute></>} />
+					<Route path="/datasets" element={<><PrivateRoute><NavigationBar /><DataSets></DataSets></PrivateRoute></>} />
 				</Routes>
 			</AuthProvider>
 		</Router>
