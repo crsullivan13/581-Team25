@@ -8,6 +8,8 @@ Revisions:
 	11/17/22 
 		Author: Amith Panuganti
 		Edit: Allowed metrics to be added
+	11/20/22
+		Edit: Add basic http error response display in a pop up modal
 Preconditions: None
 Errors: None
 Side Effects: When the begin training button is pressed, the training will start in the gce
@@ -71,10 +73,12 @@ function Training() {
 	//TODO - get rid of passing setModelData to children
 	const [model_data, setModelData] = useState({});
 
+	//state to determine if we should show the modal or noy
 	const [show, setShow] = useState(false);
+	//state to carry the error we get from a response
 	const [requestError, setReqError] = useState();
 
-
+	//set either close or open for the modal state
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 
@@ -107,69 +111,87 @@ function Training() {
 		parseCSV(event.target.files[0], 'feature');
 	}
 
+	//this is called when we are training a model
 	let handleTrain =  () => {
 		console.log(model_data);
-				//url for training
-				let url = "https://team-25-362714.uc.r.appspot.com/fit"
+		//url for training
+		let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
-				if(isTrainFileSelect && isLabelFileSelect){
-					model_data["X"] = trainData
-					model_data["y"] = labelData[0]
-					model_data["uuid"] = currentUser.uid
+		//make sure we have the files we need
+		if(isTrainFileSelect && isLabelFileSelect){
+			//set up x vector
+			model_data["X"] = trainData
+			//set y vector
+			model_data["y"] = labelData[0]
+			//we need the user id to train, for storage purposes
+			model_data["uuid"] = currentUser.uid
+	
+			//turn the request data into json string
+			let jsonString = JSON.stringify(model_data)
+
+			console.log(jsonString)
+
+			//setup http request
+			let xhr = new XMLHttpRequest()
+			//post request with above url
+			xhr.open("POST", url)
+			//send the request with the json string as body
+			xhr.send(jsonString)
 			
+			//called when http request finished
+			xhr.onload = function() {
+				//when we get a 200 we do some parsing to display the output
+				if(xhr.status == 200) {
+					//Parse the response 
+					var jsonResponse = JSON.parse(xhr.responseText)
 
-					let jsonString = JSON.stringify(model_data)
+					//If the response does contain a figure
+					if(jsonResponse.hasOwnProperty('figure'))
+					{
+						//Create image that serves as sourc
+						const image = "data:image/png;base64,"+jsonResponse.figure;
+						
+						//Create imag tab 
+						let element = <img alt="Figure" src={image}></img>
 
-					console.log(jsonString)
-
-					let xhr = new XMLHttpRequest()
-					xhr.open("POST", url)
-					xhr.send(jsonString)
-					
-
-					xhr.onload = function() {
-						if(xhr.status == 200) {
-							//Parse the response 
-							var jsonResponse = JSON.parse(xhr.responseText)
-
-							//If the response does contain a figure
-							if(jsonResponse.hasOwnProperty('figure'))
-							{
-								//Create image that serves as sourc
-								const image = "data:image/png;base64,"+jsonResponse.figure;
-								
-								//Create imag tab 
-								let element = <img alt="Figure" src={image}></img>
-
-								//Set returnedModel with elemnt
-								setReturnedModel(element)
-							}
-							//Otherwise
-							else
-							{
-								//Create response 
-								var response = "Error: " + jsonResponse.Error 
-
-								//Set ReturnedMoDEL with response
-								setReturnedModel(response)
-							}
-						} else {
-							let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
-							handleReqError(error);
-						}
+						//Set returnedModel with elemnt
+						setReturnedModel(element)
 					}
+					//Otherwise
+					else
+					{
+						//Create response 
+						var response = "Error: " + jsonResponse.Error 
 
-					xhr.onerror = function() {
-						let error = 'Network error. Request was not made (most likely a CORS error).';
-						handleReqError(error);
+						//Set ReturnedMoDEL with response
+						setReturnedModel(response)
 					}
 				} else {
-					alert("Must select train data first")
+					//get here if we get and error status from the http response
+					let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
+					//pass the error to our error handler, will be displayed in the modal
+					handleReqError(error);
 				}
+			}
+
+			//this is called when the http is unable to be sent, means a network error
+			xhr.onerror = function() {
+				//set error to what this network issue generally is
+				let error = 'Network error. Request was not made (most likely a CORS error).';
+				//display it in the modal
+				handleReqError(error);
+			}
+		} else {
+			//make sure we set out data files before we try to train
+			alert("Must select train data first")
+		}
 	}
 
+	//when we get an http error this is called
 	let handleReqError = (error) => {
+		//set the state that carries the error
 		setReqError(error)
+		//show the modal
 		handleShow();
 	}
 
@@ -252,6 +274,7 @@ function Training() {
 
 
 	<>
+	{/*This is the pop up for error displaying, we need this so we can inform the user what was wrong with their input*/}
 	<Modal show={show} onHide={handleClose}>
 		<Modal.Header closeButton>
 			<Modal.Title>Request Error!</Modal.Title>
