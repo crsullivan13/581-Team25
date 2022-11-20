@@ -26,12 +26,13 @@ import DecisionTreeHypParams from "./DecisionTreeHypParams"
 import DecisionTreeClassifierHypParams from "./DecisionTreeClassifierHypParams"
 import MultiLayerPerceptronHypParams from "./MultiLayerPerceptronHypParams"
 import GenericHypParams from "./GenericHypParams"
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, ModalHeader } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
+import Modal from 'react-bootstrap/Modal'
+
 import { useState, useEffect } from 'react';
-import { warning } from "@remix-run/router";
 
 import {useAuth} from "../../contexts/AuthContext"
 
@@ -70,8 +71,12 @@ function Training() {
 	//TODO - get rid of passing setModelData to children
 	const [model_data, setModelData] = useState({});
 
-	//TODO - make handlers for each hyperparameter input, and in the handlers update the data state
+	const [show, setShow] = useState(false);
+	const [requestError, setReqError] = useState();
 
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 
 	//this function handles the even that is triggered when someone changes the file they want to use
 	let changeTrainHandler = (event) => {
@@ -118,68 +123,81 @@ function Training() {
 					console.log(jsonString)
 
 					let xhr = new XMLHttpRequest()
-					xhr.open("POST", url, false)
+					xhr.open("POST", url)
 					xhr.send(jsonString)
+					
 
-					//Parse the response 
-					var jsonResponse = JSON.parse(xhr.responseText)
-				
-					//If the response does contain a figure
-					if(jsonResponse.hasOwnProperty('figure'))
-					{
-						//Create image that serves as sourc
-						const image = "data:image/png;base64,"+jsonResponse.figure;
-						
-						//Create imag tab 
-						let element = <img alt="Figure" src={image}></img>
+					xhr.onload = function() {
+						if(xhr.status == 200) {
+							//Parse the response 
+							var jsonResponse = JSON.parse(xhr.responseText)
 
-						//Set returnedModel with elemnt
-						setReturnedModel(element)
+							//If the response does contain a figure
+							if(jsonResponse.hasOwnProperty('figure'))
+							{
+								//Create image that serves as sourc
+								const image = "data:image/png;base64,"+jsonResponse.figure;
+								
+								//Create imag tab 
+								let element = <img alt="Figure" src={image}></img>
+
+								//Set returnedModel with elemnt
+								setReturnedModel(element)
+							}
+							//Otherwise
+							else
+							{
+								//Create response 
+								var response = "Error: " + jsonResponse.Error 
+
+								//Set ReturnedMoDEL with response
+								setReturnedModel(response)
+							}
+						} else {
+							let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
+							handleReqError(error);
+						}
 					}
-					//Otherwise
-					else
-					{
-						//Create response 
-						var response = "Error: " + jsonResponse.Error 
 
-						//Set ReturnedMoDEL with response
-						setReturnedModel(response)
+					xhr.onerror = function() {
+						let error = 'Network error. Request was not made (most likely a CORS error).';
+						handleReqError(error);
 					}
-					
-					
-					
 				} else {
 					alert("Must select train data first")
 				}
 	}
 
+	let handleReqError = (error) => {
+		setReqError(error)
+		handleShow();
+	}
 
-		//simple function to parse a csv into json, takes in the file and the input type to set the correct state
-		let parseCSV = (file, type) => {
-			return Papa.parse(file,
-				{
-					complete: function(results) {
-						if(type == 'train')
-						{
-							//update the trainData state
-							setTrainData(results.data)
-						}
-						else if(type == 'label')
-						{
-							//update the trainData state
-							setLabelData(results.data)
-						}
-					}, dynamicTyping: true
-				});
-		}
+
+	//simple function to parse a csv into json, takes in the file and the input type to set the correct state
+	let parseCSV = (file, type) => {
+		return Papa.parse(file,
+			{
+				complete: function(results) {
+					if(type == 'train')
+					{
+						//update the trainData state
+						setTrainData(results.data)
+					}
+					else if(type == 'label')
+					{
+						//update the trainData state
+						setLabelData(results.data)
+					}
+				}, dynamicTyping: true
+			});
+	}
 
 	let modelTypeChanged = () =>
 	{
 		setModelData({});
 		let modelType = document.getElementById("modelTypeInput").value;
 		setModelType(modelType);//page should update
-
-
 	}
 
 	let HyperparameterOptions = (props) =>
@@ -234,7 +252,12 @@ function Training() {
 
 
 	<>
-	
+	<Modal show={show} onHide={handleClose}>
+		<Modal.Header closeButton>
+			<Modal.Title>Request Error!</Modal.Title>
+		</Modal.Header>
+		<Modal.Body>{requestError}</Modal.Body>
+	</Modal>
 
 
 	<Container>
