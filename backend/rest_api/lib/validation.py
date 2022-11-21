@@ -1,37 +1,15 @@
 
 """
-Name: train.py
-Description: Trains the Model
-Programmers: Amith Panuganti, Derrick Quinn
-Creation Date: 10/5/22
+Name: validation.py
+Description: validates training data
+Programmers: Derrick Quinn
+Creation Date: 11/14/22
 Revisions:
-    10/5/22
-		Revision: Create train.py and create trainModel function
-		Author: Amith Panuganti 
-    10/6/22
-        Revision: Create train model function which will
-        train a model give features and labels
-        Author: Amith Panuganti
-    10/7/22
-        Revision: Re-edit params since for all possible models
-        from sklearn, we will only get weight and biases
-        Author: Amith Panuganti
-    10/10/22
-        Revision: Convert features and labels into numpy arrays so that the regressions
-        model will run properly
-        Author: Amith Panuganti
-    11/1/22
-        Revision: Added descriptive error messages, kwarg integration
-    11/6/22
-        Revision: Add support for getting metrics, specifically figures for training
-        Author: Amith Panuganti 
-    11/15/22
-        Revision: Add Supported for MLP, Naive Bayes, and Decesion Tree Algorithms
+    11/20/22
+        Revision: initial commit: validates input and outputs on training data
     
-Preconditions: Needs labels, features, and model type
-Postconditions: Returns model weights and biases
 Errors: None
-Side Effects: None
+Side Effects: Throws exceptions for invalid data
 Invariants: None
 Faults: None
 */
