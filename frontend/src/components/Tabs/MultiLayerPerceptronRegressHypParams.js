@@ -59,6 +59,10 @@ function MultiLayerPerceptronRegressHypParams(props) {
     let val = document.getElementById("learning_rate").value;
     props.model_data_p["learning_rate"] = val;
   }
+  let learning_rate_init_change = ()=>{ //handler for input change on the batch_size
+    let val = document.getElementById("learning_rate_init").value;
+    props.model_data_p["learning_rate_init"] = val;
+  }
   let power_t_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("power_t").value;
     props.model_data_p["power_t"] = Number(val);
@@ -134,6 +138,7 @@ function MultiLayerPerceptronRegressHypParams(props) {
     alpha_change();//
     batch_size_change();//
     learning_rate_change();//
+    learning_rate_init_change();
     power_t_change();
     max_iter_change();
     shuffle_change();
@@ -160,11 +165,11 @@ function MultiLayerPerceptronRegressHypParams(props) {
       <Row>
       <Col>
         <Form.Label>Hidden Layer Sizes</Form.Label>{/**Label for hidden layer sizes */}<br/>
-        <input id="hidden_layer_sizes" data-tip={HyperparamInfo("MultiLayerPerceptron", "crit")} onChange={hidden_layer_sizes_change} defaultValue="100" />{/**select input for criterion */}
+        <input id="hidden_layer_sizes" data-tip={HyperparamInfo("MLPClassifier", "hidden_layer_sizes")} onChange={hidden_layer_sizes_change} defaultValue="100" />{/**select input for criterion */}
       </Col>
       <Col>
         <Form.Label>Activation</Form.Label>{/**Label for activation */}
-        <Form.Select id="activation" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} onChange={activation_change} defaultValue="relu">{/**selection for activation function for hidden layers */}
+        <Form.Select id="activation" data-tip={HyperparamInfo("MLPClassifier", "activation")} onChange={activation_change} defaultValue="relu">{/**selection for activation function for hidden layers */}
           <option>identity</option>{/** */}
           <option>logistic</option>
           <option>tanh</option>
@@ -173,7 +178,7 @@ function MultiLayerPerceptronRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Solver</Form.Label>{/**Label for activation */}
-        <Form.Select id="solver" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} onChange={solver_change} defaultValue="adam">{/**selection for activation function for hidden layers */}
+        <Form.Select id="solver" data-tip={HyperparamInfo("MLPClassifier", "solver")} onChange={solver_change} defaultValue="adam">{/**selection for activation function for hidden layers */}
           <option>lbfgs</option>{/** */}
           <option>sgd</option>
           <option>adam</option>
@@ -181,38 +186,43 @@ function MultiLayerPerceptronRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Alpha</Form.Label>{/**Label for alpha - strength of the l2 regularization term */}<br/>
-        <input id="alpha" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={alpha_change} defaultValue="0.0001" />{/**selection for activation function for hidden layers */}
+        <input id="alpha" data-tip={HyperparamInfo("MLPClassifier", "alpha")} type="number" onChange={alpha_change} defaultValue="0.0001" />{/**selection for activation function for hidden layers */}
       </Col>
       </Row><Row>
       <Col>
         <Form.Label>Batch Size</Form.Label>{/**Label for batch sizes*/}<br/>
-        <input id="batch_size" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={batch_size_change} defaultValue="200" />{/**selection for activation function for hidden layers */}
+        <input id="batch_size" data-tip={HyperparamInfo("MLPClassifier", "batch_size")} type="number" onChange={batch_size_change} defaultValue="200" />{/**selection for activation function for hidden layers */}
       </Col>
       <Col>
         <Form.Label>Learning Rate</Form.Label>{/**Label for batch sizes*/}
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <Form.Select id="learning_rate" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} onChange={learning_rate_change} defaultValue="constant">{/**selection for activation function for hidden layers */}
+        <Form.Select id="learning_rate" data-tip={HyperparamInfo("MLPClassifier", "learning_rate")} onChange={learning_rate_change} defaultValue="constant">{/**selection for activation function for hidden layers */}
           <option>constant</option>{/** */}
           <option>invscaling</option>
           <option>adaptive</option>
         </Form.Select>
-
+      </Col>
+      <Col>
+        <Form.Label>Learning Rate Init</Form.Label><br/>{/**Label for batch sizes*/}
+        {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
+        <input id="learning_rate_init" data-tip={HyperparamInfo("MLPClassifier", "learning_rate_init")} type="number" onChange={learning_rate_init_change} defaultValue="0.001" />{/**selection for activation function for hidden layers */}
       </Col>
       <Col>
         <Form.Label>Power T</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="power_t" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={power_t_change} defaultValue="0.5" />{/**selection for activation function for hidden layers */}
+        <input id="power_t" data-tip={HyperparamInfo("MLPClassifier", "power_t")} type="number" onChange={power_t_change} defaultValue="0.5" />{/**selection for activation function for hidden layers */}
 
-      </Col>
-      <Col>
-        <Form.Label>Max Iter</Form.Label>{/**Label for batch sizes*/}<br/>
-        {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="max_iter" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={max_iter_change} defaultValue="200" />{/**selection for activation function for hidden layers */}
       </Col>
       </Row><Row>
       <Col>
+        <Form.Label>Max Iter</Form.Label>{/**Label for batch sizes*/}<br/>
+        {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
+        <input id="max_iter" data-tip={HyperparamInfo("MLPClassifier", "max_iter")} type="number" onChange={max_iter_change} defaultValue="200" />{/**selection for activation function for hidden layers */}
+      </Col>
+      
+      <Col>
         <Form.Label>Shuffle</Form.Label>{/*The shuffle hyperparameter*/}
-        <Form.Select id="shuffle" data-tip={HyperparamInfo("LogisticRegression", "dual")} onChange={shuffle_change} defaultValue="True">
+        <Form.Select id="shuffle" data-tip={HyperparamInfo("MLPClassifier", "shuffle")} onChange={shuffle_change} defaultValue="True">
           <option>True</option>{/*True and false options for shuffle*/}
           <option>False</option>
         </Form.Select>
@@ -220,25 +230,24 @@ function MultiLayerPerceptronRegressHypParams(props) {
  
       <Col>
         <Form.Label>Random State</Form.Label>{/*The shuffle hyperparameter*/}<br/>
-        <input id="random_state" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={random_state_change} defaultValue="0" />{/**selection for activation function for hidden layers */}
+        <input id="random_state" data-tip={HyperparamInfo("MLPClassifier", "random_state")} type="number" onChange={random_state_change} defaultValue="0" />{/**selection for activation function for hidden layers */}
       </Col>
       <Col>
         <Form.Label>Tolerance</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="tol" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={tol_change} defaultValue="0.0001" />{/**selection for activation function for hidden layers */}
+        <input id="tol" data-tip={HyperparamInfo("MLPClassifier", "tol")} type="number" onChange={tol_change} defaultValue="0.0001" />{/**selection for activation function for hidden layers */}
       </Col>
+      </Row><Row>
       <Col>
       <Form.Label>Verbose</Form.Label>{/*The verbose hyperparameter*/}
-        <Form.Select id="verbose" data-tip={HyperparamInfo("LogisticRegression", "dual")} onChange={verbose_change} defaultValue="False">
+        <Form.Select id="verbose" data-tip={HyperparamInfo("MLPClassifier", "verbose")} onChange={verbose_change} defaultValue="False">
           <option>True</option>{/*True and false options for verbose*/}
           <option>False</option>
         </Form.Select>      
       </Col>
-      </Row>
-      <Row>
       <Col>
       <Form.Label>Warm Start</Form.Label>{/*The verbose hyperparameter*/}
-        <Form.Select id="warm_start" data-tip={HyperparamInfo("LogisticRegression", "dual")} onChange={warm_start_change} defaultValue="False">
+        <Form.Select id="warm_start" data-tip={HyperparamInfo("MLPClassifier", "warm_start")} onChange={warm_start_change} defaultValue="False">
           <option>True</option>{/*True and false options for verbose*/}
           <option>False</option>
         </Form.Select>      
@@ -246,54 +255,54 @@ function MultiLayerPerceptronRegressHypParams(props) {
       <Col>
         <Form.Label>Momentum</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="momentum" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={momentum_change} defaultValue="0.9" />{/**selection for activation function for hidden layers */}
+        <input id="momentum" data-tip={HyperparamInfo("MLPClassifier", "momentum")} type="number" onChange={momentum_change} defaultValue="0.9" />{/**selection for activation function for hidden layers */}
       </Col>
       <Col>
       <Form.Label>Nesterov's Momentum</Form.Label>{/*The verbose hyperparameter*/}
-        <Form.Select id="nesterovs_momentum" data-tip={HyperparamInfo("LogisticRegression", "dual")} onChange={nesterovs_momentum_change} defaultValue="True">
+        <Form.Select id="nesterovs_momentum" data-tip={HyperparamInfo("MLPClassifier", "nesterovs_momentum")} onChange={nesterovs_momentum_change} defaultValue="True">
           <option>True</option>{/*True and false options for verbose*/}
           <option>False</option>
         </Form.Select>      
       </Col>
+      </Row><Row>
       <Col>
       <Form.Label>Early Stopping</Form.Label>{/*The verbose hyperparameter*/}
-        <Form.Select id="early_stopping" data-tip={HyperparamInfo("LogisticRegression", "dual")} onChange={early_stopping_change} defaultValue="False">
+        <Form.Select id="early_stopping" data-tip={HyperparamInfo("MLPClassifier", "early_stopping")} onChange={early_stopping_change} defaultValue="False">
           <option>True</option>{/*True and false options for verbose*/}
           <option>False</option>
         </Form.Select>
       </Col>
-      </Row>
-      <Row>
+
       <Col>
         <Form.Label>Validation_fraction</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="validation_fraction" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={validation_fraction_change} defaultValue="0.1" />{/**selection for activation function for hidden layers */}
+        <input id="validation_fraction" data-tip={HyperparamInfo("MLPClassifier", "validation_fraction")} type="number" onChange={validation_fraction_change} defaultValue="0.1" />{/**selection for activation function for hidden layers */}
       </Col>
       <Col>
         <Form.Label>Beta 1</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="beta_1" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={beta_1_change} defaultValue="0.9" />{/**selection for activation function for hidden layers */}
+        <input id="beta_1" data-tip={HyperparamInfo("MLPClassifier", "beta_1")} type="number" onChange={beta_1_change} defaultValue="0.9" />{/**selection for activation function for hidden layers */}
       </Col>
       <Col>
         <Form.Label>Beta 2</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="beta_2" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={beta_2_change} defaultValue="0.999" />{/**selection for activation function for hidden layers */}
-      </Col>
-      <Col>
-        <Form.Label>Epsilon</Form.Label>{/**Label for batch sizes*/}<br/>
-        {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="epsilon" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={epsilon_change} defaultValue="0.00000001" />{/**selection for activation function for hidden layers */}
+        <input id="beta_2" data-tip={HyperparamInfo("MLPClassifier", "beta_2")} type="number" onChange={beta_2_change} defaultValue="0.999" />{/**selection for activation function for hidden layers */}
       </Col>
       </Row><Row>
       <Col>
+        <Form.Label>Epsilon</Form.Label>{/**Label for batch sizes*/}<br/>
+        {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
+        <input id="epsilon" data-tip={HyperparamInfo("MLPClassifier", "epsilon")} type="number" onChange={epsilon_change} defaultValue="0.00000001" />{/**selection for activation function for hidden layers */}
+      </Col>
+      <Col>
         <Form.Label>N Iter No Change</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="n_iter_no_change" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={n_iter_no_change_change} defaultValue="10" />{/**selection for activation function for hidden layers */}
+        <input id="n_iter_no_change" data-tip={HyperparamInfo("MLPClassifier", "n_iter_no_change")} type="number" onChange={n_iter_no_change_change} defaultValue="10" />{/**selection for activation function for hidden layers */}
       </Col>
       <Col>
         <Form.Label>Max Number of Loss Function Calls</Form.Label>{/**Label for batch sizes*/}<br/>
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
-        <input id="max_fun" data-tip={HyperparamInfo("DecisionTreeRegression", "splitter")} type="number" onChange={max_fun_change} defaultValue="15000" />{/**selection for activation function for hidden layers */}
+        <input id="max_fun" data-tip={HyperparamInfo("MLPClassifier", "max_fun")} type="number" onChange={max_fun_change} defaultValue="15000" />{/**selection for activation function for hidden layers */}
       </Col>
       </Row>
     </Form.Group>

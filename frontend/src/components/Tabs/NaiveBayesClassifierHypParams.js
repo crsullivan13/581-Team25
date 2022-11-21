@@ -54,11 +54,11 @@ function NaiveBayesClassifierHypParams(props) {
       <Row>
       <Col>
         <Form.Label>Priors</Form.Label><br/>{/**The function to measure the quality of a split.  */}
-        <input id="priors" data-tip={HyperparamInfo("DecisionTreeRegression", "crit")} onChange={priors_change} defaultValue="0.4,0.5,0.6" />{/**select input for criterion */}
+        <input id="priors" data-tip={HyperparamInfo("GaussianBayesClassifier", "priors")} onChange={priors_change} defaultValue="0.4,0.5,0.6" />{/**select input for criterion */}
       </Col>
       <Col>
         <Form.Label>Var Smoothing</Form.Label><br/>{/** The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.*/}
-        <input id="var_smoothing" data-tip={HyperparamInfo("DecisionTreeRegression", "max_depth")} onChange={var_smoothing_change} type="number" defaultValue="0.00001"></input>{/** */}
+        <input id="var_smoothing" data-tip={HyperparamInfo("GaussianBayesClassifier", "var_smoothing")} onChange={var_smoothing_change} type="number" defaultValue="0.00001"></input>{/** */}
       </Col>
       
       </Row>
