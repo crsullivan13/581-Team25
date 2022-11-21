@@ -69,7 +69,7 @@ function MultiLayerPerceptronRegressHypParams(props) {
   }
   let shuffle_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("shuffle").value;
-    props.model_data_p["shuffle"] = (val.toLowerCase() == "true");
+    props.model_data_p["shuffle"] = (val.toLowerCase() === "true");
   }
   let random_state_change = ()=>{
     let val = document.getElementById("random_state").value;
@@ -81,11 +81,11 @@ function MultiLayerPerceptronRegressHypParams(props) {
   }
   let verbose_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("verbose").value;
-    props.model_data_p["verbose"] = (val.toLowerCase() == "true");
+    props.model_data_p["verbose"] = (val.toLowerCase() === "true");
   }
   let warm_start_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("warm_start").value;
-    props.model_data_p["warm_start"] = (val.toLowerCase() == "true");
+    props.model_data_p["warm_start"] = (val.toLowerCase() === "true");
   }
   let momentum_change = ()=>{
     let val = document.getElementById("momentum").value;
@@ -93,11 +93,11 @@ function MultiLayerPerceptronRegressHypParams(props) {
   } 
   let nesterovs_momentum_change = ()=>{
     let val = document.getElementById("nesterovs_momentum").value;
-    props.model_data_p["nesterovs_momentum"] = (val.toLowerCase() == "true");
+    props.model_data_p["nesterovs_momentum"] = (val.toLowerCase() === "true");
   }
   let early_stopping_change = ()=>{
     let val = document.getElementById("early_stopping").value;
-    props.model_data_p["early_stopping"] = (val.toLowerCase() == "true");
+    props.model_data_p["early_stopping"] = (val.toLowerCase() === "true");
   }
   let validation_fraction_change = ()=>{
     let val = document.getElementById("validation_fraction").value;

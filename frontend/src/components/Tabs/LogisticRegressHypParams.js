@@ -37,7 +37,7 @@ function LogisticRegressHypParams(props) {
   }
   let dual_change = ()=>{
     let val = document.getElementById("dual").value;
-    props.model_data_p["dual"] = (val.toLowerCase() == "true");
+    props.model_data_p["dual"] = (val.toLowerCase() === "true");
     console.log(props.model_data_p["dual"]);
   }
   let tol_change = ()=>{
@@ -52,7 +52,7 @@ function LogisticRegressHypParams(props) {
   }
   let fit_intercept_change = ()=>{
     let val = document.getElementById("fit_intercept").value;
-    props.model_data_p["fit_intercept"] = (val.toLowerCase() == "true");
+    props.model_data_p["fit_intercept"] = (val.toLowerCase() === "true");
     console.log(props.model_data_p["fit_intercept"]);
   }
   let intercept_scaling_change = ()=>{
@@ -67,7 +67,7 @@ function LogisticRegressHypParams(props) {
   }
   let random_state_change = ()=>{
     let val = document.getElementById("random_state").value;
-    //props.model_data_p["random_state"] = parseInt(val);
+    props.model_data_p["random_state"] = parseInt(val);
     console.log(props.model_data_p["random_state"]);
   }
   let solver_change = ()=>{
@@ -92,7 +92,7 @@ function LogisticRegressHypParams(props) {
   }
   let warm_start_change = ()=>{
     let val = document.getElementById("warm_start").value;
-    props.model_data_p["warm_start"] = (val.toLowerCase() == "true");
+    props.model_data_p["warm_start"] = (val.toLowerCase() === "true");
     console.log(props.model_data_p["warm_start"]);
   }
   let n_jobs_change = ()=>{
@@ -102,7 +102,7 @@ function LogisticRegressHypParams(props) {
   }
   let l1_ratio_change = ()=>{
     let val = document.getElementById("l1_ratio").value;
-    //props.model_data_p["l1_ratio"] = Number(val);
+    props.model_data_p["l1_ratio"] = Number(val);
     console.log(props.model_data_p["l1_ratio"]);
   }
 
@@ -125,7 +125,7 @@ function LogisticRegressHypParams(props) {
     warm_start_change();//call the handler for ccp_alpha_change}*/
     n_jobs_change();//call the handler for ccp_alpha_change}*/
     l1_ratio_change();//call the handler for ccp_alpha_change}*/
-
+    console.log(props.model_data_p);
   }, []);
 
 

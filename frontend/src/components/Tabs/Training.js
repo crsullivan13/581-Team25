@@ -230,6 +230,7 @@ function Training() {
 		switch(ModelType){
 			case "Linear Regressor":
 				model_data["model"] = "Linear Regression";
+				console.log(model_data);
 				return(<></>);
 				break;
 			case "Logistic Regressor":

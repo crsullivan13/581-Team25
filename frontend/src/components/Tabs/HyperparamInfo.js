@@ -38,8 +38,11 @@ function HyperparamInfo(model_type, param_name) {
     case "DecisionTreeClassifier":
       return DecisionTreeClassifierParamInfo(param_name);
     break;
-    case "MultiLayerPerceptron":
-      return DecisionTreeClassifierParamInfo(param_name);
+    case "MLPClassifier":
+      return MLPClassifier(param_name);
+    break;
+    case "MLPRegressor":
+      return MLPRegressor(param_name);
     break;
 
   }
@@ -50,6 +53,20 @@ function HyperparamInfo(model_type, param_name) {
 }
 
 function LinearRegressionParamInfo(param_name){
+}
+
+function MLPClassifier(param_name){
+  switch(param_name){
+    case "crit":
+      return ("The function to measure the quality of a split. Supported criteria are “squared_error” for the mean squared error, which is equal to variance reduction as feature selection criterion and minimizes the L2 loss using the mean of each terminal node, “friedman_mse”, which uses mean squared error with Friedman’s improvement score for potential splits, “absolute_error” for the mean absolute error, which minimizes the L1 loss using the median of each terminal node, and “poisson” which uses reduction in Poisson deviance to find splits.");
+  }
+}
+
+function MLPRegressor(param_name){
+  switch(param_name){
+    case "crit":
+      return ("The function to measure the quality of a split. Supported criteria are “squared_error” for the mean squared error, which is equal to variance reduction as feature selection criterion and minimizes the L2 loss using the mean of each terminal node, “friedman_mse”, which uses mean squared error with Friedman’s improvement score for potential splits, “absolute_error” for the mean absolute error, which minimizes the L1 loss using the median of each terminal node, and “poisson” which uses reduction in Poisson deviance to find splits.");
+  }
 }
 
 function DecisionTreeRegressionParamInfo(param_name){
@@ -143,6 +160,39 @@ function DecisionTreeClassifierParamInfo(param_name){
   switch(param_name){
     case "crit":
       return ("The function to measure the quality of a split. Supported criteria are “squared_error” for the mean squared error, which is equal to variance reduction as feature selection criterion and minimizes the L2 loss using the mean of each terminal node, “friedman_mse”, which uses mean squared error with Friedman’s improvement score for potential splits, “absolute_error” for the mean absolute error, which minimizes the L1 loss using the median of each terminal node, and “poisson” which uses reduction in Poisson deviance to find splits.");
+    break;
+    case "splitter":
+      return ("The strategy used to choose the split at each node. Supported strategies are “best” to choose the best split and “random” to choose the best random split.");
+    break;
+    case "max_depth":
+      return ("The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.");
+    break;
+    case "min_samples_split":
+      return ("The minimum number of samples required to split an internal node: If option is an integer, then min_samples_split is considered to be the minimum number. If the option is a float, then min_samples_split is considered to be a fraction and ceil(min_samples_split * n_samples) are the minimum number of smaples for each split.");
+    break;
+    case "min_samples_leaf":
+      return ("The minimum number of samples required to be at a leaf node. A split point at any depth will only be considered if it leaves at least min_samples_leaf training samples in each of the left and right branches. This may have the effect of smoothing the model, especially in regression. If it is an integer, then min_samples_leaf is used as the minimum number. If it is a float, then min_samples_leaf is a fraction and ceil(min_samples_leaf * n_samples) are the minimum number of samples for each node.");
+    break;
+    case "min_weight_frac_leaf":
+      return ("The minimum weighted fraction of the sum total of weights (of all the input samples) required to be at a leaf node. Samples have equal weight when sample_weight is not provided.");
+    break;
+    case "max_features":
+      return ("The number of features to consider when looking for the best split: If max features is an int, then that number is used as the number of features at each split. If it is a float, then max features is a fraction and max(1, int(max_features * n_features_in_)) features are considered at each split. If the option is set to 'auto', then max features is the same as N features. If 'sqrt', then Max features equals the square root of N features. If it is 'log2', then Max features equals the log base 2 of N features. If None, then Max features is the same as N features.");
+    break;
+    case "random_state":
+      return ("Controls the randomness of the estimator. The features are always randomly permuted at each split, even if splitter is set to 'best'. When max_features < n_features, the algorithm will select max_features at random at each split before finding the best split among them. But the best found split may vary across different runs, even if max_features=n_features. That is the case, if the improvement of the criterion is identical for several splits and one split has to be selected at random. To obtain a deterministic behaviour during fitting, random_state has to be fixed to an integer.");
+    break;
+    case "max_leaf_nodes":
+      return ("Grow a tree with max_leaf_nodes in best-first fashion. Best nodes are defined as relative reduction in impurity. If None then unlimited number of leaf nodes.");
+    break;
+    case "min_impurity_decrease":
+      return ("A node will be split if this split induces a decrease of the impurity greater than or equal to this value.");
+    break;
+    case "ccp_alpha":
+      return ("Complexity parameter used for Minimal Cost-Complexity Pruning. The subtree with the largest cost complexity that is smaller than ccp_alpha will be chosen. By default, no pruning is performed.");
+    break;
+    case "class_weight":
+      return ("Weights associated with classes. If None, all classes are supposed to have weight one. The “balanced” mode uses the values of y to automatically adjust weights inversely proportional to class frequencies in the input data as n_samples / (n_classes * np.bincount(y))");
     break;
   }
 }

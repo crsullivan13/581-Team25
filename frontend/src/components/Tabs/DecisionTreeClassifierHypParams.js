@@ -97,7 +97,11 @@ function DecisionTreeClassifierHypParams(props) {
 
   let class_weight_change = () =>{
     let val = document.getElementById("class_weight").value;
-    props.model_data_p["class_weight"] = val;
+    if(val === "None"){
+      props.model_data_p["class_weight"] = null;
+    }else{
+      props.model_data_p["class_weight"] = val;
+    }
   }
 
   React.useEffect(() => {
@@ -184,7 +188,7 @@ function DecisionTreeClassifierHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Class Weight</Form.Label>{/**The number of features to consider when looking for the best split: */}
-        <Form.Select id="class_weight" data-tip={HyperparamInfo("DecisionTreeRegression", "max_features")} onChange={class_weight_change} defaultValue="None">
+        <Form.Select id="class_weight" data-tip={HyperparamInfo("DecisionTreeClassifier", "class_weight")} onChange={class_weight_change} defaultValue="None">
           <option>None</option>
           <option>balanced</option>
         </Form.Select>
