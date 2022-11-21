@@ -73,7 +73,7 @@ function Training() {
 
 	//state that represents the data object that is passed into the trainModel method
 	//TODO - get rid of passing setModelData to children
-	const [model_data, setModelData] = useState({});
+	const [model_data, setModelData] = useState({"model":"Linear Regression"});
 
 	//state to determine if we should show the modal or noy
 	const [show, setShow] = useState(false);
@@ -221,7 +221,8 @@ function Training() {
 	{
 		setModelData({});
 		let modelType = document.getElementById("modelTypeInput").value;
-		setModelType(modelType);//page should update
+		setModelType(modelType);//page should update, you can get rid of this
+		setModelData({"model": modelType})
 	}
 
 	let HyperparameterOptions = (props) =>
@@ -229,7 +230,6 @@ function Training() {
 		//check the state representing the kind of model
 		switch(ModelType){
 			case "Linear Regressor":
-				model_data["model"] = "Linear Regression";
 				console.log(model_data);
 				return(<></>);
 				break;
