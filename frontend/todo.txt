@@ -1,0 +1,1 @@
+add null option for logistic

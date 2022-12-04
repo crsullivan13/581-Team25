@@ -1,4 +1,7 @@
 {
+    "DEFAULT_HYPPARAMS": {
+        "CRIT": "default"
+    },
     "DEMOS": {
         "LINEAR_TXT": "This model is an ordinary least - squares linear regression. The regression fits the model with a list of coefficients that minimizes the error, which is expressed as the residual sum of squares between the input data points and the predicted targets which are outputted from the model. Like Logistic Regression, one of it's disadvantages is a linear decision boundary which limits its expressiveness.",
         "LOGISTIC_TXT": "A Logistic Regression model is a probabilistic discriminative model, which means as part of the method it uses it calculates the odds of a certain certain class y, given a data instance x. It is also a linear model, which means that the probabilities are computed by calculating coefficients in a linear equation. In binary logistic regression there are two classes, but the model can be easily extended to support more than two, which is called multinomial logistic regression. One drawback of using logistic regression is that like all linear regressions, the decision boundary is a plane or a line, which makes it difficult to use this model for more complicated situations.",

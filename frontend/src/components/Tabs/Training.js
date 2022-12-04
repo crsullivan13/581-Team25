@@ -29,6 +29,7 @@ import DecisionTreeClassifierHypParams from "./DecisionTreeClassifierHypParams"
 import MultiLayerPerceptronClassHypParams from "./MultiLayerPerceptronClassHypParams"
 import MultiLayerPerceptronRegressHypParams from "./MultiLayerPerceptronRegressHypParams"
 import NaiveBayesClassifierHypParams from "./NaiveBayesClassifierHypParams"
+import SequentialModel from "./SequentialModelHypParams"
 import GenericHypParams from "./GenericHypParams"
 import { Form, Button, Container, ModalHeader } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
@@ -235,32 +236,32 @@ function Training() {
 				break;
 			case "Logistic Regressor":
 				return(
-				<LogisticRegressHypParams setModelDataLoR = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the LinearRegressHypParams component
+				<LogisticRegressHypParams model_data_p = {model_data}/>//makes the setModelData function callable from the LinearRegressHypParams component
 				);
 				break;
 			case "Decision Tree Regressor":
 				return(
-				<DecisionTreeHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				<DecisionTreeHypParams model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
 			case "Decision Tree Classifier":
 				return(
-				<DecisionTreeClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				<DecisionTreeClassifierHypParams  model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
 			case "Multilayer Perceptron Classifier":
 				return(
-				<MultiLayerPerceptronClassHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				<MultiLayerPerceptronClassHypParams model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 				break;
 			case "Multilayer Perceptron Regressor":
 				return(
-				<MultiLayerPerceptronRegressHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				<MultiLayerPerceptronRegressHypParams model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
 				);
 					break;
 			case "Gaussian Naive Bayes Classifier":
 				return(
-				<NaiveBayesClassifierHypParams setModelData_DTree = {setModelData} model_data_p = {model_data}/>//makes the setModelData function callable from the linearRegressHypParams
+				<NaiveBayesClassifierHypParams model_data_p = {model_data}/>
 				);
 				break;
 			case "MNIST Classifier":
@@ -271,6 +272,10 @@ function Training() {
 						
 						</Col>
 					</Form.Group>
+					);
+			case "Sequential Model":
+				return(
+					<SequentialModel model_data_p = {model_data} setModelData = {setModelData}>Sequential Model</SequentialModel>
 					);
 			default:
 
@@ -325,6 +330,7 @@ function Training() {
 			<option>Multilayer Perceptron Classifier</option>
 			<option>Multilayer Perceptron Regressor</option>
 			<option>Gaussian Naive Bayes Classifier</option>
+			<option>Sequential Model</option>
     	</Form.Select>
 	</Row>
 
