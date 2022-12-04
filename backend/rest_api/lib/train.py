@@ -26,6 +26,10 @@ Revisions:
         Author: Amith Panuganti 
     11/15/22
         Revision: Add Supported for MLP, Naive Bayes, and Decesion Tree Algorithms
+        Author: Derrick Quinn
+    11/20/22
+        Revision: Added support for input validation
+        Author: Derrick Quinn
     
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
@@ -38,6 +42,7 @@ Faults: None
 
 # Import regressions
 from lib import regressions
+from lib.validation import validate_input, validate_output
 import numpy as np
 
 # Create a dictionary that will contain both model name and its regression function
@@ -56,9 +61,14 @@ model_dict = {
 # Output: Model
 # Errors: Model does not exist. Features dim and labels dim are incorrect
 def trainModel(data):
+
     # Get the features, names, and labels of the model
     features = data['X']
     labels = data['y']
+
+    validate_input(features)
+    validate_output(labels)
+
     modelName = data['model']
 
     # Get model using model

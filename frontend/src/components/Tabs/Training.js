@@ -78,8 +78,8 @@ function Training() {
 
 	//state to determine if we should show the modal or noy
 	const [show, setShow] = useState(false);
-	//state to carry the error we get from a response
-	const [requestError, setReqError] = useState();
+	//state to carry the result we get from a response
+	const [requestResult, setReqResult] = useState();
 
 	//set either close or open for the modal state
 	const handleClose = () => setShow(false);
@@ -145,6 +145,9 @@ function Training() {
 			xhr.onload = function() {
 				//when we get a 200 we do some parsing to display the output
 				if(xhr.status == 200) {
+					let msg = "Request was successful"
+					handleReqResult(msg)
+					
 					//Parse the response 
 					var jsonResponse = JSON.parse(xhr.responseText)
 
@@ -173,7 +176,7 @@ function Training() {
 					//get here if we get and error status from the http response
 					let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
 					//pass the error to our error handler, will be displayed in the modal
-					handleReqError(error);
+					handleReqResult(error);
 				}
 			}
 
@@ -182,7 +185,7 @@ function Training() {
 				//set error to what this network issue generally is
 				let error = 'Network error. Request was not made (most likely a CORS error).';
 				//display it in the modal
-				handleReqError(error);
+				handleReqResult(error);
 			}
 		} else {
 			//make sure we set out data files before we try to train
@@ -191,9 +194,9 @@ function Training() {
 	}
 
 	//when we get an http error this is called
-	let handleReqError = (error) => {
+	let handleReqResult = (msg) => {
 		//set the state that carries the error
-		setReqError(error)
+		setReqResult(msg)
 		//show the modal
 		handleShow();
 	}
@@ -290,9 +293,9 @@ function Training() {
 	{/*This is the pop up for error displaying, we need this so we can inform the user what was wrong with their input*/}
 	<Modal show={show} onHide={handleClose}>
 		<Modal.Header closeButton>
-			<Modal.Title>Request Error!</Modal.Title>
+			<Modal.Title>Request Result</Modal.Title>
 		</Modal.Header>
-		<Modal.Body>{requestError}</Modal.Body>
+		<Modal.Body>{requestResult}</Modal.Body>
 	</Modal>
 
 
