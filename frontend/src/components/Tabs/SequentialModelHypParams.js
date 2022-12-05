@@ -34,15 +34,17 @@ function SequentialModelHypParams(props) {
         model:"Sequential Model",
         layers: [
           {
+            type: "Dense",
             units: 1,
             use_bias: true,
             activation: "None",
           },
         ],
-        type: "Regression",
+        type: "regression",
         batch_size: 1,
         epochs: 1,
         optimizer: "SGD",
+        loss: "mean squared loss",
         learning_rate: 0.001,
         momentum: 0.0,
       }
@@ -58,6 +60,7 @@ function SequentialModelHypParams(props) {
         ...model_data_copy,
         layers: [...model_data_copy.layers, 
           {
+            type:"Dense",
             units: 1,
             use_bias: true,
             activation: "None",
