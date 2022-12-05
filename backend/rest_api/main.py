@@ -29,6 +29,9 @@
 # log: Edited Nov 6
 #	 Author: Amith Panuganti
 #    Descript: Added support for fit to return figures
+# log: Edidted Dec 4
+#     Author: Amith Panuganti
+#     Description: Change predict to turn input into numpy array
 
 
 from lib.communications import PushToFront 
@@ -50,7 +53,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 from datetime import datetime
-
+import numpy as np
 #Create flask app
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)

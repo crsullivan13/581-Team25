@@ -23,6 +23,7 @@ import jsonpickle as jp
 import sklearn
 import PIL.Image as Image
 import base64
+import tensorflow as tf
 
 # Our features
 x = [[2.0],[5.0], [3.0], [4.0]]
