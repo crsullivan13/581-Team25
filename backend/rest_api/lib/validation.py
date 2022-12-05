@@ -47,5 +47,5 @@ def validate_output(y):
     t = type(y[0])
 
     #Except if there's an issue
-    if not all([type(y_i) == l for y_i in y]):
+    if not all([type(y_i) == t for y_i in y]):
         raise Exception("Input vectors have inconsistent lengths")

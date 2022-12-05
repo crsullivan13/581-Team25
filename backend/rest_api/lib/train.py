@@ -30,6 +30,9 @@ Revisions:
     11/20/22
         Revision: Added support for input validation
         Author: Derrick Quinn
+    12/04/22
+        Revision: Added support for sequential model
+        Author: Amith Panuganti
     
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
@@ -53,7 +56,8 @@ model_dict = {
     "MLP Regression": regressions.MLPRegression,
     "MLP Classification":regressions.MLPClassification,
     "Gaussian Naive Bayes":regressions.GaussianNaiveBayes,
-    "Decision Tree Classification": regressions.DecisionTreeClassification
+    "Decision Tree Classification": regressions.DecisionTreeClassification,
+    "Sequential Model":regressions.SequentialModel,
 }
 
 # Will handle training the model 
@@ -61,23 +65,23 @@ model_dict = {
 # Output: Model
 # Errors: Model does not exist. Features dim and labels dim are incorrect
 def trainModel(data):
-
+   
     # Get the features, names, and labels of the model
     features = data['X']
     labels = data['y']
-
+    
     validate_input(features)
     validate_output(labels)
 
     modelName = data['model']
-
+ 
     # Get model using model
     model = model_dict[modelName]
 
     # Convert x and y to be numpy arrays
     features = np.array(features)
     labels = np.array(labels)
-
+    
     # Get model kwargs
     kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
 
