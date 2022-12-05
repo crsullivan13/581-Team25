@@ -46,5 +46,15 @@ def ReadJson(fromPath: str): # read json files from system
     f.close() #close the file
     return data #return data
 
+def Bool2Vector(boolVar: bool): # a very basic vectorization for show
+    #input: a boolean value
+    #output: 1/0
+    #possible errors: typeError
+    #does not contain any side effect
+    returnNum = 0 #set a returnNum
+    if(boolVar): #if bool value is true change it to 1
+        returnNum = 1
+    return returnNum #return Num
+
 #test code: ReadArguments()
 #test code: PushToFront(toPath="./example.json", type="regression", subtype="linear", returnVal=[123,456])
