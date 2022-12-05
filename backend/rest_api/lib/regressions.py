@@ -8,6 +8,8 @@
 # log: modifited Nov 9 - Started to add MLP Regression and Classifier
 # log: modified Nov 15 = Added Naive Bayes Classifcation
 # log: modified Nov 16 - Fixed error with plotting multiple plots and modified figures in each model
+# log: modified Nov 29 - Added Multi Layer Support
+# log: modified Dec 4 - Added Support of Sequential Model
 # log: Added kwarg integration to simplify programming
 from sklearn.linear_model import LinearRegression #input linear regression methods
 from sklearn.linear_model import SGDClassifier #input linear regression methods
@@ -20,9 +22,12 @@ from sklearn.datasets import fetch_openml #for MNIST Demo
 from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay # for regression accuracy and confusion matrix
 from sklearn.model_selection import train_test_split # to spilt test data
 from sklearn.tree import plot_tree # To plot decision trees
+from lib.tfModel import SeqModel
 import matplotlib.pyplot as plt # For Plots
 import numpy as np #typical numpy import
 import matplotlib #just in case for drawing a graph
+import tensorflow as tf 
+
 def LinearMethod(vector_x, vector_y, data): #easily call linear regression method
     #input: two vectors (vector_x, vector_y), showing correlating two vectors on the plane.
     #output: calculated result of linear regression as y = (w)x+(b)
@@ -221,6 +226,18 @@ def GaussianNaiveBayes(vector_x, vector_y, data):
 
     # Return the model and figure
     return model, figure
+
+# Call sequential model
+def SequentialModel(vector_x, vector_y, data):
+    
+    # Create the model 
+    model = SeqModel(vector_x, vector_y, data)
+
+    # Next, train the model
+    figure = model.fit(vector_x, vector_y, data)
+    
+    # Return the model and figure
+    return model,figure
 
 def MNIST_SGDDemo(test_size: float, random_state: int):#a demo of MNIST to fetch interest for K-12 students
     # input: percentage to test to let kids know test size and train size's difference and the random state (just in case, not really used)
