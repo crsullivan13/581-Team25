@@ -2,6 +2,7 @@
 # communications.py should be including all methods to talk with front end when finished. 
 # log: created Sep 25 - includes a basic json output method for the group to discuss with json files, read method still under construction
 # log: modified Oct 23 - added prototype of reading arguments by command line. Rest of the function still TBD - Junyi Zhao
+# log: modified Dec 4 - added reading features for json - Junyi Zhao
 import json #for json output
 import sys #to read in arguments
 def PushToFront(toPath:str, type: str, subtype: str, returnVal, path): #push a json file for front end to read
@@ -34,6 +35,16 @@ def ReadArguments(): # read system arguments to run proper commands
     arguments = sys.argv #get command calls
     print (arguments) #print it for now
     return #placeholder return
+
+def ReadJson(fromPath: str): # read json files from system
+    #input: a json file's path, python cannot check file integrity
+    #output: the data inside
+    #possible errors: wrong file or wrong path
+    #does not contain any side effect
+    f = open (fromPath) #from json file path, read json
+    data = json.load (f) #load data from json
+    f.close() #close the file
+    return data #return data
 
 #test code: ReadArguments()
 #test code: PushToFront(toPath="./example.json", type="regression", subtype="linear", returnVal=[123,456])
