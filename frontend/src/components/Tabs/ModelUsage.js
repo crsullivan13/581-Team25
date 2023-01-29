@@ -18,7 +18,7 @@ Faults: None
 import React from "react"
 import { Form, Button, Container } from "react-bootstrap";
 
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import Papa from "papaparse";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -52,6 +52,57 @@ function ModelUsage() {
 	const [testData, setTestData] = useState();
 
   const [model_output, setModelOutput] = useState("default output");
+
+  //state that is a list of models that have been created, just one for now
+  const [model_list, setModelList] = useState([]);
+  
+
+
+  let getModelNames = () => {
+    //"https://team-25-362714.uc.r.appspot.com/get_models"
+    //"http://127.0.0.1:5000/get_models" - for local testing
+    let url = "http://127.0.0.1:5000/get_models"
+
+			//setup http request
+			let xhr = new XMLHttpRequest()
+			//post request with above url
+			xhr.open("GET", url)
+			//send the request with the json string as body
+      let user_data = {
+        "id" : 1,
+      }
+			xhr.send(JSON.stringify(user_data))
+			
+			//called when http request finished
+			xhr.onload = function() {
+				//when we get a 200 we do some parsing to display the output
+				if(xhr.status == 200) {
+					let msg = "Request was successful"
+          //TODO handle req result using code in Training.js
+					//handleReqResult(msg)
+					
+					//Parse the response 
+					var jsonResponse = JSON.parse(xhr.responseText)
+          setModelList(jsonResponse["names"])
+          console.log(model_list)
+				} else {
+					//get here if we get and error status from the http response
+					let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
+          console.log(error);
+					//pass the error to our error handler, will be displayed in the modal
+					//handleReqResult(error);
+				}
+			}
+
+			//this is called when the http is unable to be sent, means a network error
+			xhr.onerror = function() {
+				//set error to what this network issue generally is
+				let error = 'Network error. Request was not made (most likely a CORS error).';
+				//display it in the modal
+				//handleReqResult(error);
+			}
+  }
+
 
   let changeTrainHandler = (event) => {
 
@@ -126,14 +177,23 @@ function ModelUsage() {
         }, dynamicTyping: true
       });
   }
+
+  let makeOptionFromArray = (X) => {
+    return <option key={X}>{X}</option>
+  }
+
+  //initializes the available models to run
+  useEffect(()=>{
+    getModelNames()
+  }, [])
+
   //Returns the following html
   return (
-  
+    //Retrieve names of models from the database, then when the run button is pressed call the predict method from the backend.
     //Create a Form to contain all of our inputs
   <Container>
-
-	<Form>
     
+	<Form>
     {/* Create a new Form Group For Getting Model */}
     <Form.Group className="mb-3" controlId="modelChoice">
     {/* Label For Choose Model */}
@@ -141,7 +201,8 @@ function ModelUsage() {
     {/* Create element for user to choose Model */}
     <Form.Select aria-label="Model Select">
       {/* Placeholder for actual model */}
-      <option disabled>Example Model</option>
+
+      {model_list.map(makeOptionFromArray)}
     </Form.Select>
     </Form.Group>
 

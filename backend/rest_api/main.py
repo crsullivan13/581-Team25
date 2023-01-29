@@ -60,7 +60,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-auth = credentials.Certificate('team-25-362714-623f2b1f64ab.json')
+auth = credentials.Certificate('team-25-362714-firebase-adminsdk-c4jp3-d1dd16e975.json')
 firebase_admin.initialize_app(auth)
 db = firestore.client()
 #Create default route, for an easy check of the status of web server
@@ -125,6 +125,34 @@ def fit():
         return make_response(jsonify({"Invalid key": str(e)}), 500)
     except Exception as e: #Elsewhere
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error
+
+
+#TODO change from GET to POST
+#route for retrieving all the names of the stored models stored for the user
+@app.route('/get_models')
+@cross_origin()
+def get_models():
+
+    try:
+        #TODO get uuid from frontend, then use it to make a query for that users models
+        #data = json.loads(request.data.decode("utf-8"))
+        #uuid = data["uuid"]
+
+        #create a json object for storing the names of the models
+        model_names = {
+            "names" : [],
+        }
+        model_docs = db.collection(u'Models').stream()
+
+        #add all models to the json object
+        for doc in model_docs:
+            model_names["names"].append(doc.id)
+        
+        return model_names
+    except Exception as e:
+        return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error
+
+
 
 #Create route for predicting on the stored model for a user
 @app.route('/predict', methods=['POST']) 

@@ -114,6 +114,7 @@ function Training() {
 		parseCSV(event.target.files[0], 'feature');
 	}
 
+
 	//this is called when we are training a model
 	let handleTrain =  () => {
 		console.log(model_data);
