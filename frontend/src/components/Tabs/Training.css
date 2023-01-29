@@ -1,0 +1,10 @@
+#top-level-wrapper * {
+    margin-top: 0px;
+    background-color:white;
+}
+
+#container > * {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+/*if there are two competing style blocks the one higher has precedence*/

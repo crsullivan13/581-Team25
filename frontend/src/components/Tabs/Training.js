@@ -128,7 +128,8 @@ function Training() {
 			model_data["y"] = labelData[0]
 			//we need the user id to train, for storage purposes
 			model_data["uuid"] = currentUser.uid
-	
+
+
 			//turn the request data into json string
 			let jsonString = JSON.stringify(model_data)
 
@@ -201,6 +202,9 @@ function Training() {
 		handleShow();
 	}
 
+	let name_changed = (event) => {
+		model_data["name"] = event.target.value;
+	}
 
 	//simple function to parse a csv into json, takes in the file and the input type to set the correct state
 	let parseCSV = (file, type) => {
@@ -289,7 +293,7 @@ function Training() {
   return (
 
 
-	<>
+	<div id="top-level_wrapper">
 	{/*This is the pop up for error displaying, we need this so we can inform the user what was wrong with their input*/}
 	<Modal show={show} onHide={handleClose}>
 		<Modal.Header closeButton>
@@ -299,8 +303,8 @@ function Training() {
 	</Modal>
 
 
-	<Container>
-
+	<Container id="container">
+	<Row id="row">
 		{/*<GenericHypParams />*/}
 
 		<h1 className="w-100 mt-2">Select Training Data</h1>
@@ -318,7 +322,7 @@ function Training() {
 		<Form.Label>Upload Feature Data File</Form.Label>
 		<Form.Control type="file" name="file" onChange={changeFeatureHandler}></Form.Control>{/*The file input for the feature handler*/}
 		</Form.Group>
-
+	</Row>
 
 	<Row>
 		{/*option to choose model to train*/}
@@ -353,16 +357,20 @@ function Training() {
 		</Form.Select>
 	</Row>
 	<Row>
+		<h1 className="w-100 mt-2">Model Name</h1>
+		{/*input for name of new model*/}
+		<input type="text" placeholder="Name" onChange={name_changed}></input>
+	</Row>
+
+	<Row>
 		{/*button to begin training*/}
 	<Button type="button" onClick={handleTrain}>Train</Button>
 	</Row>
-
-	<br></br>
 	{returnedModel}
 	</Container>
 
 	
-	</>
+	</div>
   );
 }
 
