@@ -32,7 +32,12 @@
 # log: Edidted Dec 4
 #     Author: Amith Panuganti
 #     Description: Change predict to turn input into numpy array
-
+# log: Edited Jan 18 2022
+#     Author: Amith Panuganti
+#     Description: Add Route for Decision Tree Demo
+#log: Edited Jan 19 2022
+#     Author: Amith Panugnti
+#     Description: Add 200 status message in Decision Tree Demo
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
@@ -71,6 +76,45 @@ db = firestore.client()
 #output: simple success message
 def index():
     return "works"
+
+# Create a route for the Decision Tree Demo and its output
+@app.route('/decisionTreeDemo', methods=['POST'])
+@cross_origin()
+#input: request.data: the data to fit the tree
+#output: Text of the Decision Tree
+#Error: Can occur when dictionary is in incorrect format
+#       Error can occur if training fails
+def decisionTreeDemo():
+    #Run in try block to catch for errors
+    try:
+        # Load data from request
+        data = json.loads(request.data.decode("utf-8"))
+
+        # Get data 
+        data = {k: data[k] for k in data if k != "uuid"}
+
+        # Create a model and get both model and decsion tree text
+        model, text = trainModel(data)
+
+        # Get loss from metrics
+        metric = loss(model, data["X"], data["y"])
+
+        # Store both metric and text in dictionary
+        metrics = {
+            "loss":metric,
+            "tree":text,
+        }
+
+        # Make the response
+        return make_response(jsonify(metrics), 200)
+    # Will check if key in data cannot be access
+    except KeyError as e:
+        # Make response informing user of error
+        return make_response(jsonify({"Invalid key": str(e)}), 500)
+    # Will check for an additional errors
+    except Exception as e: #Elsewhere
+        return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
+
 
 #Create route for just fitting a model and returning its output
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 

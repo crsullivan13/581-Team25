@@ -1,10 +1,21 @@
 /*
 Name: DemoItem.js
 Description: The sub component for the demo page, contains the info for each model
-Programmers: Connor Sullivan
+Programmers: Connor Sullivan, Amith Panuganti
 Creation Date: 11/05/22
 Revisions:
 	11/05/22 - Initial build of the file
+Revisions:
+    1/18/22 
+        Programmer: Amith Panuganti
+        Edit: Add Route for Decision Tree Demo
+    1/19/22
+        Programmer: Amith Panuganti
+        Edit: Fix problem with decision tree not loading
+    1/21/22
+        Programmer: Amith Panuganti
+        Edit: Change Decision Tree Regressions to Decision Tree Classification
+              I believe that using a classification model for be a better fit for the project
 Preconditions: None
 Errors: None
 Side Effects: None
@@ -20,6 +31,7 @@ import { useState } from 'react';
 import configData from '../config/config.json'
 import {useAuth} from "../contexts/AuthContext"
 import Modal from 'react-bootstrap/Modal'
+import DecisionTree from './Tabs/DecisionTree';
 
 function DemoItem(props){
     //need auth context to get uuid
@@ -75,7 +87,7 @@ function DemoItem(props){
                         //return the text info fro the model
                     }
                     break;
-                case "Decision Tree Regression":
+                case "Decision Tree Classification":
                     if(dataSet === 'Set One'){
                         //set x data from config file
                         setXData(configData.DTREE_DEMO_DATA.ONE.X);
@@ -109,7 +121,7 @@ function DemoItem(props){
                 //dataSetChange()
 				return(<><p>{configData.DEMOS.LOGISTIC_TXT}</p></>);
 				break;
-			case "Decision Tree Regression":
+			case "Decision Tree Classification":
                 //dataSetChange()
 				return(<><p>{configData.DEMOS.DTREE_TXT}</p></>);
 				break;
@@ -132,6 +144,18 @@ function DemoItem(props){
 					model_data["X"] = XData
 					model_data["y"] = YData
 					model_data["uuid"] = currentUser.uid
+
+                    //Unqiue to decision tree demo
+                    //If modelType is Decision Tree Regressision
+                    if(model_data["model"] === "Decision Tree Classification")
+                    {
+                        //Set model to be Decision Tree Regression Demo
+                        model_data["model"] = "Decision Tree Classification Demo"
+
+                        //Set url to be decisionTreeDemo
+                        url = "https://team-25-362714.uc.r.appspot.com/decisionTreeDemo"
+
+                    }
 			
                     //make request json string, then log for debug
 					let jsonString = JSON.stringify(model_data)
@@ -140,19 +164,24 @@ function DemoItem(props){
                     //create the request object, set the url and request type, set the body
 					let xhr = new XMLHttpRequest()
 					xhr.open("POST", url, false)
-					xhr.send(jsonString)
-                    
-                    //log the response, pull out the loss value and set the return state
-                    console.log(xhr.response)
-					setReturnedModel(JSON.parse(xhr.response).loss)
-
                     xhr.onload = function() {
-                        if(xhr.status == 200) {
+                        if(xhr.status === 200) {
                             let jsonResponse = JSON.parse(xhr.responseText)
                             if(jsonResponse.hasOwnProperty('figure'))
                             {
                                 const image = "data:image/png;base64,"+jsonResponse.figure;
                                 let element = <img alt="Figure" src={image}></img>
+                                setReturnedModel(element)
+                            //Other if response has tree propery
+                            }else if(jsonResponse.hasOwnProperty('tree'))
+                            {
+                                //Get tree text
+                                const tree = jsonResponse.tree
+                                
+                                //Create element for the tree
+                                let element = <DecisionTree text={tree} size={XData[0].length}></DecisionTree>
+
+                                //Set Returned Model
                                 setReturnedModel(element)
                             } else {
                                 var response = "Error: " + jsonResponse.Error 
@@ -168,6 +197,8 @@ function DemoItem(props){
 						let error = 'Network error. Request was not made (most likely a CORS error).';
 						handleReqError(error);
 					}
+
+					xhr.send(jsonString)
             }else {
                 alert("Select data set first")
             }
@@ -211,7 +242,7 @@ function DemoItem(props){
                 <h3 className='w-100 mt-2'>Loss for this demo set's trained model</h3>
                 <br></br>
                 {/*show return values*/}
-	            <p>{ReturnedModel}</p>
+	            <div>{ReturnedModel}</div>
                 </Row>
                 {image}
             </Container>
