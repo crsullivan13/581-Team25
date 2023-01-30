@@ -42,7 +42,7 @@ function Demo(){
                     <Form.Select id="modelTypeInput" aria-label="Model Select" onChange={modelTypeChange}>
                         <option>Linear Regression</option>
                         <option>Logistic Regression</option>
-                        <option>Decision Tree Regression</option>
+                        <option>Decision Tree Classification</option>
                     </Form.Select>
                 </Row>
                 <Row>

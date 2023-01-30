@@ -33,6 +33,12 @@ Revisions:
     12/04/22
         Revision: Added support for sequential model
         Author: Amith Panuganti
+    1/18/22
+        Revision: Add Traing Function for Decision Tree Demo
+        Author: Amith Panuganti 
+    1/21/22
+        Revision: Change Decision Tree Regression Demo to Decision Tree Classification Demo
+        Author: Amith Panuganti
     
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
@@ -53,6 +59,7 @@ model_dict = {
     "Linear Regression": regressions.LinearMethod,
     "Logistic Regression": regressions.LogisiticsRegressionMethod,
     "Decision Tree Regression": regressions.DecisionTreeRegression,
+    "Decision Tree Classification Demo": regressions.DecisionTreeDemoModel,
     "MLP Regression": regressions.MLPRegression,
     "MLP Classification":regressions.MLPClassification,
     "Gaussian Naive Bayes":regressions.GaussianNaiveBayes,
