@@ -12,6 +12,8 @@
 # log: modified Dec 4 - Added Support of Sequential Model
 # log: modified Jan 18 2022 - Added Seperate Function for Decision Tree Demo
 # log: modified Jan 21 2022 - In Decision Tree Demo, used Decision Tree Classifer instead of Decision Tree Regressor
+# log: modified Feb 7 2022 - Add part 1 for logisitic regression demo
+# log: modified Feb 9 2022 - Added Part 2 For Logisitic Regression Demo
 # log: Added kwarg integration to simplify programming
 from sklearn.linear_model import LinearRegression #input linear regression methods
 from sklearn.linear_model import SGDClassifier #input linear regression methods
@@ -21,10 +23,11 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn import tree # For decision tree
 from sklearn.datasets import fetch_openml #for MNIST Demo
-from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay # for regression accuracy and confusion matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay, mean_squared_error # for regression accuracy and confusion matrix
 from sklearn.model_selection import train_test_split # to spilt test data
 from sklearn.tree import plot_tree, export_text # To plot decision trees and get text of decision tree
 from lib.tfModel import SeqModel
+from scipy.special import expit # Used for logisitc regression demo
 import matplotlib.pyplot as plt # For Plots
 import numpy as np #typical numpy import
 import matplotlib #just in case for drawing a graph
@@ -269,6 +272,109 @@ def MNIST_SGDDemo(test_size: float, random_state: int):#a demo of MNIST to fetch
     mnist_sgd.fit (x_train, y_train) #fit the tree
     y_predict = mnist_sgd.predict(x_test) #predict the model using the test data
     return accuracy_score(y_predict, y_test) #return predict accuracy percentage
+
+# Demo for logistic regression part 1
+def LogisticRegressionDemoPart1(vector_x, vector_y, data):
+    # Create linear regression model
+    model = LinearRegression()
+
+    # Fit data with model
+    model.fit(vector_x, vector_y)
+
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Create plot for vector_x and predict_y
+    plt.plot(vector_x, predict_y, color="blue")
+
+    # Add labels
+    plt.xlabel("Temperature")
+    plt.ylabel("Cold or Hot")
+    plt.title("Temperature Plot")
+
+    # Add yticks
+    plt.yticks([0.0,1.0])
+    
+    # Get current figue
+    figure = plt.gcf()
+
+    # Caculate loss
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Create dictionary containing figure, mse
+    results = {"figure":figure, "loss":mse}
+
+    # Return model and results
+    return model, results
+
+# Demo for logisitc regression part 2/3
+def LogisticRegressionDemoPart2(vector_x, vector_y, data):
+    # Create logisitc regression model
+    model = LogisticRegression(**data)
+
+    # Fit model on data
+    model.fit(vector_x, vector_y)
+
+    #Predict y
+    predict_y = model.predict(vector_x)
+
+     # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Next, create linspace
+    x_test = np.linspace(min(vector_x), max(vector_x), 50)
+
+    # Create logisitc function
+    log_func = expit(x_test * model.coef_ + model.intercept_)
+
+    # Graph logistic function
+    plt.plot(x_test, log_func, color="blue")
+   
+    # Add labels
+    plt.xlabel("Temperature")
+    plt.ylabel("Cold or Hot")
+    plt.title("Temperature Plot")
+
+    # Add yticks
+    plt.yticks([0.0,1.0])
+    
+    # Get current figue
+    figure = plt.gcf()
+
+    # Caculate mean square error
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Caculate accuracy
+    accuracy = accuracy_score(vector_y, predict_y)
+
+    # Create dictionary containing figure, mse, and accuracy
+
+    results = {"figure":figure, "loss":mse, "accuracy":accuracy}
+
+    # Return model and results
+    return model, results
+
+# Demo of logistic regression part 4
+def LogisticRegressionDemoPart4(vector_x, vector_y, data):
+     # Create logisitc regression model
+    model = LogisticRegression(**data)
+
+    # Fit model on data
+    model.fit(vector_x, vector_y)
+
+    #Predict y
+    predict_y = model.predict(vector_x)
+
+     # Caculate mean square error
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Caculate accuracy
+    accuracy = accuracy_score(vector_y, predict_y)
+
+
 
 #print(MNIST_SGDDemo(0.5, 42)) - for testing
 

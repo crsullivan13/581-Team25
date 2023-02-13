@@ -18,6 +18,8 @@ import { Container, Form } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row'
 import { useState } from 'react';
 import DemoItem from '../DemoItem';
+import { LogisticRegressionPart1Front, LogisticRegressionPart1After} from './LogisticRegressionDemo';
+import LogisticRegressionPart from "./LogisticRegressionDemo"
 
 function Demo(){
     //sate to hold model type that user wants to demo, defaults to linear
@@ -47,7 +49,16 @@ function Demo(){
                 </Row>
                 <Row>
                     {/*render the component that will show the useful info on this page, modeltype as a prop*/}
-                    <DemoItem modelType={ModelType}/>
+                    {/*If model type is logisitc regression, then run LogisitcRegressionDemo. Otherwise, run demo item*/ }
+                    {(ModelType === "Logistic Regression") 
+                        ? <LogisticRegressionPart 
+                        front={<LogisticRegressionPart1Front></LogisticRegressionPart1Front>} 
+                        X={[[40],[45],[55],[60],[65],[70],[75],[80],[85],[90]]} 
+                        y={[0,0,0,0,0,1,1,1,1,1]} model={"Logistic Regression Demo Part 1"}
+                        back={<LogisticRegressionPart1After></LogisticRegressionPart1After>}></LogisticRegressionPart>
+                        : <DemoItem modelType={ModelType}/>
+                    }
+                    
                 </Row>
             </Container>
         </>
