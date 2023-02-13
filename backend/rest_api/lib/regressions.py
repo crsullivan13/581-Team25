@@ -10,6 +10,8 @@
 # log: modified Nov 16 - Fixed error with plotting multiple plots and modified figures in each model
 # log: modified Nov 29 - Added Multi Layer Support
 # log: modified Dec 4 - Added Support of Sequential Model
+# log: modified Jan 18 2022 - Added Seperate Function for Decision Tree Demo
+# log: modified Jan 21 2022 - In Decision Tree Demo, used Decision Tree Classifer instead of Decision Tree Regressor
 # log: Added kwarg integration to simplify programming
 from sklearn.linear_model import LinearRegression #input linear regression methods
 from sklearn.linear_model import SGDClassifier #input linear regression methods
@@ -21,7 +23,7 @@ from sklearn import tree # For decision tree
 from sklearn.datasets import fetch_openml #for MNIST Demo
 from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay # for regression accuracy and confusion matrix
 from sklearn.model_selection import train_test_split # to spilt test data
-from sklearn.tree import plot_tree # To plot decision trees
+from sklearn.tree import plot_tree, export_text # To plot decision trees and get text of decision tree
 from lib.tfModel import SeqModel
 import matplotlib.pyplot as plt # For Plots
 import numpy as np #typical numpy import
@@ -203,7 +205,7 @@ def MLPRegression(vector_x, vector_y, data):
 # Call Gausian Bayes Classification
 def GaussianNaiveBayes(vector_x, vector_y, data):
     # Create our model
-    model = GaussianNaiveBayes(**data)
+    model = GaussianNB(**data)
 
     # Fit the model
     model.fit(vector_x, vector_y)
@@ -238,6 +240,20 @@ def SequentialModel(vector_x, vector_y, data):
     
     # Return the model and figure
     return model,figure
+
+# Demo for Decision Tree Regression
+def DecisionTreeDemoModel(vector_x, vector_y, data):
+    # Create our model
+    model = tree.DecisionTreeClassifier(**data)
+
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+    # Get the text of the model
+    text = export_text(model)
+
+    # Return both the model and figure
+    return model, text
 
 def MNIST_SGDDemo(test_size: float, random_state: int):#a demo of MNIST to fetch interest for K-12 students
     # input: percentage to test to let kids know test size and train size's difference and the random state (just in case, not really used)
