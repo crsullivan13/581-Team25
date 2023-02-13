@@ -35,9 +35,13 @@
 # log: Edited Jan 18 2022
 #     Author: Amith Panuganti
 #     Description: Add Route for Decision Tree Demo
-#log: Edited Jan 19 2022
+# log: Edited Jan 19 2022
 #     Author: Amith Panugnti
 #     Description: Add 200 status message in Decision Tree Demo
+# log: Edited Feb 7 2022
+#      Author: Amith Panuganti
+#      Description: Added route for logistic regression demo
+#
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
@@ -115,6 +119,43 @@ def decisionTreeDemo():
     except Exception as e: #Elsewhere
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
 
+# Create route for logsitc regression demo
+@app.route('/logisticRegressionDemo', methods=['POST'])
+@cross_origin()
+    # input: request.data
+    # output: json file of metrics
+def logisticRegressionDemo():
+    # Try catch block
+    try:
+        # Load data from request
+        data = json.loads(request.data.decode("utf-8"))
+
+        # Get data 
+        data = {k: data[k] for k in data if k != "uuid"}
+
+        # Create model and get both just get metrics
+        _, metrics = trainModel(data)
+
+        # If metrics contains figure, if it does
+        if(metrics.get("figure")):
+            # Convert figure into byte array
+            # Create output to get figures
+            output = io.BytesIO()
+            FigureCanvas(metrics["figure"]).print_png(output)
+
+		    # Get bytes
+            metrics["figure"] = encodebytes(output.getvalue()).decode('ascii')
+
+        # Return metrics
+        return make_response(jsonify(metrics))
+
+     # Will check if key in data cannot be access
+    except KeyError as e:
+        # Make response informing user of error
+        return make_response(jsonify({"Invalid key": str(e)}), 500)
+    # Will check for an additional errors
+    except Exception as e: #Elsewhere
+        return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
 
 #Create route for just fitting a model and returning its output
 @app.route('/fit', methods=['POST']) #Handle fit (currently linear) model to data 

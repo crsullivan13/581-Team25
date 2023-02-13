@@ -39,6 +39,12 @@ Revisions:
     1/21/22
         Revision: Change Decision Tree Regression Demo to Decision Tree Classification Demo
         Author: Amith Panuganti
+    2/7/22
+        Reivision: Add part 1 of logisitc regression demo
+        Author: Amith Panuganti
+    2/9/22
+        Revision: Add Part 2 of logisitc regression demo
+    
     
 Preconditions: Needs labels, features, and model type
 Postconditions: Returns model weights and biases
@@ -53,6 +59,7 @@ Faults: None
 from lib import regressions
 from lib.validation import validate_input, validate_output
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Create a dictionary that will contain both model name and its regression function
 model_dict = {
@@ -60,11 +67,13 @@ model_dict = {
     "Logistic Regression": regressions.LogisiticsRegressionMethod,
     "Decision Tree Regression": regressions.DecisionTreeRegression,
     "Decision Tree Classification Demo": regressions.DecisionTreeDemoModel,
+    "Logistic Regression Demo Part 1":regressions.LogisticRegressionDemoPart1,
     "MLP Regression": regressions.MLPRegression,
     "MLP Classification":regressions.MLPClassification,
     "Gaussian Naive Bayes":regressions.GaussianNaiveBayes,
     "Decision Tree Classification": regressions.DecisionTreeClassification,
     "Sequential Model":regressions.SequentialModel,
+    "Logistic Regression Demo Part 2":regressions.LogisticRegressionDemoPart2
 }
 
 # Will handle training the model 
@@ -91,6 +100,9 @@ def trainModel(data):
     
     # Get model kwargs
     kwargs = {k: data[k] for k in data if k != "X" and k != "y" and k != "model"}
+
+    # Clear any plots
+    plt.close()
 
     # Train the model and get model and figure
     model,figure = model(features, labels, kwargs)
