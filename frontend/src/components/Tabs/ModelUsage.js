@@ -55,13 +55,16 @@ function ModelUsage() {
 
   //state that is a list of models that have been created, just one for now
   const [model_list, setModelList] = useState([]);
+
+  //The current selected model
+  const [model_selected, setModelSelected] = useState("");
   
 
 
   let getModelNames = () => {
     //"https://team-25-362714.uc.r.appspot.com/get_models"
     //"http://127.0.0.1:5000/get_models" - for local testing
-    let url = "https://team-25-362714.uc.r.appspot.com/get_models"
+    let url = "http://127.0.0.1:5000/get_models"
 
 			//setup http request
 			let xhr = new XMLHttpRequest()
@@ -133,9 +136,28 @@ function ModelUsage() {
 
 
   let handleRun = () => {
-    let url = "https://team-25-362714.uc.r.appspot.com/predict"
- 
-    if(isTestFileSelect){
+    let url = "http://127.0.0.1:5000/retrieveandrun"
+    //"https://team-25-362714.uc.r.appspot.com/predict"
+    console.log("run model");
+    let data = {
+      "doc_id": model_selected
+    }
+
+    let jsonString = JSON.stringify(data)
+    console.log(jsonString);
+
+
+    let xhr = new XMLHttpRequest()
+    xhr.open("POST", url, false)
+    xhr.send(jsonString)
+
+
+    console.log(jsonString)
+
+    console.log(xhr.response)
+
+    setModelOutput(xhr.response)
+    /*if(isTestFileSelect){
       let data = {
         X: testData,
         uuid: currentUser.uid
@@ -154,7 +176,7 @@ function ModelUsage() {
       setModelOutput(xhr.response)
     } else {
       alert("Must select test data first")
-    }
+    }*/
 
   }
 
@@ -181,6 +203,11 @@ function ModelUsage() {
   let makeOptionFromArray = (X) => {
     return <option key={X}>{X}</option>
   }
+  let model_changed  = (event) => {
+    let doc_id = event.target.value;
+    console.log(doc_id);
+    setModelSelected(doc_id.toString());
+  }
 
   //initializes the available models to run
   useEffect(()=>{
@@ -199,7 +226,7 @@ function ModelUsage() {
     {/* Label For Choose Model */}
     <Form.Label>Choose Your Model</Form.Label>
     {/* Create element for user to choose Model */}
-    <Form.Select aria-label="Model Select">
+    <Form.Select aria-label="Model Select" onChange={model_changed}>
       {/* Placeholder for actual model */}
 
       {model_list.map(makeOptionFromArray)}

@@ -22,11 +22,14 @@ import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 
 import './tooltipstyle.css'
+import './Training.css';
 
 // Return The html form with hyperparameter options
 //Input: None
 //Output: HTML Page of hyperparamater inputs
 function LogisticRegressHypParams(props) {
+
+  const [show, setShow] = useState(false);
 
   //TODO - add handlers for each hyperparameter input
    //TODO - add checks on the validity of each input for each input
@@ -106,6 +109,17 @@ function LogisticRegressHypParams(props) {
     console.log(props.model_data_p["l1_ratio"]);
   }
 
+  let toggleHide = ()=>{
+    
+    if(show === false){
+      document.getElementById("hideable").style.display = 'block';
+    }else{
+      document.getElementById("hideable").style.display = 'none';
+    }
+    setShow(!show);
+    console.log("visible : "+show);
+  }
+
 
   React.useEffect(() => {
     // Runs after the first render() lifecycle
@@ -125,13 +139,15 @@ function LogisticRegressHypParams(props) {
     warm_start_change();//call the handler for ccp_alpha_change}*/
     n_jobs_change();//call the handler for ccp_alpha_change}*/
     l1_ratio_change();//call the handler for ccp_alpha_change}*/
+
+    document.getElementById("hideable").style.display = 'none';
     console.log(props.model_data_p);
   }, []);
 
 
   //Return following HTML code, containing all the inputs
   return(
-    <Form.Group>
+    <Form.Group id="form_input">
       <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
@@ -160,7 +176,9 @@ function LogisticRegressHypParams(props) {
         <br/>
         <input id="C" data-tip={"<p>C Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "C")} onChange={C_change} type="number" defaultValue="1.0"></input> {/*Numerical input for C*/}
       </Col>
-      </Row><Row>
+      </Row>
+      <div id="hideable">
+      <Row>
       <Col>
         <Form.Label>Fit Intercept</Form.Label>{/*Fit intercept hyperparameter*/}
         <Form.Select id="fit_intercept" data-tip={"<p>Fit Intercept Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "fit_intercept")} onChange={fit_intercept_change} defaultValue="True">
@@ -170,6 +188,7 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Intercept Scaling</Form.Label>{/*Intercept Scaling */}
+        <br/>
         <input id="intercept_scaling" data-tip={"<p>Intercept Scaling Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "intercept_scaling")} onChange={intercept_scaling_change} type="number" defaultValue="1.0"></input>{/*numerical input for intercept scaling*/}
       </Col>
       <Col>
@@ -182,6 +201,7 @@ function LogisticRegressHypParams(props) {
       </Col>
       <Col>
         <Form.Label>Random State</Form.Label>{/*random state hyperparameter Used when solver == ‘sag’, ‘saga’ or ‘liblinear’ to shuffle the data.*/}
+        <br/>
         <input id="random_state" data-tip={"<p>Random State Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "random_state")} onChange={random_state_change} type="number" defaultValue="2"></input>{/*numerical input*/}
       </Col>
       </Row><Row>
@@ -196,7 +216,8 @@ function LogisticRegressHypParams(props) {
         </Form.Select>
       </Col>
       <Col>
-        <Form.Label>Max Iterations</Form.Label><br/>{/*Max iterations - Maximum number of iterations taken for the solvers to converge.*/}
+        <Form.Label>Max Iterations</Form.Label>{/*Max iterations - Maximum number of iterations taken for the solvers to converge.*/}
+        <br/>
         <input id="max_iter" data-tip={"<p>Max Iterations Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "max_iter")} onChange={max_iter_change} type="number" defaultValue="100"></input>{/*numerical input*/}
       </Col>
       <Col>
@@ -208,10 +229,12 @@ function LogisticRegressHypParams(props) {
         </Form.Select>
       </Col>
       <Col>
-        <Form.Label>Verbose</Form.Label><br/>{/*Verbose hyperparameter - For the liblinear and lbfgs solvers set verbose to any positive number for verbosity.*/}
+        <Form.Label>Verbose</Form.Label>{/*Verbose hyperparameter - For the liblinear and lbfgs solvers set verbose to any positive number for verbosity.*/}
+        <br/>
         <input id="verbose" data-tip={"<p>Verbose Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "verbose")} onChange={verbose_change} type="number" defaultValue="0"></input>{/*numerical input*/}
       </Col>
-      </Row><Row>
+      </Row>
+      <Row>
       <Col>
         <Form.Label>Warm Start</Form.Label>{/*Warm start hyperparameter - When set to True, reuse the solution of the previous call to fit as initialization, otherwise, just erase the previous solution.*/}
         <Form.Select id="warm_start" data-tip={"<p>Warm Start Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "warm_start")} onChange={warm_start_change} defaultValue="False">
@@ -227,7 +250,15 @@ function LogisticRegressHypParams(props) {
         <Form.Label>L1 Ratio</Form.Label><br/>{/**the Elastic-Net mixing parameter, with 0 <= l1_ratio <= 1. */}
         <input id="l1_ratio" data-tip={"<p>L1 Ratio Hyperparameter:</p>" + HyperparamInfo("LogisticRegression", "l1_ratio")} onChange={l1_ratio_change} type="number" defaultValue="1"></input>
       </Col>
+      <Col>
+      </Col>
       </Row>
+      </div>
+
+    <Row>
+		{/*button to toggle visibility*/}
+	  <Button type="button" onClick={toggleHide}>{show ? ("Show Less") : ("Show More")}</Button>
+	  </Row>
     </Form.Group>
 
     );
