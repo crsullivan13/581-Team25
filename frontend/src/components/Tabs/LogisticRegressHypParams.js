@@ -110,7 +110,6 @@ function LogisticRegressHypParams(props) {
   }
 
   let toggleHide = ()=>{
-    
     if(show === false){
       document.getElementById("hideable").style.display = 'block';
     }else{

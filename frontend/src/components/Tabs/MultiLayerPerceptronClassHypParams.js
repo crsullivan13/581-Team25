@@ -19,6 +19,7 @@ import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput"
 import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
+import {useState, useEffect} from "react"
 import './tooltipstyle.css'
 
 
@@ -27,7 +28,17 @@ import './tooltipstyle.css'
 //Output: HTML Page of hyperparamater inputs
 function MultiLayerPerceptronClassHypParams(props) {
   //TODO - add checks on the validity of each input for each input
+  const [show, setShow] = useState(false);
 
+  let toggleHide = ()=>{
+    if(show === false){
+      document.getElementById("hideable").style.display = 'block';
+    }else{
+      document.getElementById("hideable").style.display = 'none';
+    }
+    setShow(!show);
+    console.log("visible : "+show);
+  }
 
   let hidden_layer_sizes_change = ()=>{ //handler for input change on the hidden layer sizes parameter
     let val = document.getElementById("hidden_layer_sizes").value;
@@ -154,12 +165,14 @@ function MultiLayerPerceptronClassHypParams(props) {
     epsilon_change();
     n_iter_no_change_change();
     max_fun_change();
+
+    document.getElementById("hideable").style.display = 'none';
   }, []);
 
 
   //Return following HTML code
   return(
-    <Form.Group>
+    <Form.Group id="form_input">
       <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
@@ -187,7 +200,9 @@ function MultiLayerPerceptronClassHypParams(props) {
         <Form.Label>Alpha</Form.Label>{/**Label for alpha - strength of the l2 regularization term */}<br/>
         <input id="alpha" data-tip={HyperparamInfo("MLPClassifier", "alpha")} type="number" onChange={alpha_change} defaultValue="0.0001" />{/**selection for activation function for hidden layers */}
       </Col>
-      </Row><Row>
+      </Row>
+      <div id="hideable">
+      <Row>
       <Col>
         <Form.Label>Batch Size</Form.Label>{/**Label for batch sizes*/}<br/>
         <input id="batch_size" data-tip={HyperparamInfo("MLPClassifier", "batch_size")} type="number" onChange={batch_size_change} defaultValue="200" />{/**selection for activation function for hidden layers */}
@@ -303,7 +318,13 @@ function MultiLayerPerceptronClassHypParams(props) {
         {/*{‘constant’, ‘invscaling’, ‘adaptive’}, default=’constant’*/}
         <input id="max_fun" data-tip={HyperparamInfo("MLPClassifier", "max_fun")} type="number" onChange={max_fun_change} defaultValue="15000" />{/**selection for activation function for hidden layers */}
       </Col>
+      <Col></Col>
       </Row>
+      </div>
+      <Row>
+		  {/*button to toggle visibility*/}
+	    <Button type="button" onClick={toggleHide}>{show ? ("Show Less") : ("Show More")}</Button>
+	    </Row>
     </Form.Group>
     );
 }

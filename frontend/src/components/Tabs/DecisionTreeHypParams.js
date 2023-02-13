@@ -13,13 +13,14 @@ Faults: None
 
 //Import React
 import React from "react"
+import {useState, useEffect} from "react"
 import { Form, Button, Container } from "react-bootstrap"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput"
 import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
-
+//import './Training.css';
 
 // Return The html form with hyperparameter options
 //Input: None
@@ -27,7 +28,18 @@ import HyperparamInfo from './HyperparamInfo'
 function DecisionTreeHypParams(props) {
 
   //TODO - add checks on the validity of each input for each input
+  const [show, setShow] = useState(false);
 
+
+  let toggleHide = ()=>{
+    if(show === false){
+      document.getElementById("hideable").style.display = 'block';
+    }else{
+      document.getElementById("hideable").style.display = 'none';
+    }
+    setShow(!show);
+    console.log("visible : "+show);
+  }
 
   let crit_change = ()=>{
     let val = document.getElementById("crit").value;
@@ -110,12 +122,14 @@ function DecisionTreeHypParams(props) {
     max_leaf_nodes_change() //call the handler for max_leaf_nodes*/
     min_impurity_decrease_change()//call the handler for min_impurity_decrease*/
     ccp_alpha_change()//call the handler for ccp_alpha_change}*/
+
+    document.getElementById("hideable").style.display = 'none';
   }, []);
 
 
   //Return following HTML code
   return(
-    <Form.Group>
+    <Form.Group id="form_input">
       <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
@@ -142,7 +156,9 @@ function DecisionTreeHypParams(props) {
         <Form.Label>Min Samples Split</Form.Label><br/>{/** The minimum number of samples required to split an internal node:*/}
         <input id="min_samples_split" data-tip={HyperparamInfo("DecisionTreeRegression", "min_samples_split")} onChange={min_samples_split_change} type="number" defaultValue="2"></input>{/** */}
       </Col>
-      </Row><Row>
+      </Row>
+      <div id="hideable">
+      <Row>
       <Col>
         <Form.Label>Min Samples Leaf</Form.Label><br/>{/** The minimum number of samples required to be at a leaf node. */}
         <input id="min_samples_leaf" data-tip={HyperparamInfo("DecisionTreeRegression", "min_samples_leaf")} onChange={min_samples_leaf_change} type="number" defaultValue="1"></input>{/** */}
@@ -176,7 +192,13 @@ function DecisionTreeHypParams(props) {
         <Form.Label>CCP Alpha</Form.Label><br/>{/*Complexity parameter used for Minimal Cost-Complexity Pruning. The subtree with the largest cost complexity that is smaller than ccp_alpha will be chosen. By default, no pruning is performed. * */}
         <input id="ccp_alpha" data-tip={HyperparamInfo("DecisionTreeRegression", "ccp_alpha")} type="number" onChange={ccp_alpha_change} defaultValue="0.3"></input>{/** */}
       </Col>
+      <Col></Col>
       </Row>
+      </div>
+      <Row>
+		  {/*button to toggle visibility*/}
+	    <Button type="button" onClick={toggleHide}>{show ? ("Show Less") : ("Show More")}</Button>
+	    </Row>
     </Form.Group>
     );
 }

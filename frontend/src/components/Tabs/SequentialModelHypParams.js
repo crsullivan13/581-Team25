@@ -148,35 +148,39 @@ function SequentialModelHypParams(props) {
   //Return following HTML code, containing all the inputs
   return(
     <>
-    <Form.Group>
+    <Form.Group id="form_input">
       <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
         
     
         <Row>
           <Col>
           <Form.Label>Batch Size</Form.Label>
+          <br/>
           <input id="batch_size" onChange={batch_size_change} type="number" defaultValue="1"></input>{/*numerical input for batch size*/}
           </Col>
           <Col>
           <Form.Label>Epochs</Form.Label>
+          <br/>
           <input id="epochs" onChange={epochs_change} type="number" defaultValue="1"></input>{/*numerical input for epochs*/}
           </Col>
           <Col>
           <Form.Label>Optimizer</Form.Label>
+          <br/>
           <Form.Select id="optimizer" onChange={optimizer_change} defaultValue="SGD">
           <option>SGD</option>
           <option>Adam</option>
           </Form.Select>
           </Col>
           <Col>
-          <Form.Label>Learning Rate</Form.Label>
+          <Form.Label>Learning Rate</Form.Label><br/>
           <input id="learning_rate" onChange={learning_rate_change} type="number" defaultValue="0.001"></input>{/*numerical input for learning rate*/}
           </Col>
           <Col>
-          <Form.Label>Momentum</Form.Label>
+          <Form.Label>Momentum</Form.Label><br/>
           <input id="momentum" onChange={momentum_change} type="number" defaultValue="0.0"></input>{/*numerical input for momentum*/}
           </Col>
         </Row>
+        <Row><Col><br/><br/></Col></Row>
         {/* this renders each layer's hyperparameters and creates handlers for each input */}
         {(model_data_copy["layers"]).map((layer, index) => 
         
