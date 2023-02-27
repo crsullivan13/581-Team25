@@ -37,6 +37,10 @@ Revision:
     Date 1/29/22
     Author: Amith Panuganti
     Description: Made tree fully interactive. However, it does has some bugs that needs to be fixed
+Revision:
+    Date 2/3/22
+    Author: Amith Panuganti 
+    Description: Allows users to use the same interactive decision tree multiple times.
 */
 
 
@@ -179,6 +183,38 @@ function DecisionLeaf(props){
             drawArrow(context, xPos+40, yPos+40, rightXPos+40, yPos+70)
         }
     }
+
+    //Redraws the tree
+    //Takes in context, the context of the canvas 
+    //And leaf, a node of the tree
+    const redrawTree = (context, leaf) => {
+        //Firstly, begin the tree
+        context.beginPath()
+        
+        //Create rect
+        context.rect(leaf.xCor, leaf.yCor, 80, 40)
+        context.stroke()
+
+        //Get the text from from leaf
+        let info = leaf.info
+
+        //Add text
+        context.font = "12px Arial"
+        context.textAlign = "center"
+        context.fillText(info, leaf.xCor+40, leaf.yCor+25)
+
+        //Next, if leaf has children
+        if(leaf.type !== "Class")
+        {
+            //Redraw tree for left and right child
+            redrawTree(context, leaf.leftChild)
+            redrawTree(context, leaf.rightChild)
+
+            //Redraw arrows for the tree
+            drawArrow(context, leaf.xCor+40, leaf.yCor+40, leaf.leftChild.xCor+40, leaf.yCor+70)
+            drawArrow(context, leaf.xCor+40, leaf.yCor+40, leaf.rightChild.xCor+40, leaf.yCor+70)
+        }
+    }
     
     
      //Create handleChange function
@@ -263,7 +299,12 @@ function DecisionLeaf(props){
         //Set leaf
         setLeaf(tree.root)
 
-    }, [tree])
+        return () =>{
+            //Clear reactangle
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+    }, [props.isOpen])
 
     
     //Used to make the tree interactive
@@ -274,6 +315,12 @@ function DecisionLeaf(props){
             //Make the tree green
             const canvas = canvasRef.current
             const context = canvas.getContext("2d")
+
+            //Clear reactangle
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            //Redraw the entire tree
+            redrawTree(context, tree.root)
 
             //Clear canvas
             context.fillStyle = "green"

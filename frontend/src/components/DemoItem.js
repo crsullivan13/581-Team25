@@ -77,13 +77,13 @@ function DemoItem(props){
                         //set x data from config file
                         setXData(configData.LOGISTIC_DEMO_DATA.ONE.X);
                         //set y data from config file
-                        setYData(configData.LOGTISITC_DEMO_DATA.ONE.y);
+                        setYData(configData.LOGISTIC_DEMO_DATA.ONE.y);
                         //return the text info fro the model
                     } else {
                             //set x data from config file
-                        setXData(configData.LOGTISTIC_DEMO_DATA.TWO.X);
+                        setXData(configData.LOGISTIC_DEMO_DATA.TWO.X);
                         //set y data from config file
-                        setYData(configData.LOGTISTIC_DEMO_DATA.TWO.y);
+                        setYData(configData.LOGISTIC_DEMO_DATA.TWO.y);
                         //return the text info fro the model
                     }
                     break;

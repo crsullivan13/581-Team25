@@ -30,6 +30,7 @@ import MultiLayerPerceptronClassHypParams from "./MultiLayerPerceptronClassHypPa
 import MultiLayerPerceptronRegressHypParams from "./MultiLayerPerceptronRegressHypParams"
 import NaiveBayesClassifierHypParams from "./NaiveBayesClassifierHypParams"
 import SequentialModel from "./SequentialModelHypParams"
+import FigLinearRegres from "./FigLinearRegres"
 import GenericHypParams from "./GenericHypParams"
 import { Form, Button, Container, ModalHeader } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
@@ -40,6 +41,7 @@ import Modal from 'react-bootstrap/Modal'
 import { useState, useEffect } from 'react';
 
 import {useAuth} from "../../contexts/AuthContext"
+
 
 function Training() {
 
@@ -113,6 +115,8 @@ function Training() {
 		//the feature file is parsed and the featureData state is updated
 		parseCSV(event.target.files[0], 'feature');
 	}
+
+	let colors = [ 'blue', 'green', 'red' ];
 
 
 	//this is called when we are training a model
@@ -291,10 +295,11 @@ function Training() {
 		//check state of kind of model
 	}
 	//this page currently has areas to choose and adjust options for the model, the hyperparameters, and the recorded metrics
-  return (
+	return (
 
 
 	<div id="top-level_wrapper">
+		<FigLinearRegres width="200px" height="200px"/>
 	{/*This is the pop up for error displaying, we need this so we can inform the user what was wrong with their input*/}
 	<Modal show={show} onHide={handleClose}>
 		<Modal.Header closeButton>
@@ -307,7 +312,7 @@ function Training() {
 	<Container id="container">
 	<Row id="row">
 		{/*<GenericHypParams />*/}
-
+	
 		<h1 className="w-100 mt-2">Select Training Data</h1>
 		<Form.Group className="mb-3" controlId="trainingUpload">
 		<Form.Label>Upload Training Data File</Form.Label>
@@ -369,8 +374,6 @@ function Training() {
 	</Row>
 	{returnedModel}
 	</Container>
-
-	
 	</div>
   );
 }
