@@ -1,5 +1,5 @@
 /*
-Name: DecisionTree.js
+Name: LogisitcRegressionDemo.js
 Description: Creates demo for logistic regression demo
 Programmers: Amith Panuganti
 Creation Date: 2/7/22
@@ -56,8 +56,17 @@ function LogisticRegressionPart1Front(props)
         <>
         <div>
             <p>
-              Linear Regression is good for a type of machine learning called regression, which aims to predict a value of a variable based on the values of other variables.
-              However, what linear regression is not good for is classification, which aims to determine the class of an object based the values of its variables.
+              Linear Regression is good for a type of machine learning called regression. Regression is the process of determining how the values of a series of variables affect the value of 1 varible. 
+              However, what linear regression is not good at is classification. Classifcation is the process of assigning objects into different groups called classes based on its features which are a series of variables that represents the object. 
+              Each class is represented by a set of distinct features that makes its objects different from other objects. For example, if we have a series of shapes, each shape have a distin t characteristcs, such as the number of sides, that makes it different from 
+              some shapes but similar to other shapes. So, we can develop class shapes based on the number of sides, such as the triangle class for 3 sides of the rectangle class for 4 sides, and assign each shape a class based on the number of sides. 
+
+            </p>
+            <p>
+              So, why is linear regression is not good fo classification? Well, linear regression is a regression model. So, it assumes that the value we are trying to predict, our output variable, based on the values of a set of varaibles, our inputs variables, can take on any number.
+              This can range from negative numbers to decimal number. Essentially, our output variable can take on a infinite number of values. Asa result, any set of input variables with different values can lead to any value for the output variable. 
+              However, classifcation involves a limited number of class rather an infinite amount of them. As a result, the output variable, which will represent a class, can only be a certain number of avlues. As a result, 
+              only a specific set of input variables will lead to a certain value. 
             </p>
             <p>
                 For example, lets say that I have a heater at home that controls the temperature of the house. 
@@ -187,7 +196,7 @@ function LogisticRegressionTrain(props)
         }
 
         //Set url for training 
-        let url = "https://team-25-362714.uc.r.appspot.com/logisticRegressionDemo"
+        let url = "http://127.0.0.1:5000/logisticRegressionDemo"
 
         //Make request json string
         let jsonString = JSON.stringify(model_data)
