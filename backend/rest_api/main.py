@@ -38,6 +38,9 @@
 #log: Edited Jan 19 2022
 #     Author: Amith Panugnti
 #     Description: Add 200 status message in Decision Tree Demo
+# log: Edited Feb 26 2023
+#     Author: Derrick Quinn
+#     Description: Added support for storing multiple models
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
@@ -212,14 +215,16 @@ def predict():
         # Get the features from data
         X = data["X"]
 
-        # Get the model from data
-        uuid = data["uuid"]
-
-        #Get the reference to the user's document in firebase
+        # Get the user from data
         user_ref = db.collection(u'Models').document(uuid)
 
-        #Read the stored model. If this fails, then we catch the exception
-        ser_model = user_ref.get().to_dict()['model']
+        uuid = data["uuid"]
+        ser_model = ""
+        if "model_name" in data:
+            model_dict = user_ref.get().collection(u'user_models').get().to_dict()
+            ser_model = model_dict[data["model_name"]]
+        else :
+            ser_model = user_ref.get().to_dict()['model']
 
         #Deserialize the model
         model = pickle.loads(ser_model)
