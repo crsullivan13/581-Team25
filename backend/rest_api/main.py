@@ -41,6 +41,9 @@
 # log: Edited Feb 7 2022
 #      Author: Amith Panuganti
 #      Description: Added route for logistic regression demo
+# log: Edited Feb 23 2022
+#      Author: Amith Panuganti
+#      Description: Modified a route to handle all demos
 #
 
 from lib.communications import PushToFront 
@@ -119,8 +122,9 @@ def decisionTreeDemo():
     except Exception as e: #Elsewhere
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
 
-# Create route for logsitc regression demo
-@app.route('/logisticRegressionDemo', methods=['POST'])
+# Create route for all demos
+# For now, is just logistic and mlp demo
+@app.route('/Demo', methods=['POST'])
 @cross_origin()
     # input: request.data
     # output: json file of metrics
