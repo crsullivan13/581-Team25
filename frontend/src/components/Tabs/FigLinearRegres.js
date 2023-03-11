@@ -43,36 +43,106 @@ import {useAuth} from "../../contexts/AuthContext"
 
 import { motion } from "framer-motion"
 
+
+
+
+
 function FigLinearRegres(props) {
-	console.log(parseInt(props.width));
+	const [msDown, setmsDown] = useState(false);
+	const [shiftPressed, setShift] = useState(false);
+	const [yPos1, setYPos1] = useState(10);
+	const [yPos2, setYPos2] = useState(10);
+	const [yRot, setYRot] = useState(0);
+
+	
+	
+	useEffect(() => {
+		const keyDownHandler = event => {
+			if (event.key === 'Shift') {
+				event.preventDefault();
+				console.log("shift pressed");
+				setShift(true);
+		  	}
+		};
+
+		const keyUpHandler = event => {
+			if (event.key === 'Shift') {
+				event.preventDefault();
+				console.log("shift rel");
+				setShift(false);
+			}
+		};
+
+		document.addEventListener('keydown', keyDownHandler);
+		document.addEventListener('keyup', keyUpHandler);
+
+		return () => {
+			document.removeEventListener('keydown', keyDownHandler);
+			document.removeEventListener('keyup', keyDownHandler);
+		  };
+	}, [])
+
+
+
+	function handleMouseDown(ev) { 
+		let y = ev.clientY - ev.target.parentNode.getBoundingClientRect().top;
+		let x = ev.clientX - ev.target.parentNode.getBoundingClientRect().left;
+		setmsDown(true);
+		console.log("Mouse Pressed") 
+	}
+	
+	function handleMouseUp(ev) { 
+		console.log("mouse up")
+		setmsDown(false);
+	}
+	
+	function handleMouseMove(ev) {
+		if(msDown){
+			if(shiftPressed){
+				let y = ev.clientY - ev.target.parentNode.getBoundingClientRect().top;
+				let x = ev.clientX - ev.target.parentNode.getBoundingClientRect().left;
+				let halfwidth = 0.5* (ev.target.parentNode.getBoundingClientRect().right - ev.target.parentNode.getBoundingClientRect().left);
+				let halfheight = 0.5*(ev.target.parentNode.getBoundingClientRect().top - ev.target.parentNode.getBoundingClientRect().bottom);
+				
+				let avg_ys = 0.5 * (yPos1 + yPos2);
+
+				let newy2 = (-halfwidth)* (y - avg_ys)/(x - halfwidth) + avg_ys;
+				let newy1 = (halfwidth)* (y - avg_ys)/(x - halfwidth) + avg_ys;
+				setYPos1(newy1);
+				setYPos2(newy2);
+				console.log(avg_ys)
+
+			}else{
+				let y = ev.clientY - ev.target.parentNode.getBoundingClientRect().top;
+				let avg_ys = 0.5 * (yPos1 + yPos2);
+				let y1_d = yPos1 - avg_ys;
+				let y2_d = yPos2 - avg_ys;
+				setYPos1(y + y1_d);
+				setYPos2(y + y2_d);
+				console.log(y)
+			}
+		}
+	}
+
 	return (
-	<svg id="fig1" style={{"background-color": "green"}}>
+	<svg id="fig1" backgroundcolor="green" onMouseDown={(ev) => handleMouseDown(ev)} onMouseMove={(ev) => handleMouseMove(ev)} onMouseUp={(ev) => handleMouseUp(ev)}>
 		<motion.line 
-			initial={{
-				x: ""+parseInt(props.width)/2+"px",
-				y: ""+parseInt(props.height)/2+"px"
-			}}
 			style={{
 				originX: "0px",
 				originY: "0px"
 			}}
 			animate={{
-				rotate: [0, -40, -75, -20, 45, 20, 0],
-				y: [100, 75, 100, 125, 100]
+				y1: yPos1,
+				y2: yPos2
 			}}
 			transition={{
-				repeat: Infinity,
-				duration: 3,
-				repeatType: "loop",
+				duration: 0.1,
 				ease: "easeInOut"
 			}}
-			x1="-500px" x2="500px" y1="0" y2="0" stroke="blue" strokeWidth="5"
-		/>
-		<circle cx="50" cy="50" r="5" fill="red"></circle>
-		<circle cx="150" cy="10" r="5" fill="red"></circle>
-		<circle cx="50" cy="110" r="5" fill="red"></circle>
-		<circle cx="180" cy="100" r="5" fill="red"></circle>
-		<circle cx="200" cy="120" r="5" fill="red"></circle>
+
+			x1="0" x2="300" y1="0" y2="0" stroke="blue" strokeWidth="5"
+		>
+		</motion.line>
 	</svg>
   );
 }

@@ -297,7 +297,6 @@ function Training() {
 	//this page currently has areas to choose and adjust options for the model, the hyperparameters, and the recorded metrics
 	return (
 
-
 	<div id="top-level_wrapper">
 		<FigLinearRegres width="200px" height="200px"/>
 	{/*This is the pop up for error displaying, we need this so we can inform the user what was wrong with their input*/}
