@@ -43,108 +43,226 @@ import {useAuth} from "../../contexts/AuthContext"
 
 import { motion } from "framer-motion"
 
+import { useRef } from 'react'
 
 
 
+const FigLinearRegres = props => {
+	const canvasRef = useRef(null);
+	const [equation, setEquation] = useState("");
+	const [error, setError] = useState("");
+	let msdown = false;
+	let shiftdown = false;
+	let dataPtSelected = "na";
 
-function FigLinearRegres(props) {
-	const [msDown, setmsDown] = useState(false);
-	const [shiftPressed, setShift] = useState(false);
-	const [yPos1, setYPos1] = useState(10);
-	const [yPos2, setYPos2] = useState(10);
-	const [yRot, setYRot] = useState(0);
-
-	
-	
-	useEffect(() => {
-		const keyDownHandler = event => {
-			if (event.key === 'Shift') {
-				event.preventDefault();
-				console.log("shift pressed");
-				setShift(true);
-		  	}
-		};
-
-		const keyUpHandler = event => {
-			if (event.key === 'Shift') {
-				event.preventDefault();
-				console.log("shift rel");
-				setShift(false);
-			}
-		};
-
-		document.addEventListener('keydown', keyDownHandler);
-		document.addEventListener('keyup', keyUpHandler);
-
-		return () => {
-			document.removeEventListener('keydown', keyDownHandler);
-			document.removeEventListener('keyup', keyDownHandler);
-		  };
-	}, [])
+	let px;
+	let py;
+	let nx;
+	let ny;
 
 
+	let calcFunc = (x) => {return -1;}
 
-	function handleMouseDown(ev) { 
-		let y = ev.clientY - ev.target.parentNode.getBoundingClientRect().top;
-		let x = ev.clientX - ev.target.parentNode.getBoundingClientRect().left;
-		setmsDown(true);
-		console.log("Mouse Pressed") 
+	let origin = [50, 50];
+
+	let dataPts = {
+		"p1": [20, 20],
+		"p2": [34, 35],
+		"p3": [60, 20],
+		"p4": [34, 65],
+	};
+
+
+	let calcError = () => {
+		let dist = 0;
+		for(let key in dataPts){
+			let datax = dataPts[key][0];
+			let datay = dataPts[key][1];
+
+			dist = dist + Math.pow(calcFunc(datax) - datay, 2);
+		}
+		dist = Math.round(dist*100)/100;
+		setError(dist);
 	}
-	
-	function handleMouseUp(ev) { 
-		console.log("mouse up")
-		setmsDown(false);
+
+	let calcEquation = () => {
+		let slope = (py-ny)/(px-nx);
+		slope = Math.round(100*slope)/100;
+
+		let intercept = origin[1] - (slope*origin[0]);
+		intercept = Math.round(100*intercept)/100;
+		setEquation(""+slope+"x + " + intercept);
+
+		calcFunc = (x) => {
+			let val = x*slope + intercept;
+			return val;
+		}
 	}
-	
-	function handleMouseMove(ev) {
-		if(msDown){
-			if(shiftPressed){
-				let y = ev.clientY - ev.target.parentNode.getBoundingClientRect().top;
-				let x = ev.clientX - ev.target.parentNode.getBoundingClientRect().left;
-				let halfwidth = 0.5* (ev.target.parentNode.getBoundingClientRect().right - ev.target.parentNode.getBoundingClientRect().left);
-				let halfheight = 0.5*(ev.target.parentNode.getBoundingClientRect().top - ev.target.parentNode.getBoundingClientRect().bottom);
-				
-				let avg_ys = 0.5 * (yPos1 + yPos2);
 
-				let newy2 = (-halfwidth)* (y - avg_ys)/(x - halfwidth) + avg_ys;
-				let newy1 = (halfwidth)* (y - avg_ys)/(x - halfwidth) + avg_ys;
-				setYPos1(newy1);
-				setYPos2(newy2);
-				console.log(avg_ys)
 
+	let dataPoints = (ctx) => {
+		ctx.fillStyle = '#000000';
+		for(let key in dataPts){
+			if(key == dataPtSelected){
+				ctx.beginPath();
+				ctx.arc(dataPts[key][0], dataPts[key][1], 6, 0, 2*Math.PI);
+				ctx.stroke();
 			}else{
-				let y = ev.clientY - ev.target.parentNode.getBoundingClientRect().top;
-				let avg_ys = 0.5 * (yPos1 + yPos2);
-				let y1_d = yPos1 - avg_ys;
-				let y2_d = yPos2 - avg_ys;
-				setYPos1(y + y1_d);
-				setYPos2(y + y2_d);
-				console.log(y)
+				ctx.beginPath();
+				ctx.arc(dataPts[key][0], dataPts[key][1], 3, 0, 2*Math.PI);
+				ctx.stroke();
 			}
 		}
 	}
 
-	return (
-	<svg id="fig1" backgroundcolor="green" onMouseDown={(ev) => handleMouseDown(ev)} onMouseMove={(ev) => handleMouseMove(ev)} onMouseUp={(ev) => handleMouseUp(ev)}>
-		<motion.line 
-			style={{
-				originX: "0px",
-				originY: "0px"
-			}}
-			animate={{
-				y1: yPos1,
-				y2: yPos2
-			}}
-			transition={{
-				duration: 0.1,
-				ease: "easeInOut"
-			}}
+	const releasing = (ctx) => {
+		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+		ctx.fillStyle = '#000000'
+		ctx.beginPath();
+		ctx.arc(origin[0], origin[1], 5, 0, 2*Math.PI);
+		ctx.stroke();
 
-			x1="0" x2="300" y1="0" y2="0" stroke="blue" strokeWidth="5"
-		>
-		</motion.line>
-	</svg>
-  );
+		ctx.beginPath();
+		ctx.moveTo(nx, ny);
+		ctx.lineTo(px, py);
+
+		ctx.stroke();
+		dataPoints(ctx);
+	}
+
+	const rotate = (ctx, x, y) => {
+		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+		ctx.fillStyle = '#000000'
+		ctx.beginPath();
+		ctx.arc(origin[0], origin[1], 10, 0, 2*Math.PI);
+		ctx.stroke();
+		
+
+		let dx = x - origin[0];
+		let dy = y - origin[1];
+
+		let mag = Math.sqrt(dx*dx + dy*dy);
+		let ratio = Math.max(ctx.canvas.width, ctx.canvas.height)/mag;
+
+		let multiplier = ratio*3;
+
+		px = origin[0] + dx*multiplier;
+		py = origin[1] + dy*multiplier;
+		nx = origin[0] - dx*multiplier;
+		ny = origin[1] - dy*multiplier; 
+
+
+		ctx.beginPath();
+		ctx.moveTo(nx, ny);
+		ctx.lineTo(px, py);
+
+		ctx.stroke();
+		dataPoints(ctx);
+	}
+	const offset = (ctx, x, y) => {
+
+		let dy = py - origin[1];
+		let dy_n = ny - origin[1];
+
+		origin[1] = y;
+
+		py = origin[1]+dy;
+		ny = origin[1]+dy_n;
+
+
+
+		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+		ctx.fillStyle = '#000000'
+		ctx.beginPath();
+		ctx.arc(origin[0], origin[1], 5, 0, 2*Math.PI);
+		ctx.stroke();
+
+
+		ctx.beginPath();
+		ctx.moveTo(nx, ny);
+		ctx.lineTo(px, py);
+
+		ctx.stroke();
+		dataPoints(ctx);
+	}
+
+	useEffect(() => {
+		const canvas = canvasRef.current;
+		const ctx = canvas.getContext('2d');
+		origin = [ctx.canvas.width/2, ctx.canvas.height/2];
+
+		canvas.addEventListener("mousemove", function(e){
+
+			if(msdown && !shiftdown && dataPtSelected === "na"){
+				let x = e.clientX - canvas.getBoundingClientRect().left;
+				let y = e.clientY - canvas.getBoundingClientRect().top;
+				rotate(ctx, x, y);
+				calcEquation();
+			}
+			else if(shiftdown){
+				let x = e.clientX - canvas.getBoundingClientRect().left;
+				let y = e.clientY - canvas.getBoundingClientRect().top;
+				offset(ctx, x, y);
+				calcEquation();
+			}
+			else if(dataPtSelected != "na"){
+				let x = e.clientX - canvas.getBoundingClientRect().left;
+				let y = e.clientY - canvas.getBoundingClientRect().top;
+				dataPts[dataPtSelected] = [x, y];
+				offset(ctx, 0, origin[1]);
+			}
+
+			calcError();
+		});
+
+		canvas.addEventListener("mousedown", function(e){
+			msdown = true;
+			let x = e.clientX - canvas.getBoundingClientRect().left;
+			let y = e.clientY - canvas.getBoundingClientRect().top;
+			//check if data point is under mouse:
+			for(let key in dataPts){
+				if(Math.abs(dataPts[key][0]-x) < 10 && Math.abs(dataPts[key][1]-y) < 10){
+					dataPtSelected = key;
+				}
+			}
+			offset(ctx, 0, origin[1]);
+		});
+		canvas.addEventListener("mouseup", function(e){
+			msdown = false;
+
+			for(let key in dataPts){
+				dataPtSelected = "na";
+			}
+
+			releasing(ctx);
+		});
+		document.addEventListener("keydown", function(e){
+			if(e.key == "Shift"){
+				shiftdown = true;
+			}
+		});
+		document.addEventListener("keyup", function(e){
+			if(e.key == "Shift"){
+				shiftdown = false;
+				releasing(ctx);
+			}
+		});
+		nx = 0;
+		px = ctx.canvas.width;
+		ny = ctx.canvas.height/2;
+		py = ctx.canvas.height/2;
+		offset(ctx, 0, origin[1]);
+	}, [])
+
+	return (
+		<div>
+			<p>Click and drag the line, and press shift to change the intercept of the line.</p>
+			<p>Click and drag the data points to see how the error changes</p>
+			<canvas ref={canvasRef} {...props}/>
+			<p>Line Equation: {equation}</p>
+			<p>Squared Error: {error}</p>
+		</div>
+	);
 }
 
 export default FigLinearRegres;
