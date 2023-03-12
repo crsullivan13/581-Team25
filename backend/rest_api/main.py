@@ -41,7 +41,13 @@
 # log: Edited Feb 7 2022
 #      Author: Amith Panuganti
 #      Description: Added route for logistic regression demo
+# log: Edited Feb 23 2022
+#      Author: Amith Panuganti
+#      Description: Modified a route to handle all demos
 #
+# log: Edited Feb 26 2023
+#     Author: Derrick Quinn
+#     Description: Added support for storing multiple models
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
@@ -119,8 +125,9 @@ def decisionTreeDemo():
     except Exception as e: #Elsewhere
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
 
-# Create route for logsitc regression demo
-@app.route('/logisticRegressionDemo', methods=['POST'])
+# Create route for all demos
+# For now, is just logistic and mlp demo
+@app.route('/Demo', methods=['POST'])
 @cross_origin()
     # input: request.data
     # output: json file of metrics
@@ -253,14 +260,16 @@ def predict():
         # Get the features from data
         X = data["X"]
 
-        # Get the model from data
-        uuid = data["uuid"]
-
-        #Get the reference to the user's document in firebase
+        # Get the user from data
         user_ref = db.collection(u'Models').document(uuid)
 
-        #Read the stored model. If this fails, then we catch the exception
-        ser_model = user_ref.get().to_dict()['model']
+        uuid = data["uuid"]
+        ser_model = ""
+        if "model_name" in data:
+            model_dict = user_ref.get().collection(u'user_models').get().to_dict()
+            ser_model = model_dict[data["model_name"]]
+        else :
+            ser_model = user_ref.get().to_dict()['model']
 
         #Deserialize the model
         model = pickle.loads(ser_model)
