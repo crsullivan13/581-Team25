@@ -32,6 +32,7 @@ import configData from '../config/config.json'
 import {useAuth} from "../contexts/AuthContext"
 import Modal from 'react-bootstrap/Modal'
 import DecisionTree from './Tabs/DecisionTree';
+import FigLinearRegres from './Tabs/FigLinearRegres';
 
 function DemoItem(props){
     //need auth context to get uuid
@@ -115,7 +116,7 @@ function DemoItem(props){
 			case "Linear Regression":
                 //dataSetChange()
                 //return the text info fro the model
-				return(<><p>{configData.DEMOS.LINEAR_TXT}</p></>);
+				return(<><p>{configData.DEMOS.LINEAR_TXT}</p><p>Visual Aid:</p><FigLinearRegres height="300px" width="300px"/></>);
 				break;
 			case "Logistic Regression":
                 //dataSetChange()
