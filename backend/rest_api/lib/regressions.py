@@ -10,10 +10,11 @@
 # log: modified Nov 16 - Fixed error with plotting multiple plots and modified figures in each model
 # log: modified Nov 29 - Added Multi Layer Support
 # log: modified Dec 4 - Added Support of Sequential Model
-# log: modified Jan 18 2022 - Added Seperate Function for Decision Tree Demo
-# log: modified Jan 21 2022 - In Decision Tree Demo, used Decision Tree Classifer instead of Decision Tree Regressor
-# log: modified Feb 7 2022 - Add part 1 for logisitic regression demo
-# log: modified Feb 9 2022 - Added Part 2 For Logisitic Regression Demo
+# log: modified Jan 18 2023 - Added Seperate Function for Decision Tree Demo
+# log: modified Jan 21 2023 - In Decision Tree Demo, used Decision Tree Classifer instead of Decision Tree Regressor
+# log: modified Feb 7 2023 - Add part 1 for logisitic regression demo
+# log: modified Feb 9 2023 - Added Part 2 For Logisitic Regression Demo
+# log: modified Mar 1 2023 - Added Models For Part 1 for MLP Demo
 # log: Added kwarg integration to simplify programming
 from sklearn.linear_model import LinearRegression #input linear regression methods
 from sklearn.linear_model import SGDClassifier #input linear regression methods
@@ -351,15 +352,50 @@ def LogisticRegressionDemoPart2(vector_x, vector_y, data):
     accuracy = accuracy_score(vector_y, predict_y)
 
     # Create dictionary containing figure, mse, and accuracy
-
     results = {"figure":figure, "loss":mse, "accuracy":accuracy}
 
     # Return model and results
     return model, results
 
-# Demo of logistic regression part 4
-def LogisticRegressionDemoPart4(vector_x, vector_y, data):
-     # Create logisitc regression model
+
+# Demo for Part 1 Front
+def MLPDemoPart1Front(vector_x, vector_y, data):
+    # Create linear regression model
+    model = LinearRegression()
+
+    # Fit data with model
+    model.fit(vector_x, vector_y)
+
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Create plot for vector_x and predict_y
+    plt.plot(vector_x, predict_y, color="blue")
+
+    # Add labels
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.title("Linear Regression Weakness")
+    plt.grid()
+
+     # Get current figue
+    figure = plt.gcf()
+
+    # Caculate loss
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Create dictionary containing figure, mse
+    results = {"figure":figure, "loss":mse}
+
+    # Return model and results
+    return model, results
+
+# Demo for MLP Demo Part 1 Middle
+def MLPDemoPart1Middle(vector_x, vector_y, data):
+    # Create logisitc regression model
     model = LogisticRegression(**data)
 
     # Fit model on data
@@ -368,12 +404,38 @@ def LogisticRegressionDemoPart4(vector_x, vector_y, data):
     #Predict y
     predict_y = model.predict(vector_x)
 
-     # Caculate mean square error
+     # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Next, create linspace
+    x_test = np.linspace(min(vector_x), max(vector_x), 50)
+
+    # Create logisitc function
+    log_func = expit(x_test * model.coef_ + model.intercept_)
+
+    # Graph logistic function
+    plt.plot(x_test, log_func, color="blue")
+
+    # Add labels
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.title("Logistic Regression Weakness")
+    plt.grid()
+
+     # Get current figue
+    figure = plt.gcf()
+
+    # Caculate loss
     mse = mean_squared_error(vector_y, predict_y)
 
     # Caculate accuracy
     accuracy = accuracy_score(vector_y, predict_y)
 
+    # Create dictionary containing figure, mse, and accuracy
+    results = {"figure":figure, "loss":mse, "accuracy":accuracy}
+
+    # Return model and results
+    return model, results
 
 
 #print(MNIST_SGDDemo(0.5, 42)) - for testing

@@ -33,17 +33,19 @@ Revisions:
     12/04/22
         Revision: Added support for sequential model
         Author: Amith Panuganti
-    1/18/22
+    1/18/23
         Revision: Add Traing Function for Decision Tree Demo
         Author: Amith Panuganti 
-    1/21/22
+    1/21/23
         Revision: Change Decision Tree Regression Demo to Decision Tree Classification Demo
         Author: Amith Panuganti
-    2/7/22
+    2/7/23
         Reivision: Add part 1 of logisitc regression demo
         Author: Amith Panuganti
-    2/9/22
+    2/9/23
         Revision: Add Part 2 of logisitc regression demo
+    3/1/23
+        Revision: Add Part 1 model for MLP Demo
     
     
 Preconditions: Needs labels, features, and model type
@@ -73,7 +75,9 @@ model_dict = {
     "Gaussian Naive Bayes":regressions.GaussianNaiveBayes,
     "Decision Tree Classification": regressions.DecisionTreeClassification,
     "Sequential Model":regressions.SequentialModel,
-    "Logistic Regression Demo Part 2":regressions.LogisticRegressionDemoPart2
+    "Logistic Regression Demo Part 2":regressions.LogisticRegressionDemoPart2,
+    "MLP Demo Part 1 Front":regressions.MLPDemoPart1Front,
+    "MLP Demo Part 1 Middle":regressions.MLPDemoPart1Middle
 }
 
 # Will handle training the model 

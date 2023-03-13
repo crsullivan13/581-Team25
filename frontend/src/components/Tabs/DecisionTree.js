@@ -203,7 +203,7 @@ function DecisionLeaf(props){
         context.textAlign = "center"
         context.fillText(info, leaf.xCor+40, leaf.yCor+25)
 
-        //Next, if leaf has children
+        //Next, if leaf has children s
         if(leaf.type !== "Class")
         {
             //Redraw tree for left and right child
