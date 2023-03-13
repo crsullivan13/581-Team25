@@ -456,6 +456,11 @@ function MLPDemoPart2()
             while the neurons on the right are associated with our animal. You can see that each neuron of the left layer is connected to each neuron on the right layer.
             Depending on what neurons get activated or not, it should how much the neurons on the right get activated. The more a neuron on right is activated, the most likely
             the image is that associated animal. 
+
+            Above each neuron is the name of the pattern the neuron can obtained from the dataset, including the classes. In the first layer, it is obvious that the image
+            would be dectected, so its neuron is activated. Try interacting with the neurons in the second layer and see how it effects the activation of the third layer. You 
+            click on each neuron and turning that neuron on to see its effect on the neural network. If done correctly, you would see how certain patterns from the data will effect whether
+            the image belongs to a class or not. 
         </p>
         <NN height={500} weights={[[[0.25, 0.25, -0.25, -0.25],[-0.25, -0.25, 0.25, 0.25]]]} bias={[[0.5, 0.5]]} width={1000} nodes={[1, 4, 2]} radius={25} xDist={100} left={100} yDist={50}
             patterns={[["Image"], ["Dog Ears", "Dog Tail", "Cat Ears", "Cat Tail"], ["Dog", "Cat"]]} 
@@ -477,7 +482,9 @@ function MLPDemoPart2()
             Then, the next hidden layer uses the patterns found in the previous hidden layers to find more complex patterns, such as faces or legs. 
         </p>
         <p>
-            Here is an example of a neural network with multiple hidden layers, which the first layer identify basic patterns while the sceond identifying more complex patterns. 
+            Here is an example of a neural network with multiple hidden layers, which the first layer identify basic patterns while the sceond identifying more complex patterns. As with the previous neural network,
+            interact with the neural network in the 2nd layer. You woudld see that changing the values of the 2nd layer neurons will effect the values in the 3rd layer neurons which will then effect class of the image. 
+            So, if an image contains dog paws and dog tail, then dog face will light up, causing the image to more likely be a dog. 
         </p>
         <NN height={800} width={700} nodes={[1, 8, 4, 2]} radius={25} xDist={75} left={100} yDist={50} 
             weights={[[[0.25, 0.25, 0, 0, -0.25, -0.25, 0, 0], [0, 0, 0.25, 0.25, 0, 0, -0.25, -0.25], [-0.25, -0.25, 0, 0, 0.25, 0.25, 0, 0], [0, 0, -0.25, -0.25, 0, 0, 0.25, 0.25]],[[0.25, 0.25, -0.25, -0.25],[-0.25, -0.25, 0.25, 0.25]]]}
