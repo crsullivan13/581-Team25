@@ -58,7 +58,10 @@ function Demo(){
                         </Navbar>
                     </Col>
                     <Col>
-                        <DemoItem modelType={ModelType}/>
+                        {(ModelType === "Multilayer Perceptron") 
+                            ? <MLPDemo></MLPDemo>
+                            : <DemoItem modelType={ModelType}/>
+                        }
                     </Col>
                 </Row>
             </Container>
