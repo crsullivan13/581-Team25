@@ -33,6 +33,7 @@ import {useAuth} from "../contexts/AuthContext"
 import Modal from 'react-bootstrap/Modal'
 import DecisionTree from './Tabs/DecisionTree';
 import FigLinearRegres from './Tabs/FigLinearRegres';
+import { Chart } from "react-google-charts";
 
 function DemoItem(props){
     //need auth context to get uuid
@@ -50,6 +51,53 @@ function DemoItem(props){
 	const [requestError, setReqError] = useState();
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+
+    const data = [
+        ["Diameter", "Age"],
+        [8, 37],
+        [4, 19.5],
+        [11, 52],
+        [4, 22],
+        [3, 16.5],
+        [6.5, 32.8],
+        [14, 72],
+      ];
+      
+      const options = {
+        title: "Age of sugar maples vs. trunk diameter, in inches",
+        hAxis: { title: "Diameter" },
+        vAxis: { title: "Age" },
+        legend: "none",
+        trendlines: { 0: {} },
+      };
+
+     const data2 = [
+        ["Generation", "Descendants"],
+        [0, 1],
+        [1, 33],
+        [2, 269],
+        [3, 2013],
+      ];
+      
+      const options2 = {
+        title: "Descendants by Generation",
+        hAxis: { title: "Generation", minValue: 0, maxValue: 3 },
+        vAxis: { title: "Descendants", minValue: 0, maxValue: 2100 },
+        trendlines: {
+          0: {},
+        },
+      };
+
+      const options3 = {
+        title: "Descendants by Generation",
+        hAxis: { title: "Generation", minValue: 0, maxValue: 3 },
+        vAxis: { title: "Descendants", minValue: 0, maxValue: 2100 },
+        trendlines: {
+          0: {
+              type: "exponential",
+          },
+        },
+      };
 
     //currently not in use, but could set the data values
     let dataSetChange = () => {
@@ -131,8 +179,35 @@ function DemoItem(props){
 			case "Linear Regression":
                 //dataSetChange()
                 //return the text info fro the model
-				return(<><p>{configData.DEMOS.LINEAR_TXT}</p><p>Visual Aid:</p><FigLinearRegres height="300px" width="300px"/></>);
+				return(<><p> {configData.DEMOS.LINEAR_TXT_ONE} <br/> <br/>{configData.DEMOS.LINEAR_TXT_TWO} <br/><br/> {configData.DEMOS.LINEAR_TXT_THREE}</p><Chart
+                chartType="ScatterChart"
+                width="80%"
+                height="400px"
+                data={data}
+                options={options}
+                />
+                <p>One trait to always remember about a linear regression model is that it assumes the data follows a linear trend.
+                    In the above scatter plot, you can see that the data is very linear and therefore well suited for a linear regression model.</p>
+                <Chart
+                chartType="ScatterChart"
+                width="80%"
+                height="400px"
+                data={data2}
+                options={options2}
+                />    
+                <p>If you compare the previous plot with this plot, you can clearly see how linear regression starts to struggle with data that is not linear.
+                    The above data would be better fit by a polynomial line, therefore linear regression will fail to properly predict values for this data set.</p>
+                    <Chart
+                chartType="ScatterChart"
+                width="80%"
+                height="400px"
+                data={data2}
+                options={options3}
+                /> 
+                <p>Visual Aid:</p><FigLinearRegres height="300px" width="300px"/> </>);
+                
 				break;
+
 			case "Logistic Regression":
                 //dataSetChange()
 				return(<><p>{configData.DEMOS.LOGISTIC_TXT}</p></>);
