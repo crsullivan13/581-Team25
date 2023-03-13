@@ -103,6 +103,21 @@ function DemoItem(props){
                         //return the text info fro the model
                     }
                     break;
+                 case "General Model Training":
+                    if(dataSet === 'Set One'){
+                        //set x data from config file
+                        setXData(configData.DTREE_DEMO_DATA.ONE.X);
+                        //set y data from config file
+                        setYData(configData.DTREE_DEMO_DATA.ONE.y);
+                        //return the text info fro the model
+                    } else {
+                            //set x data from config file
+                        setXData(configData.DTREE_DEMO_DATA.TWO.X);
+                        //set y data from config file
+                        setYData(configData.DTREE_DEMO_DATA.TWO.y);
+                        //return the text info fro the model
+                    }
+                    break;
                 default:
             }
 		}
@@ -125,6 +140,10 @@ function DemoItem(props){
 			case "Decision Tree Classification":
                 //dataSetChange()
 				return(<><p>{configData.DEMOS.DTREE_TXT}</p></>);
+				break;
+			case "General Model Training":
+                //dataSetChange()
+				return(<><p>{configData.DEMOS.GENERAL_TXT}</p></>);
 				break;
 			default:
 

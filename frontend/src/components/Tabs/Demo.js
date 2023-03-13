@@ -20,6 +20,7 @@ import { useState } from 'react';
 import DemoItem from '../DemoItem';
 import { LogisticRegressionPart1Front, LogisticRegressionPart1After} from './LogisticRegressionDemo';
 import LogisticRegressionPart from "./LogisticRegressionDemo"
+import GeneralDemoPart from "./GeneralDemo"
 import MLPDemo from './MLPDemo';
 
 function Demo(){
@@ -47,6 +48,7 @@ function Demo(){
                         <option>Logistic Regression</option>
                         <option>Decision Tree Classification</option>
                         <option>Multilayer Perceptron</option>
+                        <option>General Model Training</option>
                     </Form.Select>
                 </Row>
                 <Row>
