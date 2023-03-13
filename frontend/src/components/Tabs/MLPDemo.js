@@ -17,6 +17,18 @@ Revisions:
     Date: 2/24/23
     Author: Amith Panuganti 
     Description: Added Part 2 and 3 to the demo
+
+    Date: 3/1/23
+    Author: Amith Panuganti
+    Description: Added Figures and Model For Part 1
+
+    DatE: 3/3/23
+    Author: Amith Panuganti
+    Description: Add images
+
+    Date: 3/12/23
+    Author: Amith Panuganti
+    Description: Added An Interactive Neural Network to Part 2
 */
 
 //Import react
@@ -24,10 +36,88 @@ import React from "react";
 import { useState } from 'react';
 import {Button , Accordion} from 'react-bootstrap';
 import GeneralDemoPart from "./GeneralDemo";
+import logo from './Dog.png'
+import cat from './Cat.jpeg'
+import NN from "./NeuralNetwork"
 
 //Create Component for MLPDemo
 function MLPDemo(props)
 {
+
+    //Create our datasets for MLP Regression
+    //The dataset will be based on x^2 + 2x + 1
+    let Regression_X = []
+    let Regression_Y = []
+
+    //Create dataset for MLP Classifcation
+    //Class 0 should be even while Class 1 should be odd
+    let Classification_X = []
+    let Classifcation_Y = []
+
+    //Create a dataset for Linear Regression
+    //The dataset will be based on y = 2x + 2
+    let LinearRegression_X = []
+    let LinearRegression_Y = []
+
+    //Create a dataset for logistic regression
+    //Class 0 should be less than a certain number while Class 1 should be greater than a certain nubmer
+    let LogisticRegression_X = []
+    let LogisticRegression_Y = []
+
+    //Loop 100
+    for(let i = 0; i < 50; i++)
+    {
+        //Get a random number between -5 to 5
+        let reg_value = Math.random() * 5
+        reg_value = reg_value * (Math.round(Math.random()) ? 1 : -1)
+
+        //Caculate y using reg value and x^2 + 2x + 1
+        let reg_y = Math.pow(reg_value, 2) + 2 * reg_value + 1
+
+        //Caculate linear regression value using reg value
+        let lin_reg_y = 2 * reg_value + 2
+
+        //Get a random number between 50 and 200
+        let class_value = Math.floor((Math.random() * 150)) + 50
+
+        //See class y
+        let class_y = 0
+
+        //If class_value is odd
+        if(class_value % 2 === 1)
+        {
+            //Set class_y to be 1
+            class_y = 1
+        }
+
+        //Set log class y to be 0
+        let log_class_y = 0
+
+        //If class_value is greather than 125
+        if(class_value > 115)
+        {
+            //Set class_value to be 0
+            log_class_y = 1
+        }
+
+        //Add reg_value, reg_y, class_value, class_y, log_class_y, and line_reg_y to their lists
+        Regression_X.push([reg_value])
+        Regression_Y.push(reg_y)
+        Classification_X.push([class_value])
+        Classifcation_Y.push(class_y)
+
+        //If i is less than 25, add reg_value and lin_reg_y to dataset
+        if(i < 25)
+        {
+            LinearRegression_X.push([reg_value])
+            LinearRegression_Y.push(lin_reg_y)
+        }
+        
+        LogisticRegression_X.push([class_value])
+        LogisticRegression_Y.push([log_class_y])
+    }
+
+    
     //Create an Accordian
     return(
         <>
@@ -36,24 +126,32 @@ function MLPDemo(props)
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Part 1</Accordion.Header>
                 <Accordion.Body>
-                    <MLPDemoPart1Front></MLPDemoPart1Front>
-                    <MLPDemoPart1Middle></MLPDemoPart1Middle>
-                    <MLPDemoPart1Back></MLPDemoPart1Back>
+                    <MLPDemoPart1
+                    LinX={LinearRegression_X}
+                    LinY={LinearRegression_Y}
+                    LogX={LogisticRegression_X}
+                    LogY={LogisticRegression_Y}
+                    MLPRegX={Regression_X}
+                    MLPRegY={Regression_Y}
+                    MLPClassX={Classification_X}
+                    MLPClassY={Classifcation_Y}
+                    >
+                    </MLPDemoPart1>
                 </Accordion.Body>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item eventKey="1">
                 <Accordion.Header>Part 2</Accordion.Header>
                 <Accordion.Body>
                     <MLPDemoPart2></MLPDemoPart2>
                 </Accordion.Body>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item eventKey="2">
                 <Accordion.Header>Part 3</Accordion.Header>
                 <Accordion.Body>
                     <MLPDemoPart3></MLPDemoPart3>
                 </Accordion.Body>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item eventKey="3">
                 <Accordion.Header>Part 4</Accordion.Header>
                 <Accordion.Body>
                     <MLPDemoPart4Front>
@@ -62,7 +160,7 @@ function MLPDemo(props)
                     </MLPDemoPart4Back>
                 </Accordion.Body>
             </Accordion.Item>
-            <Accordion.Item>
+            <Accordion.Item eventKey="4">
                 <Accordion.Header>Part 5</Accordion.Header>
                 <Accordion.Body>
                     <MLPDemoPart5>
@@ -74,10 +172,120 @@ function MLPDemo(props)
     );
 }
 
+//Create component for MLPDemoPart1
+function MLPDemoPart1(props)
+{
+    //Create MLPDemoPart1Front
+    let frontTag = <MLPDemoPart1Front
+    X={props.MLPRegX}
+    Y={props.MLPRegY}
+    LinX={props.LinX}
+    LinY={props.LinY}
+    LogX={props.LogX}
+    LogY={props.LogY}
+    >
+    </MLPDemoPart1Front>
+
+    //Create MLPDemoPart1Middle
+    let middleTag = <MLPDemoPart1Middle
+    X={props.MLPClassX}
+    Y={props.MLPClassY}
+    ></MLPDemoPart1Middle>
+
+    //Create back general demo part 
+    let backTag = <GeneralDemoPart
+    front={middleTag}
+    X={props.MLPClassX}
+    y={props.MLPClassY}
+    model="MLP Demo Part 1 Middle"
+    back={<MLPDemoPart1Back></MLPDemoPart1Back>}
+    >
+    </GeneralDemoPart>
+
+    return(
+        <GeneralDemoPart
+        front={frontTag}
+        X={props.MLPRegX}
+        y={props.MLPRegY}
+        model="MLP Demo Part 1 Front"
+        back={backTag}
+        ></GeneralDemoPart>
+    )
+}
 
 //Create front component for Part 1 of MLP Demo
-function MLPDemoPart1Front()
+function MLPDemoPart1Front(props)
 {
+    //Create list of tag for part
+    let tags = []
+
+    //Set url for training 
+    let url = "https://team-25-362714.uc.r.appspot.com/MLPDemoFigures"
+
+    //Creates graph for Regression Dataset
+    //Create dictionary to be send 
+    let request = {
+        "X":props.X,
+        "y":props.Y,
+        "LinX":props.LinX,
+        "LinY":props.LinY,
+        "LogX":props.LogX,
+        "LogY":props.LogY,
+        "type":"MLP Demo Part 1 Front"
+    }
+
+    //Make request json string
+    let jsonString = JSON.stringify(request)
+
+    //Create object that will handling sending and recieving information 
+    let xhr = new XMLHttpRequest()
+
+    //Open response
+    xhr.open("POST", url, false)
+
+    //Create on load function
+    xhr.onload = function()
+    {
+        //If status of xhr is 200
+        if(xhr.status === 200)
+        {
+            //Get repsonse from xhr
+            let jsonResponse = JSON.parse(xhr.responseText)
+
+            //Get image from jsonResponse
+            const image = "data:image/png;base64,"+jsonResponse.figure;
+
+            //Create image tag
+            let imageTag = <img alt="Figure" key="Figure" src={image}></img>
+
+            // Add tag to tags
+            tags.push(imageTag)
+
+            //Create linear image tag
+            const linear_image = "data:image/png;base64,"+jsonResponse.linear_figure;
+            let linearImageTag = <img alt="Figure" key="Linear_Figure" src={linear_image}></img>
+
+            //Create log image tag
+            const log_image = "data:image/png;base64,"+jsonResponse.log_figure;
+            let logImageTag =  <img alt="Figure" key="Log_Figure" src={log_image}></img>
+
+            //Push both tags to tags
+            tags.push(linearImageTag)
+            tags.push(logImageTag)
+        }
+        //Otherwise
+        else
+        {
+            //Alert the user
+            let error = "Error: " + xhr.responseText
+            alert(error)
+        }
+    }
+
+    //Send Request
+    //Send string
+    xhr.send(jsonString)
+
     return(
     <>
     <p>
@@ -93,19 +301,19 @@ function MLPDemoPart1Front()
         would if the points in the data form a straight line. 
     </p>
 
-    {/*TODO: Add Model or Image to show a linear regression demo */}
+    {tags[1]}
     <p>
         Likewise, a good dataset for logistic regression would be if each class are represented by data points that 
         form seperate groups in different parts of the dataset. 
     </p>
-    {/* Show how logistic regression is good for the dataset */}
+    {tags[2]}
     <p>
         However, the problem comes when the dataset ignores both linear and logistic regression assumptions on the dataset.
         For linear regression, this is when our dataset doesn't follow a straight line. For example, lets say we are given a dataset
         that looks like the following.
     </p>
 
-    {/*TODO: Show graph of dataset */}
+    {tags[0]}
     <p>
         You can see that the path of the data is not a linear line. So, if we try using linear regression it. We get the follwoing
     </p>
@@ -116,8 +324,62 @@ function MLPDemoPart1Front()
 }
 
 //Create middle component for Part 1 of MLP Demo
-function MLPDemoPart1Middle()
+function MLPDemoPart1Middle(props)
 {
+
+    //Create tag
+    let tag = null
+
+    //Set url for training 
+    let url = "https://team-25-362714.uc.r.appspot.com/MLPDemoFigures"
+
+    //Create dictionary to send to backend
+    let request = {
+        "X":props.X,
+        "y":props.Y,
+        "type":"MLP Demo Part 1 Middle"
+    }
+
+    //Make request json string
+    let jsonString = JSON.stringify(request)
+
+    //Create object that will handling sending and recieving information 
+    let xhr = new XMLHttpRequest()
+
+    //Open response
+    xhr.open("POST", url, false)
+
+    //Create on load function
+    xhr.onload = function()
+    {
+        //If status of xhr is 200
+        if(xhr.status === 200)
+        {
+            //Get repsonse from xhr
+            let jsonResponse = JSON.parse(xhr.responseText)
+
+            //Get image from jsonResponse
+            const image = "data:image/png;base64,"+jsonResponse.figure;
+
+            //Create image tag
+            let imageTag = <img alt="Figure" key="Figure" src={image}></img>
+
+            //Set tag to be imageTag
+            tag = imageTag
+        }
+        //Otherwise
+        else
+        {
+            //Alert the user
+            let error = "Error: " + xhr.responseText
+            alert(error)
+        }
+    }
+
+    //Send Request
+    //Send string
+    xhr.send(jsonString)
+
     return(
         <>
         <p>
@@ -127,9 +389,9 @@ function MLPDemoPart1Middle()
             As for classification, logistic regression is not good if there are overlapping between different classes.
             For example, lets say that we want to know if a person is tall or short based on their weight. So, we let tall and short 
             people be our classes and weight be used to determine the class. In a normal scenario, we would see that our classes clustered
-            around a series of weights. However, the problem comes when these classes overlap.
+            around a series of weights. However, the problem comes when these classes overlap. In this case, a person is short if
         </p>
-        {/* Add graph to show dataset */}
+        {tag}
         <p>
             Now, if we try to use logistic regression on this dataset, you can see that our model can fit the dataset
         </p>
@@ -168,7 +430,13 @@ function MLPDemoPart2()
             lets say that we have a bunch of pictures of different animals, like dogs and cats, and we have to sort them. Now, we don't just simply find which pictures
             belong to which class immediately. Instead, we look at different patterns to determine what animal is a dog or cat. 
         </p>
-        {/* TODO: Maybe pictures highlight different parts of dogs and animals */}
+        <div style={{display:"flex"}}>
+
+       
+        <img alt="Dog" key="Dog" src={logo} width="20%" style={{flex:"50.0%", padding:"5px"}}/>
+        <img alt="Cat" key="Cat" src={cat} width="27%" style={{flex:"50.0%", padding:"5px"}}/>
+
+        </div>
         <p>
             You can see how by looking at certain patterns with the picture we can determine if the animal is a cat or dog.
             Same thing goes with multilayer perceptron. It looks at different patterns in the dataset and use those patterns to determine
@@ -188,8 +456,15 @@ function MLPDemoPart2()
             while the neurons on the right are associated with our animal. You can see that each neuron of the left layer is connected to each neuron on the right layer.
             Depending on what neurons get activated or not, it should how much the neurons on the right get activated. The more a neuron on right is activated, the most likely
             the image is that associated animal. 
+
+            Above each neuron is the name of the pattern the neuron can obtained from the dataset, including the classes. In the first layer, it is obvious that the image
+            would be dectected, so its neuron is activated. Try interacting with the neurons in the second layer and see how it effects the activation of the third layer. You 
+            click on each neuron and turning that neuron on to see its effect on the neural network. If done correctly, you would see how certain patterns from the data will effect whether
+            the image belongs to a class or not. 
         </p>
-        {/* TODO: Interactive Neural Network */}
+        <NN height={500} weights={[[[0.25, 0.25, -0.25, -0.25],[-0.25, -0.25, 0.25, 0.25]]]} bias={[[0.5, 0.5]]} width={1000} nodes={[1, 4, 2]} radius={25} xDist={100} left={100} yDist={50}
+            patterns={[["Image"], ["Dog Ears", "Dog Tail", "Cat Ears", "Cat Tail"], ["Dog", "Cat"]]} 
+        ></NN>
         <p>
             Currently, what we are dealing is a very simple nerual netowrk, with one input layer, one hidden layer, and one output layer. Our input layer contains the input to our model, with
             each neuron associated with a feature in our data. The hidden layer is associated with the patterns found from out inputs. Finallly, our output layer contains 
@@ -207,9 +482,15 @@ function MLPDemoPart2()
             Then, the next hidden layer uses the patterns found in the previous hidden layers to find more complex patterns, such as faces or legs. 
         </p>
         <p>
-            Here is an example of a neural network with multiple hidden layers, which the first layer identify basic patterns while the sceond identifying more complex patterns. 
+            Here is an example of a neural network with multiple hidden layers, which the first layer identify basic patterns while the sceond identifying more complex patterns. As with the previous neural network,
+            interact with the neural network in the 2nd layer. You woudld see that changing the values of the 2nd layer neurons will effect the values in the 3rd layer neurons which will then effect class of the image. 
+            So, if an image contains dog paws and dog tail, then dog face will light up, causing the image to more likely be a dog. 
         </p>
-        {/* TODO: Add another interactive version of neural network  */}
+        <NN height={800} width={700} nodes={[1, 8, 4, 2]} radius={25} xDist={75} left={100} yDist={50} 
+            weights={[[[0.25, 0.25, 0, 0, -0.25, -0.25, 0, 0], [0, 0, 0.25, 0.25, 0, 0, -0.25, -0.25], [-0.25, -0.25, 0, 0, 0.25, 0.25, 0, 0], [0, 0, -0.25, -0.25, 0, 0, 0.25, 0.25]],[[0.25, 0.25, -0.25, -0.25],[-0.25, -0.25, 0.25, 0.25]]]}
+            bias={[[0.5, 0.5, 0.5, 0.5],[0.5, 0.5]]}
+            patterns={[["Image"], ["Dog Paws", "Dog Tail", "Dog Eyes", "Dog Ears", "Cat Paws", "Cat Tail", "Cat Eyes", "Cat Ears"], ["Dog Body", "Dog Face", "Cat Body", "Cat Face"], ["Dog", "Cat"]]}
+        ></NN>
         <p>
             In the end, you can have as many hidden layers and neurons as you want to identify as many complicated patterns from the data. 
         </p>
