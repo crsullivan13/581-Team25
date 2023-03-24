@@ -16,6 +16,8 @@
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.0.3",
+    "react-google-charts": "^4.0.0",
+    "react-latex": "^2.0.0",
     "react-router-dom": "^6.4.1",
     "react-scripts": "5.0.1",
     "react-tabs-component": "^1.1.3",

@@ -48,6 +48,9 @@
 # log: Edited Feb 26 2023
 #     Author: Derrick Quinn
 #     Description: Added support for storing multiple models
+# log: Edited March 1 2023
+#     Author: Amith Panuganti
+#     Description: Created a route to create figures and graphs for the MLP Demo
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
@@ -66,6 +69,9 @@ import pickle
 from lib.train import trainModel
 import firebase_admin
 from firebase_admin import credentials, firestore
+
+# Import MLP Figures
+from lib import MLPDemoFigures as MLPDemo
 
 from datetime import datetime
 import numpy as np
@@ -125,13 +131,60 @@ def decisionTreeDemo():
     except Exception as e: #Elsewhere
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
 
+# Create a route for MLPFigureDemos
+@app.route('/MLPDemoFigures', methods=['POST'])
+@cross_origin()
+    # Input: request.data
+    # output: json file containing what the figures the demo needs
+def MLPDemoFigures():
+    # Try catch block
+    try:
+        # Create dictionary of MLPFigureDemosFunctions
+        figures = {
+            "MLP Demo Part 1 Front": MLPDemo.MLPRegressionGraph,
+            "MLP Demo Part 1 Middle":MLPDemo.MLPDemoPart1Middle
+        }
+        # Load data from request
+        data = json.loads(request.data.decode("utf-8"))
+
+        # Get type 
+        type = data["type"]
+
+        # Get the figure to be used
+        figure = figures[type]
+
+        # Get results from figure
+        results = figure(data)
+
+        # Go through each key in results
+        for key in results.keys():
+            # If key has figure
+            if(key.endswith("figure")):
+                # Create output to get figures
+                output = io.BytesIO()
+                FigureCanvas(results[key]).print_png(output)
+
+                # Get bytes
+                results[key] = encodebytes(output.getvalue()).decode('ascii')
+            
+        # Return results
+        return make_response(jsonify(results))
+
+    # Will check if key in data cannot be access
+    except KeyError as e:
+        # Make response informing user of error
+        return make_response(jsonify({"Invalid key": str(e)}), 500)
+    # Will check for an additional errors
+    except Exception as e: #Elsewhere
+        return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
+    
 # Create route for all demos
 # For now, is just logistic and mlp demo
 @app.route('/Demo', methods=['POST'])
 @cross_origin()
     # input: request.data
     # output: json file of metrics
-def logisticRegressionDemo():
+def Demo():
     # Try catch block
     try:
         # Load data from request

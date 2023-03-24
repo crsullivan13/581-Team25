@@ -5,4 +5,5 @@ flask-cors==3.0.10
 google-cloud-firestore==2.7.2
 firebase-admin==6.0.1
 tensorflow==2.11.0
-
+dtreeviz==2.2.0
+ann_visualizer==2.5

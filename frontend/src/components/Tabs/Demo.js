@@ -16,49 +16,56 @@ Faults: None
 import React from 'react';
 import { Container, Form } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import { useState } from 'react';
 import DemoItem from '../DemoItem';
 import { LogisticRegressionPart1Front, LogisticRegressionPart1After} from './LogisticRegressionDemo';
 import LogisticRegressionPart from "./LogisticRegressionDemo"
+import GeneralDemoPart from "./GeneralDemo"
 import MLPDemo from './MLPDemo';
+import { Navbar } from "react-bootstrap"
+import { Nav } from "react-bootstrap"
 
 function Demo(){
     //sate to hold model type that user wants to demo, defaults to linear
     const [ModelType, setModelType] = useState('Linear Regression')
 
     //function to change model type when drop down option selected
-    let modelTypeChange = () => {
+    let modelTypeChange = (modelType) => {
         //grabs the value out of the form
-        let modelType = document.getElementById('modelTypeInput').value;
+        //let modelType = document.getElementById('modelTypeInput').value;
         //sets the state
         setModelType(modelType);
     }
 
     return(
         <>
-            <Container>
-                <h1 className='w-100 mt-2'>ML Demos</h1>
-                <p>This page is where you can look to gain more information about the different mdoels that we offer</p>
+        <div id="top-level_wrapper">
+            <Container fluid>
                 <Row>
-                    <h3 className='w-100 mt-2'>Which model would you like to demo?</h3>
-                    {/*basic drop down form for model demo selection*/}
-                    <Form.Select id="modelTypeInput" aria-label="Model Select" onChange={modelTypeChange}>
-                        <option>Linear Regression</option>
-                        <option>Logistic Regression</option>
-                        <option>Decision Tree Classification</option>
-                        <option>Multilayer Perceptron</option>
-                    </Form.Select>
-                </Row>
-                <Row>
-                    {/*render the component that will show the useful info on this page, modeltype as a prop*/}
-                    {/*If model type is logisitc regression, then run LogisitcRegressionDemo. Otherwise, run demo item*/ }
-                    {(ModelType === "Multilayer Perceptron") 
-                        ? <MLPDemo></MLPDemo>
-                        : <DemoItem modelType={ModelType}/>
-                    }
-                    
+                    <Col md="auto">
+                        <Navbar bg="light" variant="light">
+                            <Container fluid>
+                                <Nav navbarScroll className="flex-column" activeKey={ModelType} onSelect={(selectedKey => modelTypeChange(selectedKey))}>
+                                    <h3>Demo options</h3>
+                                    <Nav.Link eventKey="Linear Regression">Linear Regression</Nav.Link>
+                                    <Nav.Link eventKey="Logistic Regression">Logistic Regression</Nav.Link>
+                                    <Nav.Link eventKey="Decison Tree Classification">Decision Tree Classifer</Nav.Link>
+                                    <Nav.Link eventKey="Multilayer Perceptron">Multilayer Perceptron</Nav.Link>
+                                    <Nav.Link eventKey="General Model Training">General Model Training</Nav.Link>
+                                </Nav>
+                            </Container>
+                        </Navbar>
+                    </Col>
+                    <Col>
+                        {(ModelType === "Multilayer Perceptron") 
+                            ? <MLPDemo></MLPDemo>
+                            : <DemoItem modelType={ModelType}/>
+                        }
+                    </Col>
                 </Row>
             </Container>
+        </div>
         </>
     )
 
