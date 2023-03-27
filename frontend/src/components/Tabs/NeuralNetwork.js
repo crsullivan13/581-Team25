@@ -17,10 +17,287 @@ Revisions:
     Date: 3/12/23
     Author: Amith Panuganti
     Description: Made an interactive neural network and add it to MLPDemo.js
+
+    Date: 3/22/23
+    Auhtor: Amith Panuganti
+    Description: Create TypeNN to showcase the different types of neural networks
+    and BoxesNN to point out the layers in the Neural Network
 */
 
 //Import react
 import React, {useRef, useEffect, useState} from "react";
+
+//Draws a neutral network for show the clear difference between neural network
+function TypeNN(props)
+{
+    //Draws both the title for the neural network 
+    //and points to the output 
+    //We the context than will be used on draw on the neural netwrok
+    //We also need the location of the neurons
+    const drawInfo = (context, neuronsLoc) =>
+    {
+        //Write the title of the neural network
+        //In the middle of it
+        //Get the middle position of the title 
+        //by dividing the width of the neural netowrk by 2
+        let width = props.left + (2 * props.radius) * (props.nodes.length+2) + props.xDist * (props.nodes.length - 1)
+        let titleXPos = width / 2
+
+        //Write the type of neural network based on props.title
+        //Write name on top of box
+        context.font = "15px Arial"
+        context.textAlign = "center"
+        context.fillStyle = "black"
+        context.fillText(props.title, titleXPos, 15)
+
+        //Next, loop through eac neuron in the last layer
+        for(let i = 0; i < props.nodes[props.nodes.length-1]; i++)
+        {
+            //Next, we will draw an arrow that will point to the output node
+            //Starting by getting the starting position of the arrow
+            let startXPos = neuronsLoc[props.nodes.length-1][i].xPos + props.radius
+            let startYPos = neuronsLoc[props.nodes.length-1][i].yPos
+            
+            //Get the ending xPos
+            let endXPos = startXPos + 30 
+
+            //Get the angle of the arrow
+            let angle = Math.atan2(0, startXPos-endXPos)
+
+            //Draw line from (endXPos, startYPos) to (startXPos, startYPos)
+            context.moveTo(endXPos, startYPos)
+            context.lineTo(startXPos, startYPos)
+
+            //Create the triangle portion of the arrow
+            context.lineTo(startXPos - 10 * Math.cos(angle - Math.PI / 6), startYPos - 10 * Math.sin(angle - Math.PI / 6));
+            context.moveTo(startXPos, startYPos);
+            context.lineTo(startXPos - 10 * Math.cos(angle + Math.PI / 6), startYPos - 10 * Math.sin(angle + Math.PI / 6));
+
+            //Stroke to show the line
+            context.stroke()
+
+            //Add text telling what value is can hold based on props.whatValue
+            context.font = "12px Arial"
+            context.textAlign = "left"
+            context.fillStyle = "black"
+            context.fillText(props.whatValue, endXPos + 10, startYPos)
+        }
+        
+    }
+
+    //Return StaticNN with drawInfo function
+    return(
+        <StaticNN
+        {...props} drawAdditional={drawInfo}
+        >
+        </StaticNN>
+    )
+}
+//Component that draws boxes for neural network
+function BoxesNN(props)
+{
+    //Create additional function that draw boxes to label 
+    //each layer on the Neural Network
+    const drawBoxes = (context, neuronsLoc) =>
+    {
+        //Create a next path
+        context.beginPath()
+
+        //Get the starting xPos
+        let startXPos = props.xDist - 10
+
+        //Go through each node in nodes
+        for(let i = 0; i < props.nodes.length; i++)
+        {
+            //Create around the nodes in the layer 
+            //Create a next path
+            context.beginPath()
+            context.rect(startXPos, 25, (props.radius + 10) * 2, props.height-50)
+            context.stroke()
+
+            //Set name to be written on top of box
+            let name = ""
+
+            //If i is 0, write Input Layer on top of text
+            if(i === 0)
+            {
+                //Set name ot be input layer
+                name = "Input Layer"
+            }
+            //else if i is less than props.length-1, 
+            else if(i < props.nodes.length-1)
+            {
+                //Set name ot be Hidden Layer i
+                name = "Hidden Layer " + i.toString()
+            }
+            //Otherwise,
+            else
+            {
+                //Set name to be Output Layer
+                name = "Output Layer" 
+            }
+
+            //Write name on top of box
+            context.font = "12px Arial"
+            context.textAlign = "center"
+            context.fillStyle = "black"
+            context.fillText(name, startXPos+10+props.radius , 15)
+
+            //Update StartxPos
+            startXPos = startXPos + 2 * props.radius + props.xDist
+            
+        }
+    }
+
+    //Return nonthing
+    return(
+        <StaticNN
+        {...props} drawAdditional={drawBoxes}
+        >
+        </StaticNN>
+    )
+}
+//A static version of the neural network 
+function StaticNN(props)
+{
+    //Create canvas ref
+    const canvasRef = useRef(null)
+
+    //Draw the arrow
+    //Inputs: ctx, (fromX, fromY) starting position, (toX, oY) end position
+    const drawArrow = (ctx, fromX, fromY, toX, toY) =>{
+        //Draw line from (fromX, fromY) to (toX, toY)
+        ctx.moveTo(fromX, fromY)
+        ctx.lineTo(toX, toY)
+        ctx.stroke()
+    }
+
+    //Draws a circle
+    const drawCircle = (ctx, centerX, centerY) => {
+        //Save the context
+        ctx.save()
+
+        //Begin a new path
+        ctx.beginPath()
+        
+        //Create cirlce
+        ctx.arc(centerX, centerY, props.radius, 0, 2 * Math.PI)
+    }
+
+    //Runs child function
+    const runChildFunc = (ctx, neuronsLoc) => {
+        //Run child function
+        props.drawAdditional(ctx, neuronsLoc, props)
+    }
+
+    //Use effect
+    useEffect(() =>{
+        //Get reference 
+        const canvas = canvasRef.current
+
+        //Get the context
+        const context = canvas.getContext("2d")
+
+        //Create a new list of locations
+        let neuronsLoc = []
+
+        //Get the middle of canvas.
+        const middle = context.canvas.height / 2
+
+        //Go through each value in nodes
+        for(let i = 0; i < props.nodes.length; i++)
+        {
+            //Create a new list of neurons of that layer
+            let neuronsLayerLoc = []
+
+            //Set xPos to be 
+            let xPos = props.left + (2 * props.radius + props.xDist) * i + props.radius
+
+            //Finding the starting yPos
+            let startYPos = 0
+
+            //If i props.nodes[i] has a remainder of 1
+            if(props.nodes[i] % 2 === 1)
+            {
+                //Set start startYPos 
+                startYPos = middle + (2 * props.radius + props.yDist) * (Math.floor(props.nodes[i] / 2))
+            }
+            //Otherwise
+            else
+            {
+                //Set start startYPos 
+                startYPos = middle + ((props.yDist/2) + props.radius + ((props.nodes[i]/2 - 1) * (2* props.radius+props.yDist)))
+            }
+            
+
+            //Loop for the number of nodes in a layer
+            for(let j = 0; j < props.nodes[i]; j++)
+            {
+                //Draw a circle at xPos and startYPost
+                context.beginPath()
+                context.arc(xPos, startYPos, props.radius, 0, 2 * Math.PI)
+                context.stroke()
+
+                //Create a list that contians the locations of x and y
+                const neuronLoc = {
+                    xPos : xPos,
+                    yPos : startYPos
+                }
+
+                //Fill the neuron
+                drawCircle(context, xPos, startYPos)
+
+                //Get name to fill
+                let name = props.patterns[i][j]
+
+                //Add name above neuron to show user what the neuron represents
+                context.font = "12px Arial"
+                context.textAlign = "center"
+                context.fillStyle = "black"
+                context.fillText(name, xPos, startYPos - props.radius - 5)
+
+                //Push neuronLoc to list of neurons locations for the layer
+                neuronsLayerLoc.push(neuronLoc)
+
+                //Change startYPos
+                startYPos = startYPos - (2 * props.radius) - props.yDist
+            }
+
+            //Push neuronsLayerLoc to neuronsLoc
+            neuronsLoc.push(neuronsLayerLoc)
+
+            //If i is greater than 1, draw lines betwee neuron layers
+            if(i > 0)
+            {
+                //For each neuron in layer i -1
+                for(let j = 0; j < neuronsLoc[i-1].length; j++)
+                {
+                    //Get the current starting neuron
+                    let prevNeuron = neuronsLoc[i-1][j]
+
+                    //For each neuron in layer i
+                    for(let k = 0; k < neuronsLoc[i].length; k++)
+                    {
+                        //Get neuron in next layer
+                        let nextNeuron = neuronsLoc[i][k]    
+                        
+                        //Draw arrow
+                        drawArrow(context, prevNeuron.xPos + props.radius, prevNeuron.yPos, nextNeuron.xPos - props.radius, nextNeuron.yPos)
+                    }
+                }
+            }
+        }
+
+        //Run child function
+        runChildFunc(context, neuronsLoc)
+        
+    }, [props])
+
+    //Return canvas
+    return(
+        <canvas height={props.height} width={props.width} ref={canvasRef} > </canvas>
+    )
+}
 
 //Regression Neural Network
 function NN(props)
@@ -382,4 +659,4 @@ class NeuralNetwork
 
 //Export NN
 export default NN
-export {NeuralNetwork}
+export {NeuralNetwork, StaticNN, BoxesNN, TypeNN}

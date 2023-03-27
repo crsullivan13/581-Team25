@@ -51,6 +51,12 @@
 # log: Edited March 1 2023
 #     Author: Amith Panuganti
 #     Description: Created a route to create figures and graphs for the MLP Demo
+# log: Edited Mar 22 2023
+#      Author: Amith Panuganti 
+#      Description: Added a new function for MLP Demo Figures
+# log: Edited Mar 23 2023
+#       Author: Amith Panuganti
+#       Description: The MLP Demo Figures Path will only have 1 function to create figures for MLP Demo
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
@@ -139,22 +145,11 @@ def decisionTreeDemo():
 def MLPDemoFigures():
     # Try catch block
     try:
-        # Create dictionary of MLPFigureDemosFunctions
-        figures = {
-            "MLP Demo Part 1 Front": MLPDemo.MLPRegressionGraph,
-            "MLP Demo Part 1 Middle":MLPDemo.MLPDemoPart1Middle
-        }
         # Load data from request
         data = json.loads(request.data.decode("utf-8"))
 
-        # Get type 
-        type = data["type"]
-
-        # Get the figure to be used
-        figure = figures[type]
-
         # Get results from figure
-        results = figure(data)
+        results = MLPDemo.MLPDemo(data)
 
         # Go through each key in results
         for key in results.keys():

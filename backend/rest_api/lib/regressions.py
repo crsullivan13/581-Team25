@@ -108,6 +108,32 @@ def MNIST_KNNDemo(test_size: float):#a demo of MNIST but with KNN model to provi
         print("accuracy:",result) # print result
     return accuracy
 
+# Call Gausian Bayes Classification
+def GaussianNaiveBayes(vector_x, vector_y, data):
+    # Create our model
+    model = GaussianNB(**data)
+
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+    # Predict the model
+    predict_y = model.predict(vector_x)
+
+   # Next, create a confusion matrix
+    matrix = confusion_matrix(vector_y, predict_y)
+
+    # Next display the image
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot()
+
+    # Add title to figure
+    plt.title("Confusion Matrix")
+
+    # Get the current figure 
+    figure = plt.gcf()
+
+    # Return the model and figure
+    return model, figure
 
 def DecisionTree (x_train, y_train, x_test, y_test): #a function to play with decision tree and generate the tree and test prediction score
     # input: training data and testing data. x and y should have equal amount of rows.
@@ -174,7 +200,6 @@ def preprocess_data(x, y):
     y_mean = y.mean(dim=0)    # Compute the mean of the output data
     y_std = y.std(dim=0)      # Compute the standard deviation of the output data
     y_normalized = (y - y_mean) / y_std  # Normalize the output data
-    
     return x_normalized, y_normalized, x_mean, x_std, y_mean, y_std
 
 def regression_net(input_dim, hidden_dim, output_dim):
@@ -190,10 +215,435 @@ def regression_net(input_dim, hidden_dim, output_dim):
     model = torch.nn.Sequential(*layers)  # Create a sequential model using the layers
     
     return model
+    
+# Call Logisitcs Regression 
+# input: two vectors x and y, data containing parameters
+# output: model for logistic regression after fitting
+# errors: incorrect sizes for vector x and y, params don't exist in data
+def LogisiticsRegressionMethod(vector_x, vector_y, data): 
+    # Create our model
+    model = LogisticRegression(**data)
 
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+    # Next, create a confusion matrix witht the model
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Next, create a confusion matrix
+    matrix = confusion_matrix(vector_y, predict_y)
+
+    # Next display the image
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot()
+
+    # Add title
+    plt.title("Confusion Matrix")
+
+    # Then, get teh figure
+    figure = plt.gcf()
+
+    # Return the model and figure
+    return model, figure
+
+# Call Decision Tree Regression
+# input: two vectors x and y, data containing parameters
+def DecisionTreeRegression(vector_x, vector_y, data):
+    # Create our model
+    model = tree.DecisionTreeRegressor(**data)
+
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+    # Plot the tree
+    plot_tree(model)
+
+    # Add title to tree
+    figure = plt.title("Tree")
+
+    # Get the current figure 
+    figure = plt.gcf()
+
+    # Return the model and figure
+    return model, figure
+
+# Call Decision Tree Classification
+def DecisionTreeClassification(vector_x, vector_y, data):
+    # Create out model
+    model = tree.DecisionTreeClassifier(**data)
+
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+    # Create a new figure and axis
+    figure, axis, = plt.subplots(2, 1, figsize=(5,10))
+
+    # The first plot will the the tree, second will be confusion matrix
+    # Plot tree
+    plot_tree(model, ax=axis[0])
+
+    # Add title to tree
+    axis[0].set_title("Decision Tree")
+
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Create confusion matrix
+    matrix = confusion_matrix(vector_y, predict_y)
+
+    # Next, display images
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot(ax=axis[1])
+
+    # Add title to confusion matrix
+    axis[1].set_title("Confusion Matrix")
+
+     # Get the current figure 
+    figure = plt.gcf()
+
+    # Return the model and figure
+    return model, figure
+
+# Call MLP Classifier
+def MLPClassification(vector_x, vector_y, data):
+    # Create out model 
+  
+    model = MLPClassifier(**data)
+
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+    # Create a new figure and axis
+    figure, axes = plt.subplots(2, 1, figsize=(5,10))
+
+    # The first plot will be loss curve, second will be confusion matrix
+    # Have axis take figure
+    axes[0].plot(model.loss_curve_)
+
+    # Set title of plot to contain loss, epochs, and loss over epoch
+    axes[0].set_xlabel("Epochs")
+    axes[0].set_ylabel("Loss")
+    axes[0].set_title("Loss Curve")
+
+    # Add grid
+    axes[0].grid()
+
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Next, create a confusion matrix
+    matrix = confusion_matrix(vector_y, predict_y)
+
+    # Next display the image
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot(ax=axes[1])
+
+    # Add title to plot
+    axes[1].set_title("Confusion Matrix")
+
+     # Get the current figure 
+    figure = plt.gcf()
+
+    # Return the model and figure
+    return model, figure
+
+# Call MLP Regressor
+def MLPRegression(vector_x, vector_y, data):
+    # Create out model 
+    model = MLPRegressor(**data)
+
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+     # Have axis take figure
+    plt.plot(model.loss_curve_)
+
+    # Plot Loss Curve
+    # Set title of plot to contain loss, epochs, and loss over epoch
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.title("Loss Curve")
+
+    # Add grid
+    plt.grid()
+
+     # Get the current figure 
+    figure = plt.gcf()
+
+    # Return the model and figure
+    return model, figure
+    
+# Call sequential model
+def SequentialModel(vector_x, vector_y, data):
+    
+    # Create the model 
+    model = SeqModel(vector_x, vector_y, data)
+
+    # Next, train the model
+    figure = model.fit(vector_x, vector_y, data)
+    
+    # Return the model and figure
+    return model,figure
+    
+# Demo for Decision Tree Regression
+def DecisionTreeDemoModel(vector_x, vector_y, data):
+    # Create our model
+    model = tree.DecisionTreeClassifier(**data)
+
+    # Fit the model
+    model.fit(vector_x, vector_y)
+
+    # Get the text of the model
+    text = export_text(model)
+
+    # Return both the model and figure
+    return model, text
+    
+# Demo for logistic regression part 1
+def LogisticRegressionDemoPart1(vector_x, vector_y, data):
+    # Create linear regression model
+    model = LinearRegression()
+
+    # Fit data with model
+    model.fit(vector_x, vector_y)
+
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Create plot for vector_x and predict_y
+    plt.plot(vector_x, predict_y, color="blue")
+
+    # Add labels
+    plt.xlabel("Temperature")
+    plt.ylabel("Cold or Hot")
+    plt.title("Temperature Plot")
+
+    # Add yticks
+    plt.yticks([0.0,1.0])
+    
+    # Get current figue
+    figure = plt.gcf()
+
+    # Caculate loss
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Create dictionary containing figure, mse
+    results = {"figure":figure, "loss":mse}
+
+    # Return model and results
+    return model, results
+    
+# Demo for logisitc regression part 2/3
+def LogisticRegressionDemoPart2(vector_x, vector_y, data):
+    # Create logisitc regression model
+    model = LogisticRegression(**data)
+
+    # Fit model on data
+    model.fit(vector_x, vector_y)
+
+    #Predict y
+    predict_y = model.predict(vector_x)
+
+     # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Next, create linspace
+    x_test = np.linspace(min(vector_x), max(vector_x), 50)
+
+    # Create logisitc function
+    log_func = expit(x_test * model.coef_ + model.intercept_)
+
+    # Graph logistic function
+    plt.plot(x_test, log_func, color="blue")
+   
+    # Add labels
+    plt.xlabel("Temperature")
+    plt.ylabel("Cold or Hot")
+    plt.title("Temperature Plot")
+
+    # Add yticks
+    plt.yticks([0.0,1.0])
+    
+    # Get current figue
+    figure = plt.gcf()
+
+    # Caculate mean square error
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Caculate accuracy
+    accuracy = accuracy_score(vector_y, predict_y)
+
+    # Create dictionary containing figure, mse, and accuracy
+    results = {"figure":figure, "loss":mse, "accuracy":accuracy}
+
+    # Return model and results
+    return model, results
+
+# Demo for Part 1 Front
+def MLPDemoPart1Front(vector_x, vector_y, data):
+    # Create linear regression model
+    model = LinearRegression()
+
+    # Fit data with model
+    model.fit(vector_x, vector_y)
+
+    # Predict with model
+    predict_y = model.predict(vector_x)
+
+    # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Create plot for vector_x and predict_y
+    plt.plot(vector_x, predict_y, color="blue")
+
+    # Add labels
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.title("Linear Regression Weakness")
+    plt.grid()
+
+     # Get current figue
+    figure = plt.gcf()
+
+    # Caculate loss
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Create dictionary containing figure, mse
+    results = {"figure":figure, "Loss":mse}
+
+    # Return model and results
+    return model, results
+
+# Demo for MLP Demo Part 1 Middle
+def MLPDemoPart1Middle(vector_x, vector_y, data):
+    # Create logisitc regression model
+    model = LogisticRegression(**data)
+
+    # Fit model on data
+    model.fit(vector_x, vector_y)
+
+    #Predict y
+    predict_y = model.predict(vector_x)
+
+     # Create scatter plot with vector_x and vector_y
+    plt.scatter(vector_x, vector_y, color='black')
+
+    # Next, create linspace
+    x_test = np.linspace(min(vector_x), max(vector_x), 50)
+
+    # Create logisitc function
+    log_func = expit(x_test * model.coef_ + model.intercept_)
+
+    # Graph logistic function
+    plt.plot(x_test, log_func, color="blue")
+
+    # Add labels
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.title("Logistic Regression Weakness")
+    plt.grid()
+
+     # Get current figue
+    figure = plt.gcf()
+
+    # Caculate loss
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Caculate accuracy
+    accuracy = accuracy_score(vector_y, predict_y)
+
+    # Create dictionary containing figure, mse, and accuracy
+    results = {"figure":figure, "Loss":mse, "Accuracy":accuracy}
 
 #print(DecisionTree([[1,2], [3,4], [5,6]], [6,7,8], [[1,2], [3,4], [5,6]], [6,7,8]))
 
+# Trains a model for MLP Demo Part 4 Front. 
+# Input: vector_x - Input Features for Dataset
+# Input: vector_y - Input Ouputs for Dataset
+# data: Parameters for MLPRegressor
+# data = {"hidden_layer_size": (Any Value)}
+# Output: results - Dictionary containing the metrics with the entries
+#               loss - The best loss the model reached
+#               mse - Mean Squared Error between model prediction and actual values
+# Output: model - The model itself
+def MLPDemoPart4Front(vector_x, vector_y, data):
+    # Create MLP Regressor
+    model = MLPRegressor(**data)
+
+    # Fit the model on the data
+    model.fit(vector_x, vector_y)
+
+    # Get loss of the model
+    loss = model.best_loss_
+
+    # Predict with the model
+    predict_y = model.predict(vector_x)
+
+    # Get Mean Squared Error
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Save loss and mse to results
+    results = {"Loss": loss, "Mean Squared Error": mse}
+
+    # Return results
+    return model, results
+
+# Trains a model and output metrics for MLP Demo Part 4 Back
+# Input: vector_x - Input Features for Dataset
+# Input: vector_y - Input Ouputs for Dataset
+# data: Parameters for MLPRegressor
+# data = {"hidden_layer_size": (Any Value)}
+# Ouput: results - Dictionary containing the metrics with the entries
+#         loss - The lowest loss the model reached
+#          accuracy - The accuracy of the model with the training data
+#          figure - Confusion Matrix to show how the model classify each input
+# Ouptut: model - Returns the model itself
+def MLPDemoPart4Back(vector_x, vector_y, data):
+    # Create MLP Classifier
+    model = MLPClassifier(**data)
+
+    # Fit the model on the data
+    model.fit(vector_x, vector_y)
+
+    # Get loss of the model
+    loss = model.best_loss_
+
+    # Predicit with the model
+    predict_y = model.predict(vector_x)
+
+    # Get the accuracy of the model
+    accuracy = accuracy_score(vector_y, predict_y)
+
+    # Make a confusion matrix for the model
+    matrix = confusion_matrix(vector_y, predict_y)
+
+    # Next display the image
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot()
+
+    # Add title
+    plt.title("Confusion Matrix")
+
+    # Then, get the figure
+    figure = plt.gcf()
+
+    # Close the plot
+    plt.close()
+
+    # Create dictionary containing the metrics producted
+    results = {
+        "Loss":loss,
+        "Accuracy":accuracy, 
+        "figure":figure
+    }
+
+    # Return results
+    return model, results
+    
 #print(MNIST_SGDDemo(0.5, 42)) - for testing
 #print (MNIST_KNNDemo(0.2))
 
