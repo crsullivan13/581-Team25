@@ -38,6 +38,9 @@ function GeneralDemoPart(props)
 
     return(
         <div>
+		<p>
+			In this section, we'll cover the basics of model training. Machine learning is all about taking a set of "input variables" and predicting some sort of output.
+		</p>
             {props.front}
             <GeneralDemoTrain
             training={training} 
@@ -196,4 +199,6 @@ function GeneralDemoTrain(props)
 }
 
 
+
 export default GeneralDemoPart
+

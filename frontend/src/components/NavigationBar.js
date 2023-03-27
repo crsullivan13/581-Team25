@@ -24,33 +24,41 @@ import '../App.css';
 
 import { Container, Navbar } from "react-bootstrap"
 import { Nav } from "react-bootstrap"
+import { useState } from 'react'
+
+
 
 
 function NavigationBar() {
 
+	const [ModelType, setModelType] = useState('')
+
+    //function to change model type when drop down option selected
+    let modelTypeChange = (modelType) => {
+        //grabs the value out of the form
+        //let modelType = document.getElementById('modelTypeInput').value;
+        //sets the state
+        setModelType(modelType);
+    }
+
 	//pretty straight forward, just using the bootstrap navbar component
 	//handles the buttons and references for us, does some light styling through classname, bg (background) and expand (where to collapse nav)
 	return (
-	<div className="App">
-        <header className="App-header">
-			<Navbar collapseOnSelect bg = "light" expand="lg">
-				<Container>
-					<Navbar.Brand href="/">ML for Everyone</Navbar.Brand>
+			<Navbar collapseOnSelect bg = "dark" variant = "dark" expand="lg" fixed="top" style={{position: "sticky"}}>
+				<Container fluid className="justify-content-md-center">
+					<Navbar.Brand href="/" className="blue-txt">ML for Everyone</Navbar.Brand>
 					<Navbar.Toggle aria-controls='responsive-navbar-vav' />
-					<Navbar.Collapse id='responsive-navbar-nav'>
-					<Nav className="me-auto">
-						{/*<Nav.Link href="/datainput">Data Input</Nav.Link>*/}
-						<Nav.Link href="/training">Training</Nav.Link>
-						<Nav.Link href="/modelusage">Model Usage</Nav.Link>
-						<Nav.Link href="/modelmetrics">Model Metrics</Nav.Link>
-						<Nav.Link href="/demos">Demos</Nav.Link>
-						<Nav.Link href="/datasets">Data Sets</Nav.Link>
+					<Navbar.Collapse id='responsive-navbar-nav' >
+					<Nav className="me-auto" activeKey={ModelType} onSelect={(selectedKey => modelTypeChange(selectedKey))}>
+						<Nav.Link href="/training" eventKey="Training">Training</Nav.Link>
+						<Nav.Link href="/modelusage" eventKey="Model Usage">Model Usage</Nav.Link>
+						<Nav.Link href="/modelmetrics" eventKey="Model Metrics">Model Metrics</Nav.Link>
+						<Nav.Link href="/demos" eventKey="Demos">Demos</Nav.Link>
+						<Nav.Link href="/datasets" eventKey="Data Sets">Data Sets</Nav.Link>
 					</Nav>
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
-        </header>
-    </div>
   )
 }
 

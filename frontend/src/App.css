@@ -16,3 +16,27 @@
   border: solid #ccc;
   border-width: 1px 1px 0 1px;
 }
+
+.dark-container {
+  background-color: #282c34;
+}
+
+.blue-txt {
+  color: #61dafb;
+}
+
+.white-txt{
+  color: white;
+}
+
+.large-txt {
+  font-weight: 700;
+  font-size: 3.2rem;
+  margin: 2rem 0;
+}
+
+.medium-txt {
+  font-weight: 200;
+  font-size: 1.2rem;
+  margin: 2rem 0;
+}
