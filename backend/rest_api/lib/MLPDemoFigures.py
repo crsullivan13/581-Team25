@@ -13,6 +13,15 @@ Revision:
     Author: Amith Panuganti 
     Description: Created a function that returns a graph for the regression dataset
 
+    Date: 3/22/23
+    Author: Amith Panuganti
+    Description: Added a function that produces a figure for MLP Demo Part 4 and 
+    refactor creation of a figure to be used in multiple functions. 
+
+    Date: 3/23/23
+    Author: Amith Panuganti 
+    Description: Replace all functinos with one function to create figures for MLP Demo
+
 """
 
 #Imports
@@ -22,11 +31,11 @@ from sklearn.linear_model import LinearRegression #input linear regression metho
 from sklearn.linear_model import LogisticRegression # input logistic regression
 from scipy.special import expit
 
-# MLP Regression Dataset Graph
-def MLPRegressionGraph(inputs):
-    # Get X and Y for mlp regression
-    X = inputs["X"]
-    Y = inputs["y"]
+# Get all the figures for MLP Demo
+def MLPDemo(inputs):
+    # Create a figure for MLP Regression Plot
+    X = inputs["MLPRegX"]
+    Y = inputs["MLPRegY"]
 
     # Create a scatter plot with X and y
     plt.figure(1)
@@ -40,13 +49,13 @@ def MLPRegressionGraph(inputs):
     plt.xlabel("X")
     plt.ylabel("Y")
 
-    # Save plt to figure
-    figure = plt.figure(1)
+    # Save plt to mlp_reg_figure
+    mlp_reg_figure = plt.figure(1)
 
     # Close Plot 
     plt.close()
 
-    # Get inputs for linear regression
+        # Get inputs for linear regression
     X = inputs["LinX"]
     Y = inputs["LinY"]
 
@@ -113,21 +122,10 @@ def MLPRegressionGraph(inputs):
     log_figure = plt.figure(3)
     plt.close()
 
-    # Save all figures to results
-    results = {
-        "figure":figure,
-        "linear_figure":linear_figure,
-        "log_figure":log_figure
-    }
-        
-    # Return results
-    return results
-
-# MLP Demo Part 1 Middle
-def MLPDemoPart1Middle(inputs):
+    # Get figure for MLP Classification Plot
      # Get X and Y for mlp regression
-    X = inputs["X"]
-    Y = inputs["y"]
+    X = inputs["MLPClassX"]
+    Y = inputs["MLPClassY"]
 
     # Create a scatter plot with X and y
     plt.figure(1)
@@ -143,13 +141,19 @@ def MLPDemoPart1Middle(inputs):
     plt.yticks([0.0,1.0])
 
     # Save plt to figure
-    figure = plt.figure(1)
+    mlp_class_figure = plt.figure(1)
 
     # Close Plot 
     plt.close()
 
-    # Save figure
-    results = {"figure":figure}
+    # Save Each Figure
+     # Save all figures to results
+    results = {
+        "mlp_reg_figure":mlp_reg_figure,
+        "linear_figure":linear_figure,
+        "log_figure":log_figure,
+        "mlp_class_figure":mlp_class_figure
+    }
 
-    # Return results
+    # Return all figures
     return results

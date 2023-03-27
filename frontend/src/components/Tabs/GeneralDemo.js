@@ -10,14 +10,18 @@ Side Effects: None
 Invariants: None
 Faults: None
 Revisions:
-    Date: 2/23/22
+    Date: 2/23/23
     Author: Amith Panuganti
     Description: Added Components For All Demos
+
+    Data: 3/23/23
+    Author: Amith Panuganti
+    Description: Modified GeneralTrain to allow for inputs 
 */
 
 //Import react
 import React from "react";
-import { useState } from 'react';
+import { useState, useRef} from 'react';
 import {Button } from 'react-bootstrap';
 
 //Create a component for general demo component
@@ -39,7 +43,15 @@ function GeneralDemoPart(props)
 		</p>
             {props.front}
             <GeneralDemoTrain
-            model={props.model}>
+            training={training} 
+            onChangeTraining={onChangeTraining} 
+            X={props.X} 
+            y={props.y} 
+            model={props.model}
+            buttonDisable={props.buttonDisable}
+            inputForm={props.inputForm}
+            hasInputs={props.hasInputs}
+            >
             </GeneralDemoTrain>
             {(training === true)
             ? <>{props.back}</>
@@ -58,6 +70,15 @@ function GeneralDemoTrain(props)
     //Will disable the button to prevent any further training
     const [button, setButton] = useState(false)
 
+    //Create a state that will store the inputs for the model
+    const [inputs, setInputs] = useState({})
+
+    //Create a state that will check if the input is valid or not
+    const [inputsValid, setInputsValid] = useState({})
+
+    //Get the input form
+    const InputForm = props.inputForm
+
     //Define training function 
     let handleTrain = () => {
         //Create dictionary to for training
@@ -67,8 +88,25 @@ function GeneralDemoTrain(props)
             "model": props.model
         }
 
+        //If props.hasInputs is true
+        if(props.hasInputs === true)
+        {
+            //Have inputForm check in the inputs if they are valid or not
+            //If they are not valid
+            if(inputsValid["entry"] === false)
+            {
+                //Return prevent model training
+                alert("Inputs are invalid. Please try again")
+                return
+            }
+
+            //Add the entries in inputs to model_data
+            model_data = Object.assign({}, model_data, inputs)
+        }
+        
+
         //Set url for training 
-        let url = "http://127.0.0.1:5000/Demo"
+        let url = "https://team-25-362714.uc.r.appspot.com/Demo"
 
         //Make request json string
         let jsonString = JSON.stringify(model_data)
@@ -90,34 +128,42 @@ function GeneralDemoTrain(props)
                 //Create list of tags
                 let tags = []
 
-                //Grab image from jsonResponse
-                const image = "data:image/png;base64,"+jsonResponse.figure;
-
-                //Create image tag
-                let imageTag = <img alt="Figure" key="Figure" src={image}></img>
-
-                //Create loss tag
-                let lossTag = <p key="Loss">Loss: {jsonResponse.loss}</p>
-
-                //Add both imageTage and lossTag to tags
-                tags.push(imageTag)
-                tags.push(lossTag)
-
-                //If jsonResponse has accuracy property
-                if(jsonResponse.hasOwnProperty("accuracy"))
+                //GO through each property in jsonResponse
+                for(const property in jsonResponse)
                 {
-                    //Create tag for accuracy
-                    let accuracyTag = <p key="Accuracy">Accuracy: {jsonResponse.accuracy}</p>
+                    //If property is figure
+                    if(property === "figure")
+                    {
+                       //Grab image from jsonResponse
+                        const image = "data:image/png;base64,"+jsonResponse.figure;
 
-                    //Push tag to tags
-                    tags.push(accuracyTag)
+                        //Create image tag
+                        let imageTag = <img alt="Figure" key="Figure" src={image}></img>
+
+                        //Add image tag
+                        tags.push(imageTag)
+                    }
+                    //Otherwise
+                    else
+                    {
+                        //Create a tag with the property
+                        let tag = <p key={property}>{property}: {jsonResponse[property]}</p>
+
+                        //Push tag
+                        tags.push(tag)
+                    }
                 }
 
                 //Set results
                 setResults(tags)
 
-                //Disable button
-                setButton(true)
+                //If props.disable is true
+                //D
+                if(props.buttonDisable===true)
+                {
+                    //Disable button
+                    setButton(true)
+                }
 
                 //Handle training in parent component
                 props.onChangeTraining(true)
@@ -138,6 +184,12 @@ function GeneralDemoTrain(props)
 
     return(
         <>
+        {
+          (props.hasInputs === true)
+          ? <InputForm inputsValid={inputsValid} model_data={inputs}/>
+          : <></>
+        }
+        
         <Button type="button" onClick={handleTrain} disabled={button}>Train</Button>
         <div>
             {results}
@@ -146,4 +198,7 @@ function GeneralDemoTrain(props)
     )
 }
 
+
+
 export default GeneralDemoPart
+

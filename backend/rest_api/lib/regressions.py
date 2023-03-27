@@ -388,7 +388,7 @@ def MLPDemoPart1Front(vector_x, vector_y, data):
     mse = mean_squared_error(vector_y, predict_y)
 
     # Create dictionary containing figure, mse
-    results = {"figure":figure, "loss":mse}
+    results = {"figure":figure, "Loss":mse}
 
     # Return model and results
     return model, results
@@ -432,10 +432,94 @@ def MLPDemoPart1Middle(vector_x, vector_y, data):
     accuracy = accuracy_score(vector_y, predict_y)
 
     # Create dictionary containing figure, mse, and accuracy
-    results = {"figure":figure, "loss":mse, "accuracy":accuracy}
+    results = {"figure":figure, "Loss":mse, "Accuracy":accuracy}
 
     # Return model and results
     return model, results
+
+# Trains a model for MLP Demo Part 4 Front. 
+# Input: vector_x - Input Features for Dataset
+# Input: vector_y - Input Ouputs for Dataset
+# data: Parameters for MLPRegressor
+# data = {"hidden_layer_size": (Any Value)}
+# Output: results - Dictionary containing the metrics with the entries
+#               loss - The best loss the model reached
+#               mse - Mean Squared Error between model prediction and actual values
+# Output: model - The model itself
+def MLPDemoPart4Front(vector_x, vector_y, data):
+    # Create MLP Regressor
+    model = MLPRegressor(**data)
+
+    # Fit the model on the data
+    model.fit(vector_x, vector_y)
+
+    # Get loss of the model
+    loss = model.best_loss_
+
+    # Predict with the model
+    predict_y = model.predict(vector_x)
+
+    # Get Mean Squared Error
+    mse = mean_squared_error(vector_y, predict_y)
+
+    # Save loss and mse to results
+    results = {"Loss": loss, "Mean Squared Error": mse}
+
+    # Return results
+    return model, results
+
+# Trains a model and output metrics for MLP Demo Part 4 Back
+# Input: vector_x - Input Features for Dataset
+# Input: vector_y - Input Ouputs for Dataset
+# data: Parameters for MLPRegressor
+# data = {"hidden_layer_size": (Any Value)}
+# Ouput: results - Dictionary containing the metrics with the entries
+#         loss - The lowest loss the model reached
+#          accuracy - The accuracy of the model with the training data
+#          figure - Confusion Matrix to show how the model classify each input
+# Ouptut: model - Returns the model itself
+def MLPDemoPart4Back(vector_x, vector_y, data):
+    # Create MLP Classifier
+    model = MLPClassifier(**data)
+
+    # Fit the model on the data
+    model.fit(vector_x, vector_y)
+
+    # Get loss of the model
+    loss = model.best_loss_
+
+    # Predicit with the model
+    predict_y = model.predict(vector_x)
+
+    # Get the accuracy of the model
+    accuracy = accuracy_score(vector_y, predict_y)
+
+    # Make a confusion matrix for the model
+    matrix = confusion_matrix(vector_y, predict_y)
+
+    # Next display the image
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot()
+
+    # Add title
+    plt.title("Confusion Matrix")
+
+    # Then, get the figure
+    figure = plt.gcf()
+
+    # Close the plot
+    plt.close()
+
+    # Create dictionary containing the metrics producted
+    results = {
+        "Loss":loss,
+        "Accuracy":accuracy, 
+        "figure":figure
+    }
+
+    # Return results
+    return model, results
+
 
 
 #print(MNIST_SGDDemo(0.5, 42)) - for testing
