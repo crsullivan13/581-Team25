@@ -29,16 +29,28 @@ Revisions:
     Date: 3/12/23
     Author: Amith Panuganti
     Description: Added An Interactive Neural Network to Part 2
+
+    Datae: 3/22/23
+    Author: Amith Panuganti
+    Description: Added Additional Neural Networks and Finish Part 2
+
+    Date: 3/23/23
+    Author: Amith Panuganti
+    Description: Added a function that will handle training the models in part 4
+    Also, modified MLPDemo so that it only sends 1 request to get all figures for all parts
 */
 
 //Import react
 import React from "react";
-import { useState } from 'react';
-import {Button , Accordion} from 'react-bootstrap';
+import { useEffect } from 'react';
+import {Form , Accordion, Button} from 'react-bootstrap';
 import GeneralDemoPart from "./GeneralDemo";
 import logo from './Dog.png'
 import cat from './Cat.jpeg'
 import NN from "./NeuralNetwork"
+import {BoxesNN, TypeNN} from "./NeuralNetwork";
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 //Create Component for MLPDemo
 function MLPDemo(props)
@@ -117,6 +129,82 @@ function MLPDemo(props)
         LogisticRegression_Y.push([log_class_y])
     }
 
+
+    //Create list of tags for entire dmeo
+    let tags = []
+
+    //Set url for training 
+    let url = "https://team-25-362714.uc.r.appspot.com/MLPDemoFigures"
+
+    //Creates graph for Regression Dataset
+    //Create dictionary to be send 
+    let request = {
+        "MLPRegX":Regression_X,
+        "MLPRegY":Regression_Y,
+        "LinX":LinearRegression_X,
+        "LinY":LinearRegression_Y,
+        "LogX":LogisticRegression_X,
+        "LogY":LogisticRegression_Y,
+        "MLPClassX":Classification_X,
+        "MLPClassY":Classifcation_Y,
+    }
+
+    //Make request json string
+    let jsonString = JSON.stringify(request)
+
+    //Create object that will handling sending and recieving information 
+    let xhr = new XMLHttpRequest()
+
+    //Open response
+    xhr.open("POST", url, false)
+
+    //Create on load function
+    xhr.onload = function()
+    {
+        //If status of xhr is 200
+        if(xhr.status === 200)
+        {
+            //Get repsonse from xhr
+            let jsonResponse = JSON.parse(xhr.responseText)
+
+            //Get image from jsonResponse
+            const image = "data:image/png;base64,"+jsonResponse.mlp_reg_figure;
+
+            //Create image tag
+            let imageTag = <img alt="Figure" key="MLP_Reg_Figure" src={image}></img>
+
+            // Add tag to tags
+            tags.push(imageTag)
+
+            //Create linear image tag
+            const linear_image = "data:image/png;base64,"+jsonResponse.linear_figure;
+            let linearImageTag = <img alt="Figure" key="Linear_Figure" src={linear_image}></img>
+
+            //Create log image tag
+            const log_image = "data:image/png;base64,"+jsonResponse.log_figure;
+            let logImageTag =  <img alt="Figure" key="Log_Figure" src={log_image}></img>
+
+            //Create mlp classifcation tag 
+            const mlp_class_image = "data:image/png;base64,"+jsonResponse.mlp_class_figure;
+            let mlpClassImageTag = <img alt="Figure" key="Log_Figure" src={mlp_class_image}></img>
+
+            //Push both tags to tags
+            tags.push(linearImageTag)
+            tags.push(logImageTag)
+            tags.push(mlpClassImageTag)
+        }
+        //Otherwise
+        else
+        {
+            //Alert the user
+            let error = "Error: " + xhr.responseText
+            alert(error)
+        }
+    }
+
+    //Send Request
+    //Send string
+    xhr.send(jsonString)
     
     //Create an Accordian
     return(
@@ -127,10 +215,10 @@ function MLPDemo(props)
                 <Accordion.Header>Part 1</Accordion.Header>
                 <Accordion.Body>
                     <MLPDemoPart1
-                    LinX={LinearRegression_X}
-                    LinY={LinearRegression_Y}
-                    LogX={LogisticRegression_X}
-                    LogY={LogisticRegression_Y}
+                    linTag={tags[1]}
+                    logTag={tags[2]}
+                    mlpRegTag={tags[0]}
+                    mlpClassTag={tags[3]}
                     MLPRegX={Regression_X}
                     MLPRegY={Regression_Y}
                     MLPClassX={Classification_X}
@@ -154,10 +242,15 @@ function MLPDemo(props)
             <Accordion.Item eventKey="3">
                 <Accordion.Header>Part 4</Accordion.Header>
                 <Accordion.Body>
-                    <MLPDemoPart4Front>
-                    </MLPDemoPart4Front>
-                    <MLPDemoPart4Back>
-                    </MLPDemoPart4Back>
+                    <MLPDemoPart4
+                   mlpRegTag={tags[0]}
+                   mlpClassTag={tags[3]}
+                   MLPRegX={Regression_X}
+                   MLPRegY={Regression_Y}
+                   MLPClassX={Classification_X}
+                   MLPClassY={Classifcation_Y}
+                    >
+                    </MLPDemoPart4>
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="4">
@@ -177,19 +270,15 @@ function MLPDemoPart1(props)
 {
     //Create MLPDemoPart1Front
     let frontTag = <MLPDemoPart1Front
-    X={props.MLPRegX}
-    Y={props.MLPRegY}
-    LinX={props.LinX}
-    LinY={props.LinY}
-    LogX={props.LogX}
-    LogY={props.LogY}
+    linTag={props.linTag}
+    logTag={props.logTag}
+    mlpRegTag={props.mlpRegTag}
     >
     </MLPDemoPart1Front>
 
     //Create MLPDemoPart1Middle
     let middleTag = <MLPDemoPart1Middle
-    X={props.MLPClassX}
-    Y={props.MLPClassY}
+    mlpClassTag={props.mlpClassTag}
     ></MLPDemoPart1Middle>
 
     //Create back general demo part 
@@ -198,7 +287,10 @@ function MLPDemoPart1(props)
     X={props.MLPClassX}
     y={props.MLPClassY}
     model="MLP Demo Part 1 Middle"
+    buttonDisable={true}
     back={<MLPDemoPart1Back></MLPDemoPart1Back>}
+    inputForm={<></>}
+    hasInputs={false}
     >
     </GeneralDemoPart>
 
@@ -209,6 +301,9 @@ function MLPDemoPart1(props)
         y={props.MLPRegY}
         model="MLP Demo Part 1 Front"
         back={backTag}
+        buttonDisable={true}
+        inputForm={<></>}
+        hasInputs={false}
         ></GeneralDemoPart>
     )
 }
@@ -216,75 +311,6 @@ function MLPDemoPart1(props)
 //Create front component for Part 1 of MLP Demo
 function MLPDemoPart1Front(props)
 {
-    //Create list of tag for part
-    let tags = []
-
-    //Set url for training 
-    let url = "https://team-25-362714.uc.r.appspot.com/MLPDemoFigures"
-
-    //Creates graph for Regression Dataset
-    //Create dictionary to be send 
-    let request = {
-        "X":props.X,
-        "y":props.Y,
-        "LinX":props.LinX,
-        "LinY":props.LinY,
-        "LogX":props.LogX,
-        "LogY":props.LogY,
-        "type":"MLP Demo Part 1 Front"
-    }
-
-    //Make request json string
-    let jsonString = JSON.stringify(request)
-
-    //Create object that will handling sending and recieving information 
-    let xhr = new XMLHttpRequest()
-
-    //Open response
-    xhr.open("POST", url, false)
-
-    //Create on load function
-    xhr.onload = function()
-    {
-        //If status of xhr is 200
-        if(xhr.status === 200)
-        {
-            //Get repsonse from xhr
-            let jsonResponse = JSON.parse(xhr.responseText)
-
-            //Get image from jsonResponse
-            const image = "data:image/png;base64,"+jsonResponse.figure;
-
-            //Create image tag
-            let imageTag = <img alt="Figure" key="Figure" src={image}></img>
-
-            // Add tag to tags
-            tags.push(imageTag)
-
-            //Create linear image tag
-            const linear_image = "data:image/png;base64,"+jsonResponse.linear_figure;
-            let linearImageTag = <img alt="Figure" key="Linear_Figure" src={linear_image}></img>
-
-            //Create log image tag
-            const log_image = "data:image/png;base64,"+jsonResponse.log_figure;
-            let logImageTag =  <img alt="Figure" key="Log_Figure" src={log_image}></img>
-
-            //Push both tags to tags
-            tags.push(linearImageTag)
-            tags.push(logImageTag)
-        }
-        //Otherwise
-        else
-        {
-            //Alert the user
-            let error = "Error: " + xhr.responseText
-            alert(error)
-        }
-    }
-
-    //Send Request
-    //Send string
-    xhr.send(jsonString)
 
     return(
     <>
@@ -301,84 +327,29 @@ function MLPDemoPart1Front(props)
         would if the points in the data form a straight line. 
     </p>
 
-    {tags[1]}
+    {props.linTag}
     <p>
         Likewise, a good dataset for logistic regression would be if each class are represented by data points that 
         form seperate groups in different parts of the dataset. 
     </p>
-    {tags[2]}
+    {props.logTag}
     <p>
         However, the problem comes when the dataset ignores both linear and logistic regression assumptions on the dataset.
         For linear regression, this is when our dataset doesn't follow a straight line. For example, lets say we are given a dataset
         that looks like the following.
     </p>
 
-    {tags[0]}
+    {props.mlpRegTag}
     <p>
         You can see that the path of the data is not a linear line. So, if we try using linear regression it. We get the follwoing
     </p>
     </>
-
-    
     )
 }
 
 //Create middle component for Part 1 of MLP Demo
 function MLPDemoPart1Middle(props)
 {
-
-    //Create tag
-    let tag = null
-
-    //Set url for training 
-    let url = "https://team-25-362714.uc.r.appspot.com/MLPDemoFigures"
-
-    //Create dictionary to send to backend
-    let request = {
-        "X":props.X,
-        "y":props.Y,
-        "type":"MLP Demo Part 1 Middle"
-    }
-
-    //Make request json string
-    let jsonString = JSON.stringify(request)
-
-    //Create object that will handling sending and recieving information 
-    let xhr = new XMLHttpRequest()
-
-    //Open response
-    xhr.open("POST", url, false)
-
-    //Create on load function
-    xhr.onload = function()
-    {
-        //If status of xhr is 200
-        if(xhr.status === 200)
-        {
-            //Get repsonse from xhr
-            let jsonResponse = JSON.parse(xhr.responseText)
-
-            //Get image from jsonResponse
-            const image = "data:image/png;base64,"+jsonResponse.figure;
-
-            //Create image tag
-            let imageTag = <img alt="Figure" key="Figure" src={image}></img>
-
-            //Set tag to be imageTag
-            tag = imageTag
-        }
-        //Otherwise
-        else
-        {
-            //Alert the user
-            let error = "Error: " + xhr.responseText
-            alert(error)
-        }
-    }
-
-    //Send Request
-    //Send string
-    xhr.send(jsonString)
 
     return(
         <>
@@ -391,9 +362,9 @@ function MLPDemoPart1Middle(props)
             people be our classes and weight be used to determine the class. In a normal scenario, we would see that our classes clustered
             around a series of weights. However, the problem comes when these classes overlap. In this case, a person is short if
         </p>
-        {tag}
+        {props.mlpClassTag}
         <p>
-            Now, if we try to use logistic regression on this dataset, you can see that our model can fit the dataset
+            Now, if we try to use logistic regression on this dataset, you can see that our model can't fit the dataset
         </p>
         </>
 
@@ -470,12 +441,36 @@ function MLPDemoPart2()
             each neuron associated with a feature in our data. The hidden layer is associated with the patterns found from out inputs. Finallly, our output layer contains 
             the final result of our model. 
         </p>
-        {/* TODO: Different Stages of Neural Network */}
+        <BoxesNN
+        height={500} width={1000} nodes={[1, 4, 1]} radius={25} xDist={100} left={100} yDist={50}
+        patterns={[["Image"], ["Dog Ears", "Dog Tail", "Cat Ears", "Cat Tail"], ["Dog", "Cat"]]} 
+        >
+        </BoxesNN>
         <p>
            In regression, our final layer contain only 1 neuron to represent the final value caculated. In classification, our final layer contains a certain number of neurons based
            on the number of classes, with each neuron being associated with how likely the data is classified to that class. 
         </p>
-        {/* TODO: Difference betwen regression and classification */}
+        <div>
+        <div style={{display:"inline-block"}}>
+        <TypeNN
+         height={500} width={600} nodes={[1, 4, 1]} radius={25} xDist={100} left={100} yDist={50}
+         patterns={[[""], ["", "", "", ""], [""]]} 
+         title="Regression Neural Network"
+         whatValue="Any Value"
+         
+        >
+        </TypeNN>
+        </div>
+        <div style={{display:"inline-block"}}>
+        <TypeNN
+         height={500} width={600} nodes={[1, 4, 4]} radius={25} xDist={100} left={100} yDist={50}
+         patterns={[[""], ["", "", "", ""], ["", "", "", ""]]} 
+         title="Classification Neural Network"
+         whatValue="Between 0 and 1"
+        >
+        </TypeNN>
+        </div>
+        </div>
         <p>
             Most of the time, our neural network can contain more than 1 hidden layer. This means that the patterns identified in one hidden layer can
             be used to find more patterns in the next layer. For example, one hidden layer find the most basic patterns of the animal, like their ears and noses.
@@ -497,13 +492,12 @@ function MLPDemoPart2()
         <p>
             While neural network work to understand data by identifying patterns, we have no idea what patterns it finds out. 
             There is no way right now to determine what features the neural network find from the data due to the fact similar linear regression and logisitc regression,
-            our model is a mathematical model. So there is no way to translate the model to something that a human can understand. 
-            {/* TODO: Maybe show a black box */}
         </p>
         <p>
             Still, regardless of how neural networks are incomprehensible, our neural network can handle more complex data. By identifying simpler patters to build more complex patterns and answers,
             multilayer perceptron makes a complex problem into simplier problems to understand the data and find the final answer.
         </p>
+        {/**TODO Add Information about weights and biases */}
         </>
     )
 }
@@ -550,8 +544,48 @@ function MLPDemoPart3()
     )
 }
 
+//Create Part 4 of MLP Demo
+function MLPDemoPart4(props)
+{
+    //Create tag for GeneralDemoPart
+    let backTag = <GeneralDemoPart
+    front={<MLPDemoPart4Back
+    mlpClassTag={props.mlpClassTag}
+    ></MLPDemoPart4Back>}
+    X={props.MLPClassX}
+    y={props.MLPClassY}
+    model="MLP Demo Part 4 Back"
+    buttonDisable={false}
+    back={<></>}
+    inputForm={MLPPart4Train}
+    hasInputs={true}
+    >
+    </GeneralDemoPart>
+
+    //Create front tag for MLPDemoPart4Front
+    let frontTag = <GeneralDemoPart
+    front={<MLPDemoPart4Front
+    mlpRegTag={props.mlpRegTag}
+    >
+    </MLPDemoPart4Front>}
+    X={props.MLPRegX}
+    y={props.MLPRegY}
+    model="MLP Demo Part 4 Front"
+    buttonDisable={false}
+    back={backTag}
+    inputForm={MLPPart4Train}
+    hasInputs={true}
+    >
+    </GeneralDemoPart>
+
+    return(
+        <>
+        {frontTag}
+        </>
+    )
+}
 //Create MLP Demo for Part 4
-function MLPDemoPart4Front()
+function MLPDemoPart4Front(props)
 {
     return(
         <>
@@ -584,25 +618,28 @@ function MLPDemoPart4Front()
         <p>
             Here is the data for the regression problem
         </p>
-            {/* TODO: Show Data for Regression Model */}
+            {props.mlpRegTag}
         </>
     );
 }
 
 //Create MLP Demo Part 4 Back
-function MLPDemoPart4Back()
+function MLPDemoPart4Back(props)
 {
+    return(
     <>
     <p>
         Here is the data for the classifcation problem
     </p>
-   {/* Show the data for classifcation and handle training of the model */}
+    {props.mlpClassTag}
     </>
+    );
 }
 
 //Create MLP Demo Part 5
 function MLPDemoPart5()
 {
+    return(
     <>
     <p>
         Multilayer perceptron is a very good machine learning model and served as the foundation 
@@ -615,13 +652,12 @@ function MLPDemoPart5()
         what's going on in the model, then you don't need worry about this problem. 
     </p>
     <p>
-    However, there are time which is knowing what going on in the model is important. For example, if you are doctore that wants to understand 
+    However, there are time which is knowing what going on in the model is important. For example, if you are doctor that wants to understand 
     what causes a disease based on certain aliments, then you could use a model to predict whether a person will have a disease based on any combination of
     aliments. However, it still important to know what aliments cause the disease and their effects. If we used a multilayer perceptron, then we
     will have no idea what aliments caused the disease since the model has no way to indicate how the features affects the results. 
     </p>
 
-    {/* TODO: A visualization of the problem  */}
     <p>
         Thus, if you do care how a model works, then you are going to need a decision tree. A decision tree can explain how
         the features of a dataset can affect of the model in readable human terms. 
@@ -634,6 +670,84 @@ function MLPDemoPart5()
         represented by a series of values. We can also have a dataset that contain text, where 
     </p>
     </>
+    );
+}
+
+//Input Form for MLP Part 4 Traning
+function MLPPart4Train(props)
+{
+    //Used to intialize component
+    useEffect(() => {
+        //Create an entry in props.model_data called hidden_layer_sze
+        //Which will store the size of the hiddent layer
+        //Set the entry to a value of [8,4] which is the default the value 
+        props.model_data["hidden_layer_sizes"] = [8,4]
+
+        //Set inputsValid to be true, 
+        props.inputsValid["entry"] = true
+
+    }, [])
+
+    //Verify if inputs are valid
+    //Input: inputs - Should contain an array of values provided by model_data from GeneralDemoTrain
+    //Output: Boolean value. True if inputs are valid or False if inputs ar enot valid
+    let checkInputs = (inputs) => {
+        //Go through each value inputs
+        for(let i = 0; i < inputs.length; i++)
+        {
+            //If inputs[i] is NaN
+            if(isNaN(inputs[i]))
+            {
+                //Return false
+                return false;
+            }
+            //Otherwise, if inputs[i] is less than 1
+            else if(inputs[i] < 1)
+            {
+                //Return false
+                return false;
+            }
+        }
+
+         //Otherwise, return true
+         return true
+    }
+
+    //Handle change in input
+    let inputChange = (event) => {
+        //Get value
+        let value = event.target.value
+
+        //Split value into a list
+        let values = value.split(",")
+
+        //Go through each value and parse int
+        //If size of values is does not equal to ['']
+        //An empty input is valid
+        if(values[0].length === 0 && values.length === 1)
+        {   
+            values = []
+        }
+        //If values is non empty
+        else
+        {
+            //Go through each value and parse int
+            values = values.map((val) => {return parseInt(val)})
+        }
+
+        //Set entry in props.model_data["hidden_layer_sizes"] to be values
+        props.model_data["hidden_layer_sizes"] = values
+
+        //Next, check if the input is valid and store the reulst in props.inputsValid
+        props.inputsValid["entry"] = checkInputs(values)
+    }
+    //Return Form
+    return(
+        <Form.Group>
+            <Form.Label>Hidden Layer Size</Form.Label>
+            <input onChange={inputChange} defaultValue="8,4"></input>
+        </Form.Group>
+    )
 }
 
 export default MLPDemo

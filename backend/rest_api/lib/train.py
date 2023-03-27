@@ -77,7 +77,9 @@ model_dict = {
     "Sequential Model":regressions.SequentialModel,
     "Logistic Regression Demo Part 2":regressions.LogisticRegressionDemoPart2,
     "MLP Demo Part 1 Front":regressions.MLPDemoPart1Front,
-    "MLP Demo Part 1 Middle":regressions.MLPDemoPart1Middle
+    "MLP Demo Part 1 Middle":regressions.MLPDemoPart1Middle,
+    "MLP Demo Part 4 Front":regressions.MLPDemoPart4Front,
+    "MLP Demo Part 4 Back":regressions.MLPDemoPart4Back
 }
 
 # Will handle training the model 
