@@ -169,6 +169,19 @@ const FigLogisticRegres = props => {
 		update(ctx);
 		dataPoints(ctx);
 	}
+	
+	const mouseMove = (e) =>{
+		const canvas = canvasRef.current;
+		const ctx = canvas.getContext('2d');
+
+		if(dataPtSelected != "na"){
+			let x = e.clientX - canvas.getBoundingClientRect().left;
+			let y = e.clientY - canvas.getBoundingClientRect().top;
+			dataPts[dataPtSelected] = [x, y];
+		}
+		update(ctx);
+		dataPoints(ctx);
+	}
 
 	useEffect(() => {
 		
@@ -187,7 +200,7 @@ const FigLogisticRegres = props => {
 		<div id="div_top">
 			<p>Click and drag the line, and press shift to change the intercept of the line.</p>
 			<p>Click and drag the data points to see how the error changes</p>
-			<canvas id="canv" ref={canvasRef} {...props} onMouseDown={mouseDown} onMouseUp={mouseUp}/><br/>
+			<canvas id="canv" ref={canvasRef} {...props} onMouseDown={mouseDown} onMouseUp={mouseUp} onMouseMove={mouseMove}/><br/>
 			Coefficient 1: <input type="range" onChange={changeCoef1}/><br/>
 			Coefficient 2: <input type="range" onChange={changeCoef2}/>
 			<p>Squared Error: {error}</p>
