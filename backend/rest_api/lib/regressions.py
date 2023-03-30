@@ -2,19 +2,31 @@
 # regressions.py should be including all methods to deal with regression calls when finished. 
 # log: created Sep 25 - includes a basic linear regression method for the group to discuss with inputs and outputs, others still under construction - Junyi
 # log: modified Oct 12 - added a demo function to play with test and train size and random state for MNIST classifier - Junyi
+# log: modified Oct 18 - Modified Linear Regression to take in params and return model and added both Logistics and Decision Tree Regression - Amith Panuganti
+# log: modified Oct 21 - Add more Hyperparameters for Logistics and Decession Tree Regression - Amith Panuganti
 # log: modified Oct 23 - added a decision tree function and a logistic regression function to make more regressions possible - Junyi
 # log: modified Nov 6 - added decision tree save image support, and solved file name conflict problem while reserving for other functions by using uuid module - Junyi
+# log: modifited Nov 9 - Started to add MLP Regression and Classifier - Amith Panuganti
 # log: modified Nov 13 - added support for system logging. - Junyi
+# log: modified Nov 15 - Added Naive Bayes Classifcation - Amith Panuganti
+# log: modified Nov 16 - Fixed error with plotting multiple plots and modified figures in each model - Amith Panuganti 
+# log: modified Nov 29 - Added Multi Layer Support - Amith Panuganti 
+# log: modified Dec 4 - Added Support of Sequential Model - Amith Panuganti 
+# log: modified Jan 18 2023 - Added Seperate Function for Decision Tree Demo - Amith Panuganti 
+# log: modified Jan 21 2023 - In Decision Tree Demo, used Decision Tree Classifer instead of Decision Tree Regressor - Amith Panuganti
 # log: modified Jan 29 - added KNN on MNIST - Junyi
+# log: modified Feb 7 2023 - Add part 1 for logisitic regression demo - Amith Panuganti 
+# log: modified Feb 9 2023 - Added Part 2 For Logisitic Regression Demo - Amith Panuganti
+# log: modified Mar 1 2023 - Added Models For Part 1 for MLP Demo - Amith Panuganti 
 # log: modified Mar 12 - added tree visual support - Junyi
 # log: modified Mar 26 - added pytorch support - Junyi
 import sklearn
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text 
 from sklearn.linear_model import LinearRegression #input linear regression methods
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier #input linear regression methods
 from sklearn.datasets import fetch_openml #for MNIST Demo
-from sklearn.metrics import accuracy_score # for regression accuracy
+from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay, mean_squared_error  # for regression accuracy
 from sklearn.model_selection import train_test_split # to spilt test data
 from sklearn import tree #to use all tree functions
 import numpy as np #typical numpy import
@@ -27,6 +39,13 @@ from keras.models import Sequential
 from keras.layers import Dense
 from ann.visualizer.visualize import ann_viz
 import torch
+from sklearn.neural_network import MLPRegressor
+from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import 
+from lib.tfModel import SeqModel
+from scipy.special import expit # Used for logisitc regression demo
+import matplotlib #just in case for drawing a graph
+import tensorflow as tf 
 
 class KNNClassifier():#this is a KNN Classifier 
     def __init__(self, k=10): # initiation of the class, we set k = 10 for now
@@ -72,6 +91,19 @@ def LinearMethod(vector_x, vector_y): #easily call linear regression method
     w = model.coef_ #as wx+b
     b = model.intercept_ #generate linear regression result
     return w, b, save_id #return the req'd values and unique ID
+
+def LinearMethod(vector_x, vector_y, data): #easily call linear regression method
+    #input: two vectors (vector_x, vector_y), showing correlating two vectors on the plane.
+    #output: calculated result of linear regression as y = (w)x+(b)
+    #errors: wrongful type of input, wrongful vector size, wrongful type inside vector
+    #side effects and known faults not found yet
+    model = LinearRegression() #define the model
+    model.fit(vector_x, vector_y) #fit into linear regression model
+
+    # Set figure to be none
+    figure = None
+    
+    return model, figure # Return the model
 
 def MNIST_SGDDemo(test_size: float, random_state: int = 42):#a demo of MNIST to fetch interest for K-12 students
     # input: percentage to test to let kids know test size and train size's difference and the random state (just in case, not really used)
