@@ -41,8 +41,6 @@ import { useState, useEffect } from 'react';
 
 import {useAuth} from "../../contexts/AuthContext"
 
-import { motion } from "framer-motion"
-
 import { useRef } from 'react'
 
 
@@ -117,7 +115,9 @@ const FigLinearRegres = props => {
 
 	const releasing = (ctx) => {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-		ctx.fillStyle = '#000000'
+		ctx.lineWidth = 5;
+		ctx.fillStyle = 'blue';
+		ctx.strokeStyle = 'blue';
 		ctx.beginPath();
 		ctx.arc(origin[0], origin[1], 5, 0, 2*Math.PI);
 		ctx.stroke();

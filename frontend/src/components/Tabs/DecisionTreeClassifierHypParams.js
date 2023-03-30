@@ -18,7 +18,7 @@ import { Form, Button, Container } from "react-bootstrap"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput"
-import {Tooltip as ReactTooltip} from 'react-tooltip'
+import * as ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 
 

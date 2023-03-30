@@ -33,6 +33,7 @@ import {useAuth} from "../contexts/AuthContext"
 import Modal from 'react-bootstrap/Modal'
 import DecisionTree from './Tabs/DecisionTree';
 import FigLinearRegres from './Tabs/FigLinearRegres';
+import FigLogisticRegres from './Tabs/FigLogisticRegres';
 import { Chart } from "react-google-charts";
 
 function DemoItem(props){
@@ -210,7 +211,8 @@ function DemoItem(props){
 
 			case "Logistic Regression":
                 //dataSetChange()
-				return(<><p>{configData.DEMOS.LOGISTIC_TXT}</p></>);
+				return(<><p>{configData.DEMOS.LOGISTIC_TXT}</p>
+                <p>Visual Aid:</p><FigLogisticRegres height="300px" width="300px"/></>);
 				break;
 			case "Decision Tree Classification":
                 //dataSetChange()
