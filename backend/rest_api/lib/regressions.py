@@ -37,11 +37,11 @@ from dtreeviz.trees import *
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
-from ann.visualizer.visualize import ann_viz
+from ann_visualizer.visualize import ann_viz
 import torch
 from sklearn.neural_network import MLPRegressor
 from sklearn.neural_network import MLPClassifier
-from sklearn.naive_bayes import 
+from sklearn.naive_bayes import GaussianNB
 from lib.tfModel import SeqModel
 from scipy.special import expit # Used for logisitc regression demo
 import matplotlib #just in case for drawing a graph
