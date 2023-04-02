@@ -35,6 +35,9 @@ import DecisionTree from './Tabs/DecisionTree';
 import FigLinearRegres from './Tabs/FigLinearRegres';
 import FigLogisticRegres from './Tabs/FigLogisticRegres';
 import { Chart } from "react-google-charts";
+import LogisticRegressionPart, { LogisticRegressionPart1After, LogisticRegressionPart1Front
+                                 , LogisticRegressionPart2Front, LogisticRegressionPart2After 
+                                 , LogisticRegressionPart3Front} from './Tabs/LogisticRegressionDemo';
 
 function DemoItem(props){
     //need auth context to get uuid
@@ -205,14 +208,33 @@ function DemoItem(props){
                 data={data2}
                 options={options3}
                 /> 
-                <p>Visual Aid:</p><FigLinearRegres height="300px" width="300px"/> </>);
+                <p>Below is a visual aid. With this, you can move data points and the line itself to get an idea of how the data can affect whether or not
+                    linear regression is a good model to use:</p><FigLinearRegres height="300px" width="300px"/> </>);
                 
 				break;
 
 			case "Logistic Regression":
                 //dataSetChange()
-				return(<><p>{configData.DEMOS.LOGISTIC_TXT}</p>
-                <p>Visual Aid:</p><FigLogisticRegres height="300px" width="300px"/></>);
+				return(<><LogisticRegressionPart 
+                        front={<LogisticRegressionPart1Front></LogisticRegressionPart1Front>}
+                        back={<LogisticRegressionPart1After></LogisticRegressionPart1After>}
+                        modle="Logistic Regression Demo Part 1"
+                        X={configData.LOGISTIC_DEMO_DATA.ONE.X}
+                        Y={configData.LOGISTIC_DEMO_DATA.ONE.Y}/>
+                        <h1 className='w-100 mt-2'>Sigmoid Function</h1>
+                        <LogisticRegressionPart 
+                        front={<LogisticRegressionPart2Front></LogisticRegressionPart2Front>}
+                        back={<LogisticRegressionPart2After></LogisticRegressionPart2After>}
+                        modle="Logistic Regression Demo Part 2"
+                        X={configData.LOGISTIC_DEMO_DATA.ONE.X}
+                        Y={configData.LOGISTIC_DEMO_DATA.ONE.Y}/>
+                        <h1 className='w-100 mt-2'>Strengths and Weaknesses</h1>
+                        <LogisticRegressionPart 
+                        front={<LogisticRegressionPart3Front></LogisticRegressionPart3Front>}
+                        back={<LogisticRegressionPart2After></LogisticRegressionPart2After>}
+                        modle="Logistic Regression Demo Part 3"
+                        X={configData.LOGISTIC_DEMO_DATA.ONE.X}
+                        Y={configData.LOGISTIC_DEMO_DATA.ONE.Y}/></>);
 				break;
 			case "Decision Tree Classification":
                 //dataSetChange()
