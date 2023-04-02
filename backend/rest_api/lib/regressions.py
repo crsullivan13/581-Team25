@@ -591,6 +591,9 @@ def MLPDemoPart1Middle(vector_x, vector_y, data):
     # Create dictionary containing figure, mse, and accuracy
     results = {"figure":figure, "Loss":mse, "Accuracy":accuracy}
 
+    # Return results 
+    return model, results
+
 #print(DecisionTree([[1,2], [3,4], [5,6]], [6,7,8], [[1,2], [3,4], [5,6]], [6,7,8]))
 
 # Trains a model for MLP Demo Part 4 Front. 

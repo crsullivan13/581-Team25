@@ -106,7 +106,7 @@ function GeneralDemoTrain(props)
         
 
         //Set url for training 
-        let url = "https://team-25-362714.uc.r.appspot.com/Demo"
+        let url = "http://127.0.0.1:5000/Demo"
 
         //Make request json string
         let jsonString = JSON.stringify(model_data)
