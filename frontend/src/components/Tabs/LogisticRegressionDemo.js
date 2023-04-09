@@ -34,6 +34,8 @@ import React from "react";
 import { useState } from 'react';
 import {Button } from 'react-bootstrap';
 
+
+
 //Create part 1 before
 function LogisticRegressionPart1Front(props)
 {
@@ -148,6 +150,141 @@ function LogisticRegressionPart1After(props)
     )
 }
 
+function LogisticRegressionPart2Front(props)
+{
+    //Create dictionary for table
+    const dataset = [
+        {temperature:40, feel:"Cold", class:0},
+        {temperature:45, feel:"Cold", class:0},
+        {temperature:50, feel:"Cold", class:0},
+        {temperature:55, feel:"Cold", class:0},
+        {temperature:60, feel:"Cold", class:0},
+        {temperature:65, feel:"Hot", class:1},
+        {temperature:70, feel:"Hot", class:1},
+        {temperature:75, feel:"Hot", class:1},
+        {temperature:80, feel:"Hot", class:1},
+        {temperature:85, feel:"Hot", class:1}
+    ]
+
+    //Return statement
+    return(
+        <>
+        <div>
+            <p>
+              The logistic regression model is an application of the logistic function, which creates the logistic curve that you have probably seen graphed before (do a
+              quick serach online if you haven't). In this part of the demo, we are going to focus on what's called binary classification. This is the simplest case of
+              using a logisitc regression model and it allows us to perform the task of placing an item in one of two classes, which is exactly what we want to accomplish
+              with the airconditioning example above.
+            </p>
+            <p>
+              So how does the logisitc regression model classify an item? A good starting point is to think about classifcation simply as the process of finding the probability
+              that some item X is part of a given class. Using the airconditioning example, we can say we want to find the probability that a given temperature is in the class 
+              we defined as "Hot" or "1". Since we are working with probabilities, we know that when we pass the temperature value to our model, it will need to output a value 
+              between 0 and 1 as real probabilities must fall in this range to make sense. This is where the logisitic function comes into play.
+            </p>
+            <p>
+              The logisitic function (also called the sigmoid function, because its graphical shape looks like an S) has the property that the output values will always fall
+              between 0 and 1. So, by using the sigmoid function, we can always produce a probability. We won't go into the math and equations here, but please check out
+              the terms glossary for more information on the math surrounding the sigmoid function.
+            </p>
+            <p>
+                Again, we will use the same data set as above, as it is a simple binary classifcation (binary being a two class case). 
+            </p>
+            <table>
+                <tbody>
+                <tr>
+                    <th>Temperature</th>
+                    <th>Class</th>
+                </tr>
+                {dataset.map ((val, key) => {
+                    return (
+                        <tr key = {key}>
+                            <td>
+                                {val.temperature}
+                            </td>
+                            <td>
+                                {val.class}
+                            </td>
+                        </tr>
+                    )
+                })}
+                </tbody>
+            </table>
+        </div>
+        </>
+    )
+}
+
+function LogisticRegressionPart2After(props)
+{
+    return(
+        <div>
+        <p>From the graph and the metrics (loss and accuracy) you can see how the logisitc regression model is well suited for classifcation.
+            Of course, as with all models, logistic regression does have some drawbacks, and we will dive into that in the next section.
+        </p>
+        </div>
+    )
+}
+
+function LogisticRegressionPart3Front(props)
+{
+    //Create dictionary for table
+    const dataset = [
+        {temperature:40, feel:"Cold", class:0},
+        {temperature:45, feel:"Cold", class:0},
+        {temperature:50, feel:"Cold", class:0},
+        {temperature:55, feel:"Cold", class:0},
+        {temperature:60, feel:"Cold", class:0},
+        {temperature:65, feel:"Hot", class:1},
+        {temperature:70, feel:"Hot", class:1},
+        {temperature:75, feel:"Hot", class:1},
+        {temperature:80, feel:"Hot", class:1},
+        {temperature:85, feel:"Hot", class:1}
+    ]
+
+    //Return statement
+    return(
+        <>
+        <div>
+            <p>
+              In this section we will dive into some of the strengths and weaknesses of logistic regression as a classifier.
+            </p>
+            <p>
+              One big assumption of logistic regression is that the data items should be independent. This means that data items shouldn't be related to each other
+              in any way. An example of this is logisitic regression should not be used on data that consists of multiple measurements of the same individual.
+            </p>
+            <p>
+              Another assumption of logisitic regression is that data elements should not be highly correlated to each other. An example of this is if you were trying to classify 
+
+            </p>
+            <p>
+                
+            </p>
+            <table>
+                <tbody>
+                <tr>
+                    <th>Temperature</th>
+                    <th>Class</th>
+                </tr>
+                {dataset.map ((val, key) => {
+                    return (
+                        <tr key = {key}>
+                            <td>
+                                {val.temperature}
+                            </td>
+                            <td>
+                                {val.class}
+                            </td>
+                        </tr>
+                    )
+                })}
+                </tbody>
+            </table>
+        </div>
+        </>
+    )
+}
+
 //Create component for LogsticiRegressionPart
 function LogisticRegressionPart(props)
 {
@@ -174,6 +311,7 @@ function LogisticRegressionPart(props)
             ? <>{props.back}</>
             : <></>
             }
+            {props.back}
         </div>
     )
 }
@@ -196,7 +334,7 @@ function LogisticRegressionTrain(props)
         }
 
         //Set url for training 
-        let url = "http://127.0.0.1:5000/logisticRegressionDemo"
+        let url = "https://team-25-362714.uc.r.appspot.com/logisticRegressionDemo"
 
         //Make request json string
         let jsonString = JSON.stringify(model_data)
@@ -277,3 +415,5 @@ function LogisticRegressionTrain(props)
 //Export default
 export default LogisticRegressionPart
 export {LogisticRegressionPart1Front, LogisticRegressionPart1After}
+export {LogisticRegressionPart2Front, LogisticRegressionPart2After}
+export {LogisticRegressionPart3Front}
