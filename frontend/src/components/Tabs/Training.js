@@ -10,6 +10,13 @@ Revisions:
 		Edit: Allowed metrics to be added
 	11/20/22
 		Edit: Add basic http error response display in a pop up modal
+	3/6/23
+		Author: Amith Paunganti
+		Edit: Being used to test GenericHypParams
+	3/8/23
+		Authro; Amith Panuganti
+		Edit: Implimented KNN Classifier and KNN Regressor
+		KNN Regressor still need to have a backend function
 Preconditions: None
 Errors: None
 Side Effects: When the begin training button is pressed, the training will start in the gce
@@ -31,7 +38,7 @@ import MultiLayerPerceptronRegressHypParams from "./MultiLayerPerceptronRegressH
 import NaiveBayesClassifierHypParams from "./NaiveBayesClassifierHypParams"
 import SequentialModel from "./SequentialModelHypParams"
 import FigLinearRegres from "./FigLinearRegres"
-import GenericHypParams from "./GenericHypParams"
+import KNNHypParams from "./KNNHypParams";
 import { Form, Button, Container, ModalHeader } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -133,7 +140,6 @@ function Training() {
 			model_data["y"] = labelData[0]
 			//we need the user id to train, for storage purposes
 			model_data["uuid"] = currentUser.uid
-
 
 			//turn the request data into json string
 			let jsonString = JSON.stringify(model_data)
@@ -290,6 +296,18 @@ function Training() {
 				return(
 					<SequentialModel model_data_p = {model_data} setModelData = {setModelData}>Sequential Model</SequentialModel>
 					);
+			case "KNN Regressor":
+				return(
+					<KNNHypParams model="KNN Regressor" model_data_p= {model_data} >
+
+					</KNNHypParams>
+				);
+			case "KNN Classifier":
+				return(
+					<KNNHypParams model="KNN Classifier" model_data_p= {model_data} >
+
+					</KNNHypParams>
+				);
 			default:
 
 		}
@@ -337,8 +355,10 @@ function Training() {
 		  	<option>Linear Regressor</option>
 			<option>Logistic Regressor</option>
 			<option>Decision Tree Regressor</option>
-			<option>MNIST Classifier</option>
 			<option>Decision Tree Classifier</option>
+			<option>KNN Regressor</option>
+			<option>KNN Classifier</option>
+			<option>MNIST Classifier</option>
 			<option>Multilayer Perceptron Classifier</option>
 			<option>Multilayer Perceptron Regressor</option>
 			<option>Gaussian Naive Bayes Classifier</option>

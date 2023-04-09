@@ -46,6 +46,8 @@ Revisions:
         Revision: Add Part 2 of logisitc regression demo
     3/1/23
         Revision: Add Part 1 model for MLP Demo
+    4/8/23
+        Revision: Add KNN Classifier
     
     
 Preconditions: Needs labels, features, and model type
@@ -79,7 +81,8 @@ model_dict = {
     "MLP Demo Part 1 Front":regressions.MLPDemoPart1Front,
     "MLP Demo Part 1 Middle":regressions.MLPDemoPart1Middle,
     "MLP Demo Part 4 Front":regressions.MLPDemoPart4Front,
-    "MLP Demo Part 4 Back":regressions.MLPDemoPart4Back
+    "MLP Demo Part 4 Back":regressions.MLPDemoPart4Back,
+    "KNN Classifier":regressions.KNNClassifierMethod,
 }
 
 # Will handle training the model 
@@ -109,7 +112,7 @@ def trainModel(data):
 
     # Clear any plots
     plt.close()
-
+   
     # Train the model and get model and figure
     model,figure = model(features, labels, kwargs)
     
