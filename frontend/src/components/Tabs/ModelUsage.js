@@ -52,7 +52,7 @@ function ModelUsage() {
   let getModelNames = () => {
     //"https://team-25-362714.uc.r.appspot.com/get_models"
     //"http://127.0.0.1:5000/get_models" - for local testing
-    let url = "http://127.0.0.1:5000/get_models"
+    let url = "https://team-25-362714.uc.r.appspot.com/get_models"
 
 			//setup http request
 			let xhr = new XMLHttpRequest()
@@ -104,7 +104,7 @@ function ModelUsage() {
 
 
   let handleRun = () => {
-    let url = "http://127.0.0.1:5000/predict"
+    let url = "https://team-25-362714.uc.r.appspot.com/predict"
     let data = {
       "doc_id": model_selected,
       "X":testData,
