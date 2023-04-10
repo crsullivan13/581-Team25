@@ -229,13 +229,15 @@ def fit():
         data = {k: data[k] for k in data if k != "uuid" and k != "name"}
 
 		# Create a model and figure get its params
-        trained, figure = trainModel(data)
+        model_metrics = None
+        trained, figure,model_metrics = trainModel(data)
 
         #Store the model
         user_ref = db.collection(u'Models').document(uuid)
 
+        json_metrics = json.dumps(model_metrics, ensure_ascii=False)
         #Store as default
-        user_ref.set({"model": pickle.dumps(trained)})
+        user_ref.set({"model": pickle.dumps(trained), "model_metrics": json_metrics})
 
         # Set bytes to be None
         bytes = None
@@ -286,9 +288,30 @@ def get_models():
 
         #add all models to the json object
         for doc in model_docs:
+            #print(doc.to_dict()["model_metrics"])
             model_names["names"].append(doc.id)
         
         return model_names
+    except Exception as e:
+        return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error
+
+#TODO change from GET to POST
+#route for retrieving all the names of the stored models stored for the user
+@app.route('/get_metrics', methods=['POST'])
+@cross_origin()
+def get_metrics():
+    try:
+        #TODO get uuid from frontend, then use it to make a query for that users models
+        data = json.loads(request.data.decode("utf-8"))
+        model_id = data["model_id"]
+
+        doc = db.collection(u'Models').document(model_id).get()
+        doc_dict = doc.to_dict()
+        if("model_metrics" in doc_dict):
+            metric = doc.to_dict()["model_metrics"]
+            return metric
+        else:
+            return {}
     except Exception as e:
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error
 

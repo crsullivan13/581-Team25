@@ -99,7 +99,6 @@ const FigLinearRegres = props => {
 
 
 	let dataPoints = (ctx) => {
-		ctx.fillStyle = '#000000';
 		for(let key in dataPts){
 			if(key == dataPtSelected){
 				ctx.beginPath();
@@ -132,7 +131,6 @@ const FigLinearRegres = props => {
 
 	const rotate = (ctx, x, y) => {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-		ctx.fillStyle = '#000000'
 		ctx.beginPath();
 		ctx.arc(origin[0], origin[1], 10, 0, 2*Math.PI);
 		ctx.stroke();
@@ -160,7 +158,10 @@ const FigLinearRegres = props => {
 		dataPoints(ctx);
 	}
 	const offset = (ctx, x, y) => {
-
+		ctx.lineWidth = 5;
+		ctx.fillStyle = 'blue';
+		ctx.strokeStyle = 'blue';
+		
 		let dy = py - origin[1];
 		let dy_n = ny - origin[1];
 
@@ -172,7 +173,6 @@ const FigLinearRegres = props => {
 
 
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-		ctx.fillStyle = '#000000'
 		ctx.beginPath();
 		ctx.arc(origin[0], origin[1], 5, 0, 2*Math.PI);
 		ctx.stroke();
