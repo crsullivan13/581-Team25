@@ -48,6 +48,8 @@ Revisions:
         Revision: Add Part 1 model for MLP Demo
     4/8/23
         Revision: Add KNN Classifier
+    4/9/23
+        Revision: Add KNN Regressor
     
     
 Preconditions: Needs labels, features, and model type
@@ -83,6 +85,7 @@ model_dict = {
     "MLP Demo Part 4 Front":regressions.MLPDemoPart4Front,
     "MLP Demo Part 4 Back":regressions.MLPDemoPart4Back,
     "KNN Classifier":regressions.KNNClassifierMethod,
+    "KNN Regressor":regressions.KNNRegressorMethod
 }
 
 # Will handle training the model 

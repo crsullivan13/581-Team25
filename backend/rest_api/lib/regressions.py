@@ -21,6 +21,7 @@
 # log: modified Mar 12 - added tree visual support - Junyi
 # log: modified Mar 26 - added pytorch support - Junyi
 # log: modifited April 8 - Integrated KNN Classifier for training 
+# log: modified Apr 9 - added Tensorflow written KNNRegressor - Junyi
 import sklearn
 from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text 
 from sklearn.linear_model import LinearRegression #input linear regression methods
@@ -80,6 +81,40 @@ class KNNClassifier():#this is a KNN Classifier
         rate = np.sum(np.array(y_pred == y_test,dtype=np.int32))
         return rate / len(y_test)   # / test_length return, with average
 
+class KNNRegressor:
+# this is a KNN Regressor Class
+  def __init__(self, k):
+    # Constructor to initialize number of neighbors to consider
+    # input: number of neighbors to consider
+    self.k = k
+
+  def fit(self, X_train, y_train):
+    # Convert training data to TensorFlow constant
+    # input: x and y training data
+    self.X_train = tf.constant(X_train, dtype=tf.float64)
+    self.y_train = tf.constant(y_train, dtype=tf.float64)
+
+  def predict(self, X_test):
+    #input: test x vector, output: predicted y test vector.
+    # Create list for y_predictions
+    y_predictions = []
+    # For each vector in X_test
+    for vector in X_test:   
+        # Calculate distances between test and training data
+        distances = tf.reduce_sum(tf.square(tf.subtract(vector, self.X_train)), axis=1)
+        # Get indices of k nearest neighbors
+        _, indices = tf.nn.top_k(-distances, k=self.k)
+        
+        # Get labels of k nearest neighbors
+        nearest_neighbors = tf.gather(self.y_train, indices)
+        # Calculate mean of labels to make prediction
+        y_pred = tf.reduce_mean(nearest_neighbors)
+
+        # Convert y_pred to numpy and add it to y_predictions
+        y_predictions.append(y_pred.numpy())
+
+    # Return predictions 
+    return y_predictions
 
 def LinearMethod(vector_x, vector_y): #easily call linear regression method
     # input: two vectors (vector_x, vector_y), showing correlating two vectors on the plane.
@@ -717,6 +752,23 @@ def KNNClassifierMethod(vector_x, vector_y, data):
 
     # Return model and confusion matrix
     return model, figure
+
+# Train a model for KNN Regression
+# # Input: vector_x - Input Features for Dataset
+# Input: vector_y - Input Ouputs for Dataset
+# data: Parameters for MLPRegressor
+# data contains the follwing parameters
+# k: The number of neighbors 
+# Ouput: model, the KNN Classifier
+# Output: figure, The figure for the model
+def KNNRegressorMethod(vector_x, vector_y, data):
+     # Create model for KNN Classifier
+    model = KNNRegressor(k=data["k"])
+   
+    # Fit the model on the data
+    model.fit(vector_x, vector_y)
+
+    return model, None
 #print(MNIST_SGDDemo(0.5, 42)) - for testing
 #print (MNIST_KNNDemo(0.2))
 

@@ -87,7 +87,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-auth = credentials.Certificate('team-25-362714-3af9294635.json')
+auth = credentials.Certificate('team-25-362714-623f2b1f64ab.json')
 firebase_admin.initialize_app(auth)
 db = firestore.client()
 #Create default route, for an easy check of the status of web server
@@ -248,13 +248,12 @@ def fit():
 
 		    # Get bytes
             bytes = encodebytes(output.getvalue()).decode('ascii')
-
 		#Next, create metircs with loss and figure
         metrics = {
 			"loss": loss(trained, data["X"], data["y"]),
 			"figure" : bytes
 		} 
-
+        
         # Return params back to frontend
         coefs = False 
         if coefs:
