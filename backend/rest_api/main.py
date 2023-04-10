@@ -222,10 +222,11 @@ def fit():
     try:	
 		# Load data from request
         data = json.loads(request.data.decode("utf-8"))
-
-
         uuid = data["uuid"]
-        data = {k: data[k] for k in data if k != "uuid"}
+
+        # Get the name for the model
+        name = data["name"]
+        data = {k: data[k] for k in data if k != "uuid" and k != "name"}
 
 		# Create a model and figure get its params
         model_metrics = None
@@ -249,13 +250,12 @@ def fit():
 
 		    # Get bytes
             bytes = encodebytes(output.getvalue()).decode('ascii')
-
 		#Next, create metircs with loss and figure
         metrics = {
 			"loss": loss(trained, data["X"], data["y"]),
 			"figure" : bytes
 		} 
-
+        
         # Return params back to frontend
         coefs = False 
         if coefs:
@@ -330,11 +330,12 @@ def predict():
 
         # Get the features from data
         X = data["X"]
+        uuid = data["uuid"]
 
         # Get the user from data
         user_ref = db.collection(u'Models').document(uuid)
 
-        uuid = data["uuid"]
+        
         ser_model = ""
         if "model_name" in data:
             model_dict = user_ref.get().collection(u'user_models').get().to_dict()

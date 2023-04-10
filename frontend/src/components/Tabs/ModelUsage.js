@@ -7,6 +7,9 @@ Revisions:
 	9/25/22: 
         Revision: Impliment Interface for Model Usage
         Author: Amith Panuganti 
+  3/9/23:
+        Revision: Fixed interface to allow predicting to work
+        Author: Amith Panuganti
 Preconditions: None
 Postconditions: None
 Errors: None
@@ -30,21 +33,6 @@ function ModelUsage() {
 	
   const {currentUser} = useAuth()
 
-
-  //the states that keep track of the selected files and whether files have been selected
-	
-	//These states keep track of the Training file
-	const [selectedTrainFile, setSelectedTrainFile] = useState();//keeps track of what training file is selected
-	const [isTrainFileSelect, setIsTrainFileSelec] = useState(false);//keeps track of whether a training file is selected
-  //trainData stores the parsed information from the training file
-	const [trainData, setTrainData] = useState();
-	
-	//these track the label file
-	const [selectedLabelFile, setSelectedLabelFile] = useState();//keeps track of what label file is selected
-	const [isLabelFileSelect, setIsLabelFileSelec] = useState(false);//keeps track of whether a label file is selected
-  //labelData stores the parsed information from the data file
-	const [labelData, setLabelData] = useState();
-	
 	//these track the feature file
 	const [selectedTestFile, setSelectedTestFile] = useState();//keeps track of what feature file is selected
 	const [isTestFileSelect, setIsTestFileSelec] = useState(false);//keeps track of whether a label file is selected
@@ -87,7 +75,6 @@ function ModelUsage() {
 					//Parse the response 
 					var jsonResponse = JSON.parse(xhr.responseText)
           setModelList(jsonResponse["names"])
-          console.log(model_list)
 				} else {
 					//get here if we get and error status from the http response
 					let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
@@ -106,25 +93,6 @@ function ModelUsage() {
 			}
   }
 
-
-  let changeTrainHandler = (event) => {
-
-		//these two lines update the state of the page
-		setSelectedTrainFile(event.target.files[0]);	//sets the selected file
-		setIsTrainFileSelec(true);	//a file has been selected, so this is set to true
-    //updates the trainData state
-		parseCSV(event.target.files[0], 'train');
-	}
-
-	//this function handles the even that is triggered when someone changes the file they want to use
-	let changeLabelHandler = (event) => {
-
-		//these two lines update the state of the page
-		setSelectedLabelFile(event.target.files[0]);//sets the selected file
-		setIsLabelFileSelec(true);//a file has been selected, so this is set to true
-		parseCSV(event.target.files[0], 'label');
-	}
-
 	let changeTestHandler = (event) => {
 
 		//these two lines update the state of the page
@@ -136,11 +104,11 @@ function ModelUsage() {
 
 
   let handleRun = () => {
-    let url = "http://127.0.0.1:5000/retrieveandrun"
-    //"https://team-25-362714.uc.r.appspot.com/predict"
-    console.log("run model");
+    let url = "https://team-25-362714.uc.r.appspot.com/predict"
     let data = {
-      "doc_id": model_selected
+      "doc_id": model_selected,
+      "X":testData,
+      "uuid":currentUser.uid
     }
 
     let jsonString = JSON.stringify(data)
@@ -184,18 +152,7 @@ function ModelUsage() {
     return Papa.parse(file,
       {
         complete: function(results) {
-          if(type == 'train')
-          {
-            setTrainData(results.data) //update Traindata state
-          }
-          else if(type == 'label')
-          {
-            setLabelData(results.data) //update LabelData state
-          }
-          else if(type == 'test')
-          {
             setTestData(results.data) //update TestData state
-          }
         }, dynamicTyping: true
       });
   }
@@ -205,7 +162,7 @@ function ModelUsage() {
   }
   let model_changed  = (event) => {
     let doc_id = event.target.value;
-    console.log(doc_id);
+    console.log(doc_id.toString());
     setModelSelected(doc_id.toString());
   }
 
@@ -233,8 +190,6 @@ function ModelUsage() {
     </Form.Select>
     </Form.Group>
 
-    {/* Label for Model Usage */}
-    <Form.Label>Use Model</Form.Label>
     {/* Create a Form Group For Using Model */}
     <Form.Group className="mb-3" controlId="modelUsage">
 

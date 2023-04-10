@@ -18,11 +18,12 @@ import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput";
-import * as ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 
 import './tooltipstyle.css'
 import './Training.css';
+
 
 // Return The html form with hyperparameter options
 //Input: None
@@ -147,7 +148,7 @@ function LogisticRegressHypParams(props) {
   //Return following HTML code, containing all the inputs
   return(
     <Form.Group id="form_input">
-      <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
+      <ReactTooltip id="Hello" className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
       
