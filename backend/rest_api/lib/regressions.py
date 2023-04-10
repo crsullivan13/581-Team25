@@ -26,8 +26,11 @@ import sklearn
 from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text 
 from sklearn.linear_model import LinearRegression #input linear regression methods
 from sklearn.linear_model import SGDClassifier #input linear regression methods
+from sklearn.linear_model import LogisticRegression # input logistic regression
+from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay, mean_squared_error # for regression accuracy and confusion matrix
+from sklearn.model_selection import train_test_split # to spilt test data
+from sklearn.tree import plot_tree, export_text # To plot decision trees and get text of decision tree
 from sklearn.datasets import fetch_openml #for MNIST Demo
-from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix, ConfusionMatrixDisplay, mean_squared_error  # for regression accuracy
 from sklearn.model_selection import train_test_split # to spilt test data
 from sklearn import tree #to use all tree functions
 import numpy as np #typical numpy import
@@ -43,13 +46,13 @@ import torch
 from sklearn.neural_network import MLPRegressor
 from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import GaussianNB
-
 from lib.tfModel import SeqModel
 from scipy.special import expit # Used for logisitc regression demo
 import matplotlib.pyplot as plt # For Plots
 import numpy as np #typical numpy import
 import matplotlib #just in case for drawing a graph
 import tensorflow as tf 
+
 import heapq
 
 class KNNClassifier():#this is a KNN Classifier 
@@ -118,6 +121,18 @@ class KNNRegressor:
     # Return predictions 
     return y_predictions
 
+def LinearMethod(vector_x, vector_y): #easily call linear regression method
+    # input: two vectors (vector_x, vector_y), showing correlating two vectors on the plane.
+    # output: calculated result of linear regression as y = (w)x+(b)
+    # errors: wrongful type of input, wrongful vector size, wrongful type inside vector
+    # side effects and known faults not found yet
+    save_id = uuid.uuid1().hex # create a random save id
+    logging.info("Linear Method #" + save_id + " has started!") # log UUID
+    model = LinearRegression() #define the model
+    model.fit(vector_x, vector_y) #fit into linear regression model
+    w = model.coef_ #as wx+b
+    b = model.intercept_ #generate linear regression result
+    return w, b, save_id #return the req'd values and unique ID
 
 def LinearMethod(vector_x, vector_y, data): #easily call linear regression method
     #input: two vectors (vector_x, vector_y), showing correlating two vectors on the plane.
@@ -544,6 +559,7 @@ def MLPDemoPart1Middle(vector_x, vector_y, data):
 
 #print(DecisionTree([[1,2], [3,4], [5,6]], [6,7,8], [[1,2], [3,4], [5,6]], [6,7,8]))
 
+
 # Trains a model for MLP Demo Part 4 Front. 
 # Input: vector_x - Input Features for Dataset
 # Input: vector_y - Input Ouputs for Dataset
@@ -626,7 +642,6 @@ def MLPDemoPart4Back(vector_x, vector_y, data):
 
     # Return results
     return model, results
-    
 # Train a model for KNN classification
 # Input: vector_x - Input Features for Dataset
 # Input: vector_y - Input Ouputs for Dataset
@@ -680,5 +695,6 @@ def KNNRegressorMethod(vector_x, vector_y, data):
     model.fit(vector_x, vector_y)
 
     return model, None
+
 #print(MNIST_SGDDemo(0.5, 42)) - for testing
 

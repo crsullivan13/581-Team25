@@ -116,6 +116,7 @@ def trainModel(data):
     # Clear any plots
     plt.close()
     m_metrics = None
+
     # Train the model and get model and figure
     model,figure,m_metrics = model(features, labels, kwargs)
     
