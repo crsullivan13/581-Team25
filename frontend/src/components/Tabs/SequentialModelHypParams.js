@@ -18,7 +18,7 @@ import { Form, Button, Container } from "react-bootstrap";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput";
-import * as ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 
 import './tooltipstyle.css'
@@ -149,7 +149,7 @@ function SequentialModelHypParams(props) {
   return(
     <>
     <Form.Group id="form_input">
-      <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
+    <ReactTooltip id="Hello" className="info_tooltip" effect="solid" html={true} multiline={true}/>
         
     
         <Row>

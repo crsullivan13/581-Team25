@@ -20,6 +20,8 @@
 # log: modified Mar 1 2023 - Added Models For Part 1 for MLP Demo - Amith Panuganti 
 # log: modified Mar 12 - added tree visual support - Junyi
 # log: modified Mar 26 - added pytorch support - Junyi
+# log: modifited April 8 - Integrated KNN Classifier for training 
+# log: modified Apr 9 - added Tensorflow written KNNRegressor - Junyi
 import sklearn
 from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text 
 from sklearn.linear_model import LinearRegression #input linear regression methods
@@ -37,15 +39,16 @@ from dtreeviz.trees import *
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
-from ann.visualizer.visualize import ann_viz
+from ann_visualizer.visualize import ann_viz
 import torch
 from sklearn.neural_network import MLPRegressor
 from sklearn.neural_network import MLPClassifier
-from sklearn.naive_bayes import 
+from sklearn.naive_bayes import GaussianNB
 from lib.tfModel import SeqModel
 from scipy.special import expit # Used for logisitc regression demo
 import matplotlib #just in case for drawing a graph
 import tensorflow as tf 
+import heapq
 
 class KNNClassifier():#this is a KNN Classifier 
     def __init__(self, k=10): # initiation of the class, we set k = 10 for now
@@ -67,7 +70,7 @@ class KNNClassifier():#this is a KNN Classifier
         for i in range(len(x_test)):
             # np.tile() tiles the same dataset onto one dimension
             # then we reshape it into a new matrix
-            X = np.reshape(np.tile(x_test[i], self.x_train.shape[0]),(self.x_train.shape[0], num_pixel)) 
+            X = np.reshape(np.tile(x_test[i], self.x_train.shape[0]),(self.x_train.shape[0], self.x_train.shape[1])) 
             distance = np.sum(np.square(self.x_train - X), axis=1) # distance = Euculidean Distance ^ 2
             index = heapq.nsmallest(self.k, range(len(distance)), distance.take) # find smallest ks
             label = self.y_train[index] # k labels to be selected
@@ -78,6 +81,40 @@ class KNNClassifier():#this is a KNN Classifier
         rate = np.sum(np.array(y_pred == y_test,dtype=np.int32))
         return rate / len(y_test)   # / test_length return, with average
 
+class KNNRegressor:
+# this is a KNN Regressor Class
+  def __init__(self, k):
+    # Constructor to initialize number of neighbors to consider
+    # input: number of neighbors to consider
+    self.k = k
+
+  def fit(self, X_train, y_train):
+    # Convert training data to TensorFlow constant
+    # input: x and y training data
+    self.X_train = tf.constant(X_train, dtype=tf.float64)
+    self.y_train = tf.constant(y_train, dtype=tf.float64)
+
+  def predict(self, X_test):
+    #input: test x vector, output: predicted y test vector.
+    # Create list for y_predictions
+    y_predictions = []
+    # For each vector in X_test
+    for vector in X_test:   
+        # Calculate distances between test and training data
+        distances = tf.reduce_sum(tf.square(tf.subtract(vector, self.X_train)), axis=1)
+        # Get indices of k nearest neighbors
+        _, indices = tf.nn.top_k(-distances, k=self.k)
+        
+        # Get labels of k nearest neighbors
+        nearest_neighbors = tf.gather(self.y_train, indices)
+        # Calculate mean of labels to make prediction
+        y_pred = tf.reduce_mean(nearest_neighbors)
+
+        # Convert y_pred to numpy and add it to y_predictions
+        y_predictions.append(y_pred.numpy())
+
+    # Return predictions 
+    return y_predictions
 
 def LinearMethod(vector_x, vector_y): #easily call linear regression method
     # input: two vectors (vector_x, vector_y), showing correlating two vectors on the plane.
@@ -591,6 +628,9 @@ def MLPDemoPart1Middle(vector_x, vector_y, data):
     # Create dictionary containing figure, mse, and accuracy
     results = {"figure":figure, "Loss":mse, "Accuracy":accuracy}
 
+    # Return results 
+    return model, results
+
 #print(DecisionTree([[1,2], [3,4], [5,6]], [6,7,8], [[1,2], [3,4], [5,6]], [6,7,8]))
 
 # Trains a model for MLP Demo Part 4 Front. 
@@ -676,6 +716,59 @@ def MLPDemoPart4Back(vector_x, vector_y, data):
     # Return results
     return model, results
     
+# Train a model for KNN classification
+# Input: vector_x - Input Features for Dataset
+# Input: vector_y - Input Ouputs for Dataset
+# data: Parameters for MLPRegressor
+# data contains the follwing parameters
+# k: The number of neighbors 
+# Ouput: model, the KNN Classifier
+# Output: figure, The figure for the model
+def KNNClassifierMethod(vector_x, vector_y, data):
+    # Create model for KNN Classifier
+    model = KNNClassifier(k=data["k"])
+   
+    # Fit the model on the data
+    model.fit(vector_x, vector_y)
+    
+    # Predict on the model
+    predict_y = model.predict(vector_x)
+   
+    # Make a confusion matrix for the model
+    matrix = confusion_matrix(vector_y, predict_y)
+
+    # Next display the image
+    confusion_disp = ConfusionMatrixDisplay(confusion_matrix=matrix)
+    confusion_disp.plot()
+
+    # Add title
+    plt.title("Confusion Matrix")
+
+    # Then, get the figure
+    figure = plt.gcf()
+
+    # Close the plot
+    plt.close()
+
+    # Return model and confusion matrix
+    return model, figure
+
+# Train a model for KNN Regression
+# # Input: vector_x - Input Features for Dataset
+# Input: vector_y - Input Ouputs for Dataset
+# data: Parameters for MLPRegressor
+# data contains the follwing parameters
+# k: The number of neighbors 
+# Ouput: model, the KNN Classifier
+# Output: figure, The figure for the model
+def KNNRegressorMethod(vector_x, vector_y, data):
+     # Create model for KNN Classifier
+    model = KNNRegressor(k=data["k"])
+   
+    # Fit the model on the data
+    model.fit(vector_x, vector_y)
+
+    return model, None
 #print(MNIST_SGDDemo(0.5, 42)) - for testing
 #print (MNIST_KNNDemo(0.2))
 
