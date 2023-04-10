@@ -8,6 +8,8 @@
 #    Author : Amith Panuganti
 #    Description: Handel case if mse if numpy
 import numpy as np
+from sklearn.metrics import explained_variance_score, max_error, mean_pinball_loss
+import json
 
 # Compute loss for a model
 def loss(model, X, y):
@@ -21,3 +23,12 @@ def loss(model, X, y):
         mse = mse[0]
 
     return mse
+
+
+def make_metric_JSON_regress(model, X, y):
+    m_metrics = {
+        "explained_variance_score" : float(explained_variance_score(y, model.predict(X) )),
+        "max_error" : float(max_error(y, model.predict(X))),
+        "mean_pinball_loss": float(mean_pinball_loss(y, model.predict(X)))
+    }
+    return m_metrics
