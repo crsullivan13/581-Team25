@@ -130,7 +130,7 @@ function Training() {
 	let handleTrain =  () => {
 		console.log(model_data);
 		//url for training
-		let url = "https://team-25-362714.uc.r.appspot.com/fit"
+		let url = "http://127.0.0.1:5000/fit"
 
 		//make sure we have the files we need
 		if(isTrainFileSelect && isLabelFileSelect){
@@ -141,9 +141,9 @@ function Training() {
 			//we need the user id to train, for storage purposes
 			model_data["uuid"] = currentUser.uid
 
+			model_data["name"] = "model_mcmodelface"
 			//turn the request data into json string
 			let jsonString = JSON.stringify(model_data)
-
 			console.log(jsonString)
 
 			//setup http request

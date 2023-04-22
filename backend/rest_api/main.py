@@ -87,7 +87,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-auth = credentials.Certificate('team-25-362714-623f2b1f64ab.json')
+auth = credentials.Certificate('team-25-362714-firebase-adminsdk-c4jp3-6d9363c3eb.json')
 firebase_admin.initialize_app(auth)
 db = firestore.client()
 #Create default route, for an easy check of the status of web server
@@ -221,11 +221,12 @@ def fit():
     # Catch any errors 
     try:	
 		# Load data from request
+
         data = json.loads(request.data.decode("utf-8"))
+
         uuid = data["uuid"]
 
         # Get the name for the model
-        name = data["name"]
         data = {k: data[k] for k in data if k != "uuid" and k != "name"}
 
 		# Create a model and figure get its params
@@ -238,7 +239,6 @@ def fit():
         json_metrics = json.dumps(model_metrics, ensure_ascii=False)
         #Store as default
         user_ref.set({"model": pickle.dumps(trained), "model_metrics": json_metrics})
-
         # Set bytes to be None
         bytes = None
 
@@ -255,7 +255,6 @@ def fit():
 			"loss": loss(trained, data["X"], data["y"]),
 			"figure" : bytes
 		} 
-        
         # Return params back to frontend
         coefs = False 
         if coefs:

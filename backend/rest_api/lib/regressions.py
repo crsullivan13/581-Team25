@@ -52,8 +52,14 @@ import matplotlib.pyplot as plt # For Plots
 import numpy as np #typical numpy import
 import matplotlib #just in case for drawing a graph
 import tensorflow as tf 
-
+from lib.metrics import *
+import sys
 import heapq
+from contextlib import contextmanager
+import subprocess
+from subprocess import Popen, PIPE
+import pexpect
+import pickle
 
 class KNNClassifier():#this is a KNN Classifier 
     def __init__(self, k=10): # initiation of the class, we set k = 10 for now
@@ -157,10 +163,28 @@ def LinearMethod(vector_x, vector_y, data): #easily call linear regression metho
 def LogisiticsRegressionMethod(vector_x, vector_y, data): 
     # Create our model
     model = LogisticRegression(**data)
-    # Fit the model
-    model.fit(vector_x, vector_y)
 
+    p = Popen([sys.executable, 'printTest.py'], stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True, env=os.environ)
+
+    arg_vars = [model, vector_x, vector_y]
+
+    arg_bytes = pickle.dumps(arg_vars)
+
+    output, err = p.communicate(arg_bytes)
+    rc = p.returncode
+
+    print("ERROR  : "+ str(err))
+    print("OUTPUT  : "+ str(output))
+
+    model.verbose = False
+    model.fit(vector_x, vector_y)
+ 
+    
     model_metrics = make_metric_JSON_regress(model, vector_x, vector_y)
+    model_metrics["verbose"] = str(output)
+    
+    print(model_metrics)
+
 
     # Next, create a confusion matrix witht the model
     # Predict with model
