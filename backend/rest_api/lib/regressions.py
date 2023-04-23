@@ -176,14 +176,13 @@ def LogisiticsRegressionMethod(vector_x, vector_y, data):
     print("ERROR  : "+ str(err))
     print("OUTPUT  : "+ str(output))
 
+    #the verbose output for this call is not needed
     model.verbose = False
     model.fit(vector_x, vector_y)
  
     
     model_metrics = make_metric_JSON_regress(model, vector_x, vector_y)
     model_metrics["verbose"] = str(output)
-    
-    print(model_metrics)
 
 
     # Next, create a confusion matrix witht the model
