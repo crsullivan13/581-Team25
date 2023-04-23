@@ -41,45 +41,359 @@ Revision:
     Date 2/3/22
     Author: Amith Panuganti 
     Description: Allows users to use the same interactive decision tree multiple times.
+Revision:  
+    Date 2/19/23
+    Author: Amith Panuganti 
+    Description: Added a decision tree that can is non interactive
+Revision:
+    Date 2/20/23
+    Author: Amith Panuganti
+    Description: Create a component to showcase the structure of a tree by hilighting its
+    components
+Revision:
+    Date 2/21/23
+    Author: Amith Panuganti
+    Description: Create a component to higlight only certain structural portions of the tree 
+
+    Date: 2/23/23
+    Author: Amith Panuganti
+    Description: Modify Decision Leaf to highlight the path of the tree
 */
 
 
 //Import react
-import React, {useRef, useEffect, useState} from "react"
+import React, { useRef, useEffect, useState } from "react"
 
+//Draw the arrow
+//Inputs: ctx, (fromX, fromY) starting position, (toX, oY) end position
+const drawArrow = (ctx, fromX, fromY, toX, toY, color) => {
+    //Start new path 
+    ctx.beginPath()
+
+    //Get the x distance at fromX to toX
+    let dx = toX - fromX
+
+    //Get the y distance at fromY to toY
+    let dy = toY - fromY
+
+    //Get the angle of the arrow
+    let angle = Math.atan2(dy, dx)
+
+    //Draw line from (fromX, fromY) to (toX, toY)
+    ctx.moveTo(fromX, fromY)
+    ctx.lineTo(toX, toY)
+
+    //Create the triangle portion of the arrow
+    ctx.lineTo(toX - 10 * Math.cos(angle - Math.PI / 6), toY - 10 * Math.sin(angle - Math.PI / 6));
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(toX - 10 * Math.cos(angle + Math.PI / 6), toY - 10 * Math.sin(angle + Math.PI / 6));
+
+    //Set stroke style and color the draw
+    ctx.strokeStyle = color
+    ctx.stroke()
+}
+
+//Draws the tree with out higlighting
+const drawTreeNormally = (context, leaf, xPos, yPos) => {
+    //Draw the tree and get XPos and YPos
+    let positions = drawTree(context, leaf, xPos, yPos, "black")
+
+    //If positions is null
+    if (positions === null) {
+        //Stop drawing the tree
+        return
+    }
+
+    let leftXPos = positions[0]
+    let rightXPos = positions[1]
+
+    //Next, we draw the arrows to each box
+    drawArrow(context, xPos + 40, yPos + 40, leftXPos + 40, yPos + 70, "black")
+    drawArrow(context, xPos + 40, yPos + 40, rightXPos + 40, yPos + 70, "black")
+
+    //Draw the box for the left and right children
+    drawTreeNormally(context, leaf.leftChild, leftXPos, yPos + 70)
+    drawTreeNormally(context, leaf.rightChild, rightXPos, yPos + 70)
+}
+
+//Higlihts the tree 
+const highlightTree = (context, leaf, xPos, yPos, lbranchColor, rbranchColor, leafColor, decisionColor) => {
+    //Determine the color to higlight the tree
+    let color = decisionColor
+
+    //Set context for the nodes
+    context.lineWidth = 5
+
+    //If type of tree is decision
+    if (leaf.type === "Class") {
+        //Set color to be deicsionColor
+        color = leafColor
+    }
+
+    //Draws the tree and getXPos and Ypos 
+    let positions = drawTree(context, leaf, xPos, yPos, color)
+
+    //If positions is null
+    if (positions === null) {
+        //Stop drawing the tree
+        return null
+    }
+
+    //Get lefXPos and rightXPos
+    let leftXPos = positions[0]
+    let rightXPos = positions[1]
+
+    //Set linedwith of arrow
+    context.lineWidth = 3
+    //Draw the arrows based on branchColor
+    drawArrow(context, xPos + 40, yPos + 40, leftXPos + 40, yPos + 70, lbranchColor)
+    drawArrow(context, xPos + 40, yPos + 40, rightXPos + 40, yPos + 70, rbranchColor)
+
+    highlightTree(context, leaf.leftChild, leftXPos, yPos + 70, lbranchColor, rbranchColor, leafColor, decisionColor)
+    highlightTree(context, leaf.rightChild, rightXPos, yPos + 70, lbranchColor, rbranchColor, leafColor, decisionColor)
+}
+
+//Draw tree
+const drawTree = (context, leaf, xPos, yPos, color) => {
+    //Set the coordinates of the leaf
+    leaf.xCor = xPos
+    leaf.yCor = yPos
+
+    //Firstly, begin the tree
+    context.beginPath()
+
+    //Create rect
+    context.rect(xPos, yPos, 80, 40)
+    context.strokeStyle = color
+    context.stroke()
+
+    //Get the text from from leaf
+    let info = leaf.info
+
+    //Add text
+    context.font = "12px Arial"
+    context.textAlign = "center"
+    context.strokeStyle = "black"
+    context.fillText(info, xPos + 40, yPos + 25)
+
+    //If leaf has children
+    if (leaf.rightChild != null && leaf.leftChild != null) {
+        //Get the longestPath of both leftChild and rightChild
+        let lowestPath = leaf.leftChild.longestPath
+        let rightPath = leaf.rightChild.longestPath
+
+        //If rightPath is loweer than lowestPath
+        if (rightPath < lowestPath) {
+            //Let lowestPath be rightPath
+            lowestPath = rightPath
+        }
+
+        //Caculate the difference between the next children node
+        let difference = lowestPath * 135
+
+        //Add 20 to difference
+        difference = ((difference + 20) / 2)
+
+        //Get the xPos of the left box
+        let leftXPos = (xPos + 40) - difference - 80
+
+        //Get the rightXPos
+        let rightXPos = (xPos + 40) + difference
+
+        //Return leftXPos and rightXPos
+        return [leftXPos, rightXPos]
+    }
+    //Otherwise if not 
+    return null
+}
 
 //Create Tree Node Function
-class DecisionTree extends React.Component
-{
+class DecisionTree extends React.Component {
     //Constructor For Class
-    constructor(props)
-    {
+    constructor(props) {
         //Super Construct
         super(props)
 
 
         //Get this.state
-        this.state = {text: this.props.text,
-                      tree: new Tree(this.props.text),
-                      size: this.props.size
+        this.state = {
+            text: this.props.text,
+            tree: new Tree(this.props.text),
+            size: this.props.size
         }
     }
 
     //Render
-    render()
-    {
+    render() {
 
         return (
-        <>
-        <DecisionLeaf tree={this.state.tree} size={this.props.size}></DecisionLeaf>
-        </>)
-        
-        
+            <>
+                <DecisionLeaf tree={this.state.tree} size={this.state.size}></DecisionLeaf>
+            </>)
+
+
     }
 }
 
+//Create a component for deicision tree
+function StaticTree(props) {
+    //Creates a reference to canvas
+    const canvasRef = useRef(null)
+
+    //Create state for tree 
+    let tree = props.tree
+
+    //Runs child func
+    const runChildFunc = (context) => {
+        //If there is a draw additional funciton
+        if(props.drawAdditional !== undefined)
+        {
+            //Run Draw Additional 
+            props.drawAdditional(context)
+        }
+    }
+    //Intial rendering
+    useEffect(() => {
+        //Get the reference
+        const canvas = canvasRef.current
+
+        //Get the context
+        const context = canvas.getContext("2d")
+        context.canvas.width = props.width
+
+        //Get the height of canvas
+        context.canvas.height = ((tree.treeDepth + 1) * 100)
+
+        //Draw the tree
+        drawTreeNormally(context, tree.root, props.xPos, 50)
+
+        //Finish drawing the tree
+        runChildFunc(context, tree)
+        //Clear the rectangle
+        return () => {
+            //Clear reactangle
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }, [tree.root, tree.treeDepth, props])
+
+    
+    //Return canvas
+    return (
+        <canvas ref={canvasRef}></canvas>
+    );
+}
+
+//Create a component that points to the structure of the tree
+function StructureTree(props) {
+    //Creates a reference to canvas to be use for drawing
+    const canvasRef = useRef(null)
+
+    //Create a state for the tree
+    let tree = props.tree
+
+    //Initial rendering 
+    useEffect(() => {
+        //Get the reference
+        const canvas = canvasRef.current
+
+        //Get the context
+        const context = canvas.getContext("2d")
+        context.canvas.width = "800"
+
+        //Get the height of canvas
+        context.canvas.height = ((tree.treeDepth + 1) * 100)
+
+        //Highlight the tree
+        highlightTree(context, tree.root, 600, 50, props.branchColor, props.branchColor, props.leafColor, props.decisionColor)
+
+        //Create a key to for each color
+        //Start by creating the box for the key
+        context.beginPath()
+        context.rect(200, 50, 200, 200)
+
+        //Write key
+        context.font = "18px Arial"
+        context.strokeStyle = "black"
+        context.fillText("Key", 300, 90)
+
+        //Write Labels
+        context.fillText("Decision", 275, 130)
+        context.fillText("Leaf", 275, 170)
+        context.fillText("Branch", 275, 210)
+
+        //Draw boxes with their colors
+        //Decision
+        context.fillStyle = props.decisionColor
+        context.fillRect(325, 112.5, 20, 20)
+
+        //Leaf 
+        context.fillStyle = props.leafColor
+        context.fillRect(325, 170 - 17.5, 20, 20)
+
+        //Branch
+        context.fillStyle = props.branchColor
+        context.fillRect(325, 210 - 17.5, 20, 20)
+
+        context.stroke()
+
+    })
+    //Return canvas
+    return (
+        <canvas ref={canvasRef}></canvas>
+    );
+}
+
+//Create a component that hilight only 1 portion of the tree
+function PortionTree(props) {
+    //Creates a reference to canvas to be use for drawing
+    const canvasRef = useRef(null)
+
+    //Create a state for the tree
+    let tree = props.tree
+
+    //Initial rendering 
+    useEffect(() => {
+        //Get the reference
+        const canvas = canvasRef.current
+
+        //Get the context
+        const context = canvas.getContext("2d")
+        context.canvas.width = props.width
+
+        //Get the height of canvas
+        context.canvas.height = ((tree.treeDepth + 1) * 100)
+
+        //higliht Tree based on what to higlight
+        switch (props.toColor) {
+            //Color Left Branch
+            case "Left Branch":
+                highlightTree(context, tree.root, props.xPos, 50, props.Color, "black", "black", "black")
+                break
+            //Color Right Branch
+            case "Right Branch":
+                highlightTree(context, tree.root, props.xPos, 50, "black", props.Color, "black", "black")
+                break
+            //Color Leaf Node
+            case "Leaf":
+                highlightTree(context, tree.root, props.xPos, 50, "black", "black", props.Color, "black")
+                break
+            //Color Deicision Node
+            case "Decision":
+                highlightTree(context, tree.root, props.xPos, 50, "black", "black", "black", props.Color)
+                break
+            default:
+                break
+        }
+    })
+    //Return canvas
+    return (
+        <canvas ref={canvasRef}></canvas>
+    );
+}
+
+//Create a component that 
 //Create a block component used to store the node of a tree
-function DecisionLeaf(props){
+function DecisionLeaf(props) {
     //Makes the tree interactive
     let [interacitve, setInteractive] = useState(null)
 
@@ -91,7 +405,7 @@ function DecisionLeaf(props){
 
     //Store the infomration about tree
     let [leaf, setLeaf] = useState(null)
-    
+
     //Create state for tree 
     let tree = props.tree
 
@@ -101,96 +415,13 @@ function DecisionLeaf(props){
     //Create reference for canvas
     const canvasRef = useRef(null)
 
-    //Draw the arrow
-    //Inputs: ctx, (fromX, fromY) starting position, (toX, oY) end position
-    const drawArrow = (ctx, fromX, fromY, toX, toY) =>{
-        //Get the x distance at fromX to toX
-        let dx = toX - fromX
-
-        //Get the y distance at fromY to toY
-        let dy = toY - fromY
-
-        //Get the angle of the arrow
-        let angle = Math.atan2(dy, dx)
-
-        //Draw line from (fromX, fromY) to (toX, toY)
-        ctx.moveTo(fromX, fromY)
-        ctx.lineTo(toX, toY)
-
-        //Create the triangle portion of the arrow
-        ctx.lineTo(toX - 10 * Math.cos(angle - Math.PI / 6), toY - 10 * Math.sin(angle - Math.PI / 6));
-        ctx.moveTo(toX, toY);
-        ctx.lineTo(toX - 10 * Math.cos(angle + Math.PI / 6), toY - 10 * Math.sin(angle + Math.PI / 6));
-
-        ctx.stroke()
-    }
-
-    //Draw the each node of the tree
-    //Inputs: ctx, tree node, xPos and yPos of the tree node
-    const drawTree = (context, leaf, xPos, yPos) =>
-    {
-        //Set the coordinates of the leaf
-        leaf.xCor = xPos
-        leaf.yCor = yPos
-
-        //Firstly, begin the tree
-        context.beginPath()
-        
-        //Create rect
-        context.rect(xPos, yPos, 80, 40)
-        context.stroke()
-
-        //Get the text from from leaf
-        let info = leaf.info
-
-        //Add text
-        context.font = "12px Arial"
-        context.textAlign = "center"
-        context.fillText(info, xPos+40, yPos+25)
-
-        //If leaf has children
-        if(leaf.rightChild != null && leaf.leftChild != null)
-        {
-            //Get the longestPath of both leftChild and rightChild
-            let lowestPath = leaf.leftChild.longestPath
-            let rightPath = leaf.rightChild.longestPath
-
-            //If rightPath is loweer than lowestPath
-            if(rightPath < lowestPath)
-            {
-                //Let lowestPath be rightPath
-                lowestPath = rightPath
-            }
-
-            //Caculate the difference between the next children node
-            let difference = lowestPath * 135
-
-            //Add 20 to difference
-            difference = ((difference + 20)/2)
-
-            //Get the xPos of the left box
-            let leftXPos = (xPos+40) - difference - 80
-
-            //Get the rightXPos
-            let rightXPos = (xPos+40) + difference
-
-            //Draw the box for the left and right children
-            drawTree(context, leaf.leftChild, leftXPos, yPos+70)
-            drawTree(context, leaf.rightChild, rightXPos, yPos+70)
-
-            //Next, we draw the arrows to each box
-            drawArrow(context, xPos+40, yPos+40, leftXPos+40, yPos+70)
-            drawArrow(context, xPos+40, yPos+40, rightXPos+40, yPos+70)
-        }
-    }
-
     //Redraws the tree
     //Takes in context, the context of the canvas 
     //And leaf, a node of the tree
     const redrawTree = (context, leaf) => {
         //Firstly, begin the tree
         context.beginPath()
-        
+
         //Create rect
         context.rect(leaf.xCor, leaf.yCor, 80, 40)
         context.stroke()
@@ -201,24 +432,23 @@ function DecisionLeaf(props){
         //Add text
         context.font = "12px Arial"
         context.textAlign = "center"
-        context.fillText(info, leaf.xCor+40, leaf.yCor+25)
+        context.fillText(info, leaf.xCor + 40, leaf.yCor + 25)
 
         //Next, if leaf has children s
-        if(leaf.type !== "Class")
-        {
+        if (leaf.type !== "Class") {
             //Redraw tree for left and right child
             redrawTree(context, leaf.leftChild)
             redrawTree(context, leaf.rightChild)
 
             //Redraw arrows for the tree
-            drawArrow(context, leaf.xCor+40, leaf.yCor+40, leaf.leftChild.xCor+40, leaf.yCor+70)
-            drawArrow(context, leaf.xCor+40, leaf.yCor+40, leaf.rightChild.xCor+40, leaf.yCor+70)
+            drawArrow(context, leaf.xCor + 40, leaf.yCor + 40, leaf.leftChild.xCor + 40, leaf.yCor + 70, "black")
+            drawArrow(context, leaf.xCor + 40, leaf.yCor + 40, leaf.rightChild.xCor + 40, leaf.yCor + 70, "black")
         }
     }
-    
-    
-     //Create handleChange function
-     const handleChange = (event) => {
+
+
+    //Create handleChange function
+    const handleChange = (event) => {
         //Get name of input
         let name = event.target.name
 
@@ -226,8 +456,7 @@ function DecisionLeaf(props){
         let value = event.target.value
 
         //If value is empty
-        if(value === "")
-        {
+        if (value === "") {
             //Replace value with 0
             event.target.value = 0
 
@@ -239,19 +468,18 @@ function DecisionLeaf(props){
         let newInputs = inputs
         newInputs[name] = value
         setInputs(newInputs)
-       
+
     }
 
     //Create input tags
-     let tagInputs = []
-     for(let i = 0; i < size; i++)
-     {
-         //Create name
+    let tagInputs = []
+    for (let i = 0; i < size; i++) {
+        //Create name
         let name = i
 
         //Create label name
         let labelName = "x" + name.toString() + ":"
-                
+
         //Create label
         let label = <label key={labelName}>{labelName}</label>
 
@@ -259,12 +487,12 @@ function DecisionLeaf(props){
         tagInputs.push(label)
 
         //Create input tag
-        let input = <input key={name} name={name} onChange={(event) => handleChange(event)}defaultValue="0" type="number"/>
+        let input = <input key={name} name={name} onChange={(event) => handleChange(event)} defaultValue="0" type="number" />
 
         //Add input to inputs
         tagInputs.push(input)
-     }
-    
+    }
+
     //Intial rendering
     useEffect(() => {
         //Get the reference
@@ -272,20 +500,19 @@ function DecisionLeaf(props){
 
         //Get the context
         const context = canvas.getContext("2d")
-        context.canvas.width = "1500"
-        
+        context.canvas.width = "1000"
+
         //Get the height of canvas
-        context.canvas.height = ((tree.treeDepth+1) * 100)
+        context.canvas.height = ((tree.treeDepth) * 100) + 25
 
         //Draw the tree
-        drawTree(context, tree.root, 600, 50) 
+        drawTreeNormally(context, tree.root, 600, 50)
 
         //Create empty array of avlaues
         let values = []
 
         //Create array of 0s
-        for(let i = 0; i < size; i++)
-        {
+        for (let i = 0; i < size; i++) {
             //Push 0 to values
             values.push(0)
         }
@@ -294,27 +521,29 @@ function DecisionLeaf(props){
         setInputs(values)
 
         //Set canvasInfo
-        setCanvasInfo({xPos:0, yPos:0})
+        setCanvasInfo({ xPos: 0, yPos: 0 })
 
         //Set leaf
         setLeaf(tree.root)
 
-        return () =>{
+        return () => {
             //Clear reactangle
             context.clearRect(0, 0, canvas.width, canvas.height);
         }
 
     }, [props.isOpen])
 
-    
+
     //Used to make the tree interactive
-    useEffect(()=>{
+    useEffect(() => {
         //If interactive is true, return false
-        if ( interacitve === true)
-        {
+        if (interacitve === true) {
             //Make the tree green
             const canvas = canvasRef.current
             const context = canvas.getContext("2d")
+
+            //Set stroke style to be black
+            context.strokeStyle = "black"
 
             //Clear reactangle
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -340,33 +569,31 @@ function DecisionLeaf(props){
             //Set leaf to be root
             setLeaf(tree.root)
         }
-        
+
     }, [interacitve])
 
     //Handles when the user sumbit their answers
-   const handleSubmit = (event) =>{
+    const handleSubmit = (event) => {
         event.preventDefault()
         setInteractive(true)
-   }
+    }
 
-   //Hnadles when the user clicks on canvas
-   const handleTreeClick = (event) => {
+    //Hnadles when the user clicks on canvas
+    const handleTreeClick = (event) => {
         //If interactive is truee
-        if(interacitve === true)
-        {
+        if (interacitve === true) {
             //Get the location of the click
-            let xPos = event.clientX 
+            let xPos = event.clientX
             let yPos = event.clientY
 
             //Store info into state
-            setCanvasInfo(prev => {return {...prev, xPos:xPos, yPos:yPos}})
-        } 
-   }
+            setCanvasInfo(prev => { return { ...prev, xPos: xPos, yPos: yPos } })
+        }
+    }
 
-   //Create effect for canvas clicks
-   useEffect(()=>{
-        if(interacitve === true)
-        {
+    //Create effect for canvas clicks
+    useEffect(() => {
+        if (interacitve === true) {
             //Get canvas
             let canvas = canvasRef.current
 
@@ -384,17 +611,15 @@ function DecisionLeaf(props){
             let condition = null
 
             //If click is in left box
-            if(xPos >= leaf.leftChild.xCor && xPos <= (leaf.leftChild.xCor+80) && yPos >= leaf.leftChild.yCor && yPos <= (leaf.leftChild.yCor+40))
-            {
+            if (xPos >= leaf.leftChild.xCor && xPos <= (leaf.leftChild.xCor + 80) && yPos >= leaf.leftChild.yCor && yPos <= (leaf.leftChild.yCor + 40)) {
                 //Set nextLeaf to be leftChild
                 nextLeaf = leaf.leftChild
-                
+
                 //Set condtion to be left
                 condition = "left"
             }
             //Otherwise if click is in right box
-            else if(xPos >= leaf.rightChild.xCor && xPos <= (leaf.rightChild.xCor+80) && yPos >= leaf.rightChild.yCor && yPos <= (leaf.rightChild.yCor+40))
-            {
+            else if (xPos >= leaf.rightChild.xCor && xPos <= (leaf.rightChild.xCor + 80) && yPos >= leaf.rightChild.yCor && yPos <= (leaf.rightChild.yCor + 40)) {
                 //Set nextLeaft to be rightChild
                 nextLeaf = leaf.rightChild
 
@@ -403,11 +628,10 @@ function DecisionLeaf(props){
             }
 
             //If nextLeaf is not null
-            if(nextLeaf != null)
-            {
+            if (nextLeaf != null) {
                 //Get the feature name
                 let index = parseInt(leaf.name.substring(1))
-                
+
                 //Get the value from inputs
                 let value = inputs[index]
 
@@ -415,19 +639,16 @@ function DecisionLeaf(props){
                 let result = null
 
                 //If coindtion is left
-                if(condition === "left")
-                {
+                if (condition === "left") {
                     result = (value <= leaf.value)
                 }
                 //Otherwise
-                else
-                {
+                else {
                     result = (value > leaf.value)
                 }
 
                 //If result is false
-                if(result === false)
-                {
+                if (result === false) {
                     //Make the tree green
                     const canvas = canvasRef.current
                     const context = canvas.getContext("2d")
@@ -443,18 +664,22 @@ function DecisionLeaf(props){
                     context.font = "12px Arial"
                     context.textAlign = "center"
                     context.fillStyle = "black"
-                    context.fillText(text, nextLeaf.xCor+40, nextLeaf.yCor+25)
+                    context.fillText(text, nextLeaf.xCor + 40, nextLeaf.yCor + 25)
                 }
                 //Otherwise
-                else
-                {
+                else {
                     //Make the tree green
                     const canvas = canvasRef.current
                     const context = canvas.getContext("2d")
                     context.fillStyle = "green"
 
-                    //Fill the root
+                    //Fill the node
                     context.fillRect(nextLeaf.xCor, nextLeaf.yCor, 80, 40)
+
+                    //Draw arrow to next node
+                    context.lineWidth = 3
+                    drawArrow(context, leaf.xCor+40, leaf.yCor+40, nextLeaf.xCor+40, nextLeaf.yCor, "blue")
+                    context.lineWidth = 1
 
                     //Get the text from the leaf
                     const text = nextLeaf.info
@@ -463,19 +688,15 @@ function DecisionLeaf(props){
                     context.font = "12px Arial"
                     context.textAlign = "center"
                     context.fillStyle = "black"
-                    context.fillText(text, nextLeaf.xCor+40, nextLeaf.yCor+25)
+                    context.fillText(text, nextLeaf.xCor + 40, nextLeaf.yCor + 25)
 
-                    console.log(nextLeaf)
-                    
                     //If nextLeaf has type class
-                    if(nextLeaf.type === "Class")
-                    {
+                    if (nextLeaf.type === "Class") {
                         //We are done, make the tree not interactive anymore
                         setInteractive(false)
                     }
                     //Otherwise
-                    else
-                    {
+                    else {
                         //Set leaf to be next leaf
                         setLeaf(nextLeaf)
                     }
@@ -483,33 +704,31 @@ function DecisionLeaf(props){
             }
 
         }
-        
-   }, [canvasInfo])
+
+    }, [canvasInfo])
 
     //Return canvas tag
-    return (<div>   
-    <canvas onClick={handleTreeClick} ref={canvasRef}></canvas>
-    <div style={{display:"flex", flexDirection:"column", justifyContent:"space-evenly", gap:"10px"}}>
-    {tagInputs}
-    <input type="button" onClick={handleSubmit}value="Submit"/>
-    </div>
-     </div>)   
+    return (<div>
+        <canvas onClick={handleTreeClick} ref={canvasRef}></canvas>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-evenly", gap: "10px" }}>
+            {tagInputs}
+            <input type="button" onClick={handleSubmit} value="Submit" />
+        </div>
+    </div>)
 }
 
 
 //Create a tree node
-class TreeNode
-{
+class TreeNode {
     //Constructor
-    constructor()
-    {
+    constructor() {
         //Parameters
         //Left Child
         this.leftChild = null
 
         //Right child
         this.rightChild = null
-        
+
         //Store type of tree
         this.type = null
 
@@ -528,25 +747,21 @@ class TreeNode
     }
 
     //Set type
-    setType(type)
-    {
+    setType(type) {
         //Set this type to type
         this.type = type
     }
 
     //Set depth
-    setDepth(depth)
-    {
+    setDepth(depth) {
         //Set depth of node
         this.depth = depth
     }
 
     //Insert to the tree
-    insertChild(child)
-    {
+    insertChild(child) {
         //If leftChild is null
-        if(this.leftChild == null)
-        {
+        if (this.leftChild == null) {
             //Set leftChild to be child
             this.leftChild = child
 
@@ -554,8 +769,7 @@ class TreeNode
             this.leftChild.parent = this
         }
         //Otherwise
-        else
-        {
+        else {
             //Set rightChild to be child
             this.rightChild = child
 
@@ -565,11 +779,9 @@ class TreeNode
     }
 
     //Get the latest child
-    getLatestChild()
-    {
+    getLatestChild() {
         //If rightChild is null
-        if(this.rightChild == null)
-        {
+        if (this.rightChild == null) {
             //Return left child 
             return this.leftChild
         }
@@ -578,38 +790,32 @@ class TreeNode
     }
 
     //Get left child
-    getLeftChiild()
-    {
+    getLeftChiild() {
         //Return left child
         return this.leftChild
     }
 
     //Get right child
-    getRightChild()
-    {
+    getRightChild() {
         //Return right child
         return this.rightChild
     }
 
     //Get parent
-    getParent()
-    {
+    getParent() {
         //Return the parent
         return this.parent
     }
 
     //Caculate the longest path 
-    caculateLongestPath()
-    {
+    caculateLongestPath() {
         //If node has no children
-        if(this.leftChild == null)
-        {
+        if (this.leftChild == null) {
             //Set longestPath to be 0
             this.longestPath = 0
         }
         //Otherwise, if node has only 1 child
-        else if(this.leftChild != null && this.rightChild == null)
-        {
+        else if (this.leftChild != null && this.rightChild == null) {
             //Caculate longestPath of left child
             this.leftChild.caculateLongestPath()
 
@@ -617,21 +823,18 @@ class TreeNode
             this.longestPath = this.leftChild.longestPath + 1
         }
         //Otherwise, if node has 2 children
-        else
-        {
+        else {
             //Caculate the longest path of both children
             this.leftChild.caculateLongestPath()
             this.rightChild.caculateLongestPath()
 
             //If leftChild longest path is greater than right child longest path
-            if(this.leftChild.longestPath >= this.rightChild.longestPath)
-            {
+            if (this.leftChild.longestPath >= this.rightChild.longestPath) {
                 //Set this longestPath to be leftChild longestPath + 1
                 this.longestPath = this.leftChild.longestPath + 1
             }
             //Otherwise
-            else
-            {
+            else {
                 //Set longestPath to be right child longest path + 1
                 this.longestPath = this.rightChild.longestPath + 1
             }
@@ -640,11 +843,9 @@ class TreeNode
 }
 
 //Decision Node
-class DecisionNode extends TreeNode
-{
+class DecisionNode extends TreeNode {
     //Constructor
-    constructor(name, value, info, depth)
-    {
+    constructor(name, value, info, depth) {
         //Constructo as Tree Node
         super()
 
@@ -676,10 +877,8 @@ class DecisionNode extends TreeNode
 
 }
 //Class Nodes for class 
-class ClassNode extends TreeNode
-{
-    constructor(group, info, depth)
-    {
+class ClassNode extends TreeNode {
+    constructor(group, info, depth) {
         //Construct from Tree Node
         super()
 
@@ -701,11 +900,9 @@ class ClassNode extends TreeNode
 }
 
 //Create a Class of the Tree
-class Tree
-{
+class Tree {
     //Constructs an empty tree
-    constructor(treeText)
-    {
+    constructor(treeText) {
         //Root of the tree
         this.root = null
 
@@ -720,8 +917,7 @@ class Tree
     }
 
     //Creates the tree
-    createTree(treeText)
-    {
+    createTree(treeText) {
         //Firstly, divide up string into array of lines
         const lines = treeText.split("\n")
 
@@ -766,8 +962,7 @@ class Tree
         let depth = 0
 
         //Loop until we reach the end of the array
-        for(let i = 1; i < lines.length-1; i++)
-        {
+        for (let i = 1; i < lines.length - 1; i++) {
             //Create node to store the node create from the line
             let newNode = null
 
@@ -778,22 +973,20 @@ class Tree
             let index = line.indexOf("|--- ")
 
             //Get info
-            let info = line.substring((index+5))
+            let info = line.substring((index + 5))
 
             //Divide index by 4 to get the curDepth
             let lineDepth = index / 4
 
             //If lineDepth is greater than treeDepth
-            if(this.treeDepth < lineDepth)
-            {
+            if (this.treeDepth < lineDepth) {
                 //Set treeDepth to be lineDepth
                 this.treeDepth = lineDepth
             }
 
             //Next, check if line contains <= or >
             //If the line does not contain <= or >
-            if(line.indexOf("<=") === -1 && line.indexOf(">") === -1)
-            {
+            if (line.indexOf("<=") === -1 && line.indexOf(">") === -1) {
                 //Get the index of : and add 2
                 let classIndex = line.indexOf(":") + 2
 
@@ -804,8 +997,7 @@ class Tree
                 newNode = new ClassNode(classNum, info, lineDepth)
             }
             //Otherwise, if line is not -1
-            else if(line.indexOf("<=") !== -1)
-            {
+            else if (line.indexOf("<=") !== -1) {
                 //Replace feature_ with x
                 info = info.replace("feature_", "x")
 
@@ -830,11 +1022,10 @@ class Tree
                 //Create a new decision node
                 newNode = new DecisionNode(name, value, info, lineDepth)
             }
-            
+
             //Next, check if lineDepth is greater that depth
             //If it is
-            if(lineDepth > depth)
-            {
+            if (lineDepth > depth) {
                 //Have curNode insert newNode
                 curNode.insertChild(newNode)
 
@@ -845,11 +1036,9 @@ class Tree
                 depth = depth + 1
             }
             //Otherwise if lineDepth is less than depth
-            else if(depth > lineDepth)
-            {
+            else if (depth > lineDepth) {
                 //Run until depth is lineDepth
-                while(depth !== lineDepth)
-                {
+                while (depth !== lineDepth) {
                     //Decrease depth
                     depth = depth - 1;
 
@@ -858,14 +1047,14 @@ class Tree
                 }
             }
         }
-        
+
         //Return this
         return this
     }
 }
 
 //Export tree default
-export {Tree}
+export { Tree, StaticTree, StructureTree, PortionTree, drawArrow }
 export default DecisionTree
 
 

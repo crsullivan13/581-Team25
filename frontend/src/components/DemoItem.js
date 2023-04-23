@@ -6,16 +6,19 @@ Creation Date: 11/05/22
 Revisions:
 	11/05/22 - Initial build of the file
 Revisions:
-    1/18/22 
+    1/18/23
         Programmer: Amith Panuganti
         Edit: Add Route for Decision Tree Demo
-    1/19/22
+    1/19/23
         Programmer: Amith Panuganti
         Edit: Fix problem with decision tree not loading
-    1/21/22
+    1/21/23
         Programmer: Amith Panuganti
         Edit: Change Decision Tree Regressions to Decision Tree Classification
               I believe that using a classification model for be a better fit for the project
+    4/23/23
+        Programmer: Amith Panuganti
+        Edit: Remove Deicision Tree from Demo Item. There is a seperate demo for the tree
 Preconditions: None
 Errors: None
 Side Effects: None
@@ -34,6 +37,7 @@ import Modal from 'react-bootstrap/Modal'
 import DecisionTree from './Tabs/DecisionTree';
 import FigLinearRegres from './Tabs/FigLinearRegres';
 import FigLogisticRegres from './Tabs/FigLogisticRegres';
+import DecisionTreeDemo from './Tabs/DecisionTreeDemo';
 import { Chart } from "react-google-charts";
 import LogisticRegressionPart, { LogisticRegressionPart1After, LogisticRegressionPart1Front
                                  , LogisticRegressionPart2Front, LogisticRegressionPart2After 
@@ -108,6 +112,7 @@ function DemoItem(props){
         let dataSet = document.getElementById('dataSetInput').value;
         if(dataSet != 'None'){
             console.log(document.getElementById('dataSetInput').value)
+            console.log(props.modelType)
             switch(props.modelType){
                 case "Linear Regression":
                     if(dataSet === 'Set One'){
@@ -137,21 +142,6 @@ function DemoItem(props){
                         setXData(configData.LOGISTIC_DEMO_DATA.TWO.X);
                         //set y data from config file
                         setYData(configData.LOGISTIC_DEMO_DATA.TWO.y);
-                        //return the text info fro the model
-                    }
-                    break;
-                case "Decision Tree Classification":
-                    if(dataSet === 'Set One'){
-                        //set x data from config file
-                        setXData(configData.DTREE_DEMO_DATA.ONE.X);
-                        //set y data from config file
-                        setYData(configData.DTREE_DEMO_DATA.ONE.y);
-                        //return the text info fro the model
-                    } else {
-                            //set x data from config file
-                        setXData(configData.DTREE_DEMO_DATA.TWO.X);
-                        //set y data from config file
-                        setYData(configData.DTREE_DEMO_DATA.TWO.y);
                         //return the text info fro the model
                     }
                     break;
@@ -236,10 +226,6 @@ function DemoItem(props){
                         X={configData.LOGISTIC_DEMO_DATA.ONE.X}
                         Y={configData.LOGISTIC_DEMO_DATA.ONE.Y}/></>);
 				break;
-			case "Decision Tree Classification":
-                //dataSetChange()
-				return(<><p>{configData.DEMOS.DTREE_TXT}</p></>);
-				break;
 			case "General Model Training":
                 //dataSetChange()
 				return(<><p>{configData.DEMOS.GENERAL_TXT}</p></>);
@@ -256,7 +242,7 @@ function DemoItem(props){
                 //log data for debug
 		        console.log(model_data);
 				//url for training
-				let url = "https://team-25-362714.uc.r.appspot.com/fit"
+				let url = "http://127.0.0.1:5000//fit"
 
                     //set the fields for the json
                     model_data["model"] = props.modelType
@@ -264,18 +250,6 @@ function DemoItem(props){
 					model_data["y"] = YData
 					model_data["uuid"] = currentUser.uid
 
-                    //Unqiue to decision tree demo
-                    //If modelType is Decision Tree Regressision
-                    if(model_data["model"] === "Decision Tree Classification")
-                    {
-                        //Set model to be Decision Tree Regression Demo
-                        model_data["model"] = "Decision Tree Classification Demo"
-
-                        //Set url to be decisionTreeDemo
-                        url = "https://team-25-362714.uc.r.appspot.com/decisionTreeDemo"
-
-                    }
-			
                     //make request json string, then log for debug
 					let jsonString = JSON.stringify(model_data)
 					console.log(jsonString)
@@ -290,17 +264,6 @@ function DemoItem(props){
                             {
                                 const image = "data:image/png;base64,"+jsonResponse.figure;
                                 let element = <img alt="Figure" src={image}></img>
-                                setReturnedModel(element)
-                            //Other if response has tree propery
-                            }else if(jsonResponse.hasOwnProperty('tree'))
-                            {
-                                //Get tree text
-                                const tree = jsonResponse.tree
-                                
-                                //Create element for the tree
-                                let element = <DecisionTree text={tree} size={XData[0].length}></DecisionTree>
-
-                                //Set Returned Model
                                 setReturnedModel(element)
                             } else {
                                 var response = "Error: " + jsonResponse.Error 

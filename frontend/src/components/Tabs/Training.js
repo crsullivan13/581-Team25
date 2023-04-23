@@ -130,7 +130,7 @@ function Training() {
 	let handleTrain =  () => {
 		console.log(model_data);
 		//url for training
-		let url = "https://team-25-362714.uc.r.appspot.com/fit"
+		let url = "http://127.0.0.1:5000/fit"
 
 		//make sure we have the files we need
 		if(isTrainFileSelect && isLabelFileSelect){

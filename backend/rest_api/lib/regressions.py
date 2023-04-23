@@ -22,6 +22,7 @@
 # log: modified Mar 26 - added pytorch support - Junyi
 # log: modifited April 8 - Integrated KNN Classifier for training 
 # log: modified Apr 9 - added Tensorflow written KNNRegressor - Junyi
+# log: modifited Apr 23 - Update Demo Functions Outputs
 import sklearn
 from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text 
 from sklearn.linear_model import LinearRegression #input linear regression methods
@@ -373,9 +374,13 @@ def DecisionTreeDemoModel(vector_x, vector_y, data):
     # Get the text of the model
     text = export_text(model)
 
+    # Set metrics
+    metrics = {
+        "tree":text
+    }
 
     # Return both the model and figure
-    return model, text
+    return model, text, None
 
 def MNIST_SGDDemo(test_size: float, random_state: int):#a demo of MNIST to fetch interest for K-12 students
     # input: percentage to test to let kids know test size and train size's difference and the random state (just in case, not really used)
@@ -428,7 +433,7 @@ def LogisticRegressionDemoPart1(vector_x, vector_y, data):
 
 
     # Return model and results
-    return model, results
+    return model, results, None
 
 # Demo for logisitc regression part 2/3
 def LogisticRegressionDemoPart2(vector_x, vector_y, data):
@@ -475,7 +480,7 @@ def LogisticRegressionDemoPart2(vector_x, vector_y, data):
 
 
     # Return model and results
-    return model, results
+    return model, results, None
 
 
 # Demo for Part 1 Front
@@ -511,7 +516,7 @@ def MLPDemoPart1Front(vector_x, vector_y, data):
     results = {"figure":figure, "Loss":mse}
 
     # Return model and results
-    return model, results
+    return model, results, None
 
 # Demo for MLP Demo Part 1 Middle
 def MLPDemoPart1Middle(vector_x, vector_y, data):
@@ -555,7 +560,7 @@ def MLPDemoPart1Middle(vector_x, vector_y, data):
     results = {"figure":figure, "Loss":mse, "Accuracy":accuracy}
 
     # Return results 
-    return model, results
+    return model, results, None
 
 #print(DecisionTree([[1,2], [3,4], [5,6]], [6,7,8], [[1,2], [3,4], [5,6]], [6,7,8]))
 
@@ -589,7 +594,7 @@ def MLPDemoPart4Front(vector_x, vector_y, data):
     results = {"Loss": loss, "Mean Squared Error": mse}
 
     # Return results
-    return model, results
+    return model, results, None
 
 # Trains a model and output metrics for MLP Demo Part 4 Back
 # Input: vector_x - Input Features for Dataset
@@ -641,7 +646,7 @@ def MLPDemoPart4Back(vector_x, vector_y, data):
     }
 
     # Return results
-    return model, results
+    return model, results, None
 # Train a model for KNN classification
 # Input: vector_x - Input Features for Dataset
 # Input: vector_y - Input Ouputs for Dataset
@@ -677,7 +682,7 @@ def KNNClassifierMethod(vector_x, vector_y, data):
     plt.close()
 
     # Return model and confusion matrix
-    return model, figure
+    return model, figure, None
 
 # Train a model for KNN Regression
 # # Input: vector_x - Input Features for Dataset
@@ -694,7 +699,7 @@ def KNNRegressorMethod(vector_x, vector_y, data):
     # Fit the model on the data
     model.fit(vector_x, vector_y)
 
-    return model, None
+    return model, None, None
 
 #print(MNIST_SGDDemo(0.5, 42)) - for testing
 

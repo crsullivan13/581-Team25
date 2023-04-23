@@ -14,7 +14,7 @@ Revisions:
     Author: Amith Panuganti
     Description: Added Components For All Demos
 
-    Data: 3/23/23
+    Date: 3/23/23
     Author: Amith Panuganti
     Description: Modified GeneralTrain to allow for inputs 
 */
@@ -106,7 +106,7 @@ function GeneralDemoTrain(props)
         
 
         //Set url for training 
-        let url = "https://team-25-362714.uc.r.appspot.com/Demo"
+        let url = "http://127.0.0.1:5000/Demo"
 
         //Make request json string
         let jsonString = JSON.stringify(model_data)
@@ -127,7 +127,7 @@ function GeneralDemoTrain(props)
 
                 //Create list of tags
                 let tags = []
-
+                
                 //GO through each property in jsonResponse
                 for(const property in jsonResponse)
                 {
