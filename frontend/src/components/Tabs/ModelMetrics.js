@@ -194,6 +194,9 @@ function ModelMetrics() {
     <p>Max Error: {m_metrics["max_error"]}</p>
     <p>Mean Pinball Loss: {m_metrics["mean_pinball_loss"]}</p>
     <h2>Classification Metrics:</h2>
+    <p>Accuracy Score: {m_metrics["accuracy_score"]}</p>
+    <p>Average Precision Score: {m_metrics["average_precision_score"]}</p>
+    <p>Hamming Loss: {m_metrics["hamming_loss"]}</p>
     <h2>Figures:</h2>
     {fig}
     <h2>Verbose Output:</h2>

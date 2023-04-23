@@ -163,26 +163,23 @@ def LinearMethod(vector_x, vector_y, data): #easily call linear regression metho
 def LogisiticsRegressionMethod(vector_x, vector_y, data): 
     # Create our model
     model = LogisticRegression(**data)
-
-    p = Popen([sys.executable, 'printTest.py'], stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True, env=os.environ)
-
-    arg_vars = [model, vector_x, vector_y]
-
-    arg_bytes = pickle.dumps(arg_vars)
-
-    output, err = p.communicate(arg_bytes)
-    rc = p.returncode
-
-    print("ERROR  : "+ str(err))
-    print("OUTPUT  : "+ str(output))
+    verbose_output = ""
+    if(model.verbose == True):
+        p = Popen([sys.executable, 'printTest.py'], stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True, env=os.environ)
+        arg_vars = [model, vector_x, vector_y]
+        arg_bytes = pickle.dumps(arg_vars)
+        output, err = p.communicate(arg_bytes)
+        rc = p.returncode
+        print("ERROR  : "+ str(err))
+        print("OUTPUT  : "+ str(output))
+        verbose_output = str(output)
 
     #the verbose output for this call is not needed
     model.verbose = False
     model.fit(vector_x, vector_y)
  
-    
-    model_metrics = make_metric_JSON_regress(model, vector_x, vector_y)
-    model_metrics["verbose"] = str(output)
+    model_metrics = make_metric_JSON_classif(model, vector_x, vector_y)
+    model_metrics["verbose"] = verbose_output
 
 
     # Next, create a confusion matrix witht the model
@@ -211,8 +208,13 @@ def DecisionTreeRegression(vector_x, vector_y, data):
     # Create our model
     model = tree.DecisionTreeRegressor(**data)
 
+
+
     # Fit the model
     model.fit(vector_x, vector_y)
+
+    #get model_metrics
+    model_metrics = make_metric_JSON_regress(model, vector_x, vector_y)
 
     # Plot the tree
     plot_tree(model)
@@ -223,9 +225,8 @@ def DecisionTreeRegression(vector_x, vector_y, data):
     # Get the current figure 
     figure = plt.gcf()
 
-    m_metrics = None
     # Return the model and figure
-    return model, figure, m_metrics
+    return model, figure, model_metrics
 
 # Call Decision Tree Classification
 def DecisionTreeClassification(vector_x, vector_y, data):
@@ -234,6 +235,9 @@ def DecisionTreeClassification(vector_x, vector_y, data):
 
     # Fit the model
     model.fit(vector_x, vector_y)
+
+    #get model_metrics
+    model_metrics = make_metric_JSON_classif(model, vector_x, vector_y)
 
     # Create a new figure and axis
     figure, axis, = plt.subplots(2, 1, figsize=(5,10))
@@ -262,20 +266,32 @@ def DecisionTreeClassification(vector_x, vector_y, data):
     figure = plt.gcf()
 
 
-    m_metrics = None
 
 
     # Return the model and figure
-    return model, figure, m_metrics
+    return model, figure, model_metrics
 
 # Call MLP Classifier
 def MLPClassification(vector_x, vector_y, data):
     # Create out model 
   
     model = MLPClassifier(**data)
-
+    verbose_output = ""
+    if(model.verbose == True):
+        p = Popen([sys.executable, 'printTest.py'], stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True, env=os.environ)
+        arg_vars = [model, vector_x, vector_y]
+        arg_bytes = pickle.dumps(arg_vars)
+        output, err = p.communicate(arg_bytes)
+        rc = p.returncode
+        print("ERROR  : "+ str(err))
+        print("OUTPUT  : "+ str(output))
+        verbose_output = str(output)
     # Fit the model
+    model.verbose = False
     model.fit(vector_x, vector_y)
+
+    model_metrics = make_metric_JSON_classif(model, vector_x, vector_y)
+    model_metrics["verbose"] = verbose_output
 
     # Create a new figure and axis
     figure, axes = plt.subplots(2, 1, figsize=(5,10))
@@ -308,18 +324,35 @@ def MLPClassification(vector_x, vector_y, data):
      # Get the current figure 
     figure = plt.gcf()
 
-    m_metrics = None
 
     # Return the model and figure
-    return model, figure, m_metrics
+    return model, figure, model_metrics
 
 # Call MLP Regressor
 def MLPRegression(vector_x, vector_y, data):
     # Create out model 
     model = MLPRegressor(**data)
 
+    #get verbose output if needed
+    verbose_output = ""
+    if(model.verbose == True):
+        p = Popen([sys.executable, 'printTest.py'], stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True, env=os.environ)
+        arg_vars = [model, vector_x, vector_y]
+        arg_bytes = pickle.dumps(arg_vars)
+        output, err = p.communicate(arg_bytes)
+        rc = p.returncode
+        print("ERROR  : "+ str(err))
+        print("OUTPUT  : "+ str(output))
+        verbose_output = str(output)
+    
     # Fit the model
+    model.verbose = False
     model.fit(vector_x, vector_y)
+
+
+    model_metrics = make_metric_JSON_regress(model, vector_x, vector_y)
+    model_metrics["verbose"] = verbose_output
+
 
      # Have axis take figure
     plt.plot(model.loss_curve_)
@@ -336,10 +369,8 @@ def MLPRegression(vector_x, vector_y, data):
      # Get the current figure 
     figure = plt.gcf()
 
-    m_metrics = None
-
     # Return the model and figure
-    return model, figure, m_metrics
+    return model, figure, model_metrics
 
 # Call Gausian Bayes Classification
 def GaussianNaiveBayes(vector_x, vector_y, data):

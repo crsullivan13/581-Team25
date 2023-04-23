@@ -74,7 +74,7 @@ function MultiLayerPerceptronRegressHypParams(props) {
   }
   let learning_rate_init_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("learning_rate_init").value;
-    props.model_data_p["learning_rate_init"] = val;
+    props.model_data_p["learning_rate_init"] = Number(val);
   }
   let power_t_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("power_t").value;
