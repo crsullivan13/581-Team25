@@ -87,7 +87,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-auth = credentials.Certificate('team-25-362714-firebase-adminsdk-c4jp3-6d9363c3eb.json')
+auth = credentials.Certificate('team-25-362714-623f2b1f64ab.json')
 firebase_admin.initialize_app(auth)
 db = firestore.client()
 #Create default route, for an easy check of the status of web server

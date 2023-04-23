@@ -43,7 +43,7 @@ function ModelMetrics() {
   const [m_metrics, setM_Metrics] = useState(default_metrics);
   const [fig, setFig] = useState("");
 
-   let base_url = "http://127.0.0.1:5000/"
+   let base_url = "https://team-25-362714.uc.r.appspot.com/"
 
   let getMetrics = (model_id) => {
     let url = base_url + "get_metrics"
