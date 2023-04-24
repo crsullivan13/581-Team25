@@ -57,6 +57,9 @@
 # log: Edited Mar 23 2023
 #       Author: Amith Panuganti
 #       Description: The MLP Demo Figures Path will only have 1 function to create figures for MLP Demo
+# log: Edited Apr 23 2023
+#       Author: Amith Panuganti
+#       Description: Removed decisionTreeDemo route and replaced it with Demo route
 
 from lib.communications import PushToFront 
 from lib.metrics import loss
@@ -98,44 +101,6 @@ db = firestore.client()
 #output: simple success message
 def index():
     return "works"
-
-# Create a route for the Decision Tree Demo and its output
-@app.route('/decisionTreeDemo', methods=['POST'])
-@cross_origin()
-#input: request.data: the data to fit the tree
-#output: Text of the Decision Tree
-#Error: Can occur when dictionary is in incorrect format
-#       Error can occur if training fails
-def decisionTreeDemo():
-    #Run in try block to catch for errors
-    try:
-        # Load data from request
-        data = json.loads(request.data.decode("utf-8"))
-
-        # Get data 
-        data = {k: data[k] for k in data if k != "uuid"}
-
-        # Create a model and get both model and decsion tree text
-        model, text = trainModel(data)
-
-        # Get loss from metrics
-        metric = loss(model, data["X"], data["y"])
-
-        # Store both metric and text in dictionary
-        metrics = {
-            "loss":metric,
-            "tree":text,
-        }
-
-        # Make the response
-        return make_response(jsonify(metrics), 200)
-    # Will check if key in data cannot be access
-    except KeyError as e:
-        # Make response informing user of error
-        return make_response(jsonify({"Invalid key": str(e)}), 500)
-    # Will check for an additional errors
-    except Exception as e: #Elsewhere
-        return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an erro
 
 # Create a route for MLPFigureDemos
 @app.route('/MLPDemoFigures', methods=['POST'])
@@ -189,10 +154,10 @@ def Demo():
         data = {k: data[k] for k in data if k != "uuid"}
 
         # Create model and get both just get metrics
-        _, metrics = trainModel(data)
-
+        _, metrics, _ = trainModel(data)
+       
         # If metrics contains figure, if it does
-        if(metrics.get("figure")):
+        if "figure" in metrics:
             # Convert figure into byte array
             # Create output to get figures
             output = io.BytesIO()
@@ -200,7 +165,7 @@ def Demo():
 
 		    # Get bytes
             metrics["figure"] = encodebytes(output.getvalue()).decode('ascii')
-
+       
         # Return metrics
         return make_response(jsonify(metrics))
 
@@ -221,20 +186,17 @@ def fit():
     # Catch any errors 
     try:	
 		# Load data from request
+
         data = json.loads(request.data.decode("utf-8"))
 
-
         uuid = data["uuid"]
-        data = {k: data[k] for k in data if k != "uuid"}
+
+        # Get the name for the model
+        data = {k: data[k] for k in data if k != "uuid" and k != "name"}
 
 		# Create a model and figure get its params
-        trained, figure = trainModel(data)
-
-        #Store the model
-        user_ref = db.collection(u'Models').document(uuid)
-
-        #Store as default
-        user_ref.set({"model": pickle.dumps(trained)})
+        model_metrics = None
+        trained, figure, model_metrics = trainModel(data)
 
         # Set bytes to be None
         bytes = None
@@ -247,13 +209,23 @@ def fit():
 
 		    # Get bytes
             bytes = encodebytes(output.getvalue()).decode('ascii')
+    
+        #Next, create metircs with loss and figure
+        model_metrics["figure"] = bytes
 
-		#Next, create metircs with loss and figure
+
+        #Store the model
+        user_ref = db.collection(u'Models').document(uuid)
+
+        json_metrics = json.dumps(model_metrics, ensure_ascii=False)
+        #Store as default
+        user_ref.set({"model": pickle.dumps(trained), "model_metrics": json_metrics})
+
+        #these metrics are returned to the frontend
         metrics = {
 			"loss": loss(trained, data["X"], data["y"]),
 			"figure" : bytes
 		} 
-
         # Return params back to frontend
         coefs = False 
         if coefs:
@@ -286,9 +258,30 @@ def get_models():
 
         #add all models to the json object
         for doc in model_docs:
+            #print(doc.to_dict()["model_metrics"])
             model_names["names"].append(doc.id)
         
         return model_names
+    except Exception as e:
+        return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error
+
+#TODO change from GET to POST
+#route for retrieving all the names of the stored models stored for the user
+@app.route('/get_metrics', methods=['POST'])
+@cross_origin()
+def get_metrics():
+    try:
+        #TODO get uuid from frontend, then use it to make a query for that users models
+        data = json.loads(request.data.decode("utf-8"))
+        model_id = data["model_id"]
+
+        doc = db.collection(u'Models').document(model_id).get()
+        doc_dict = doc.to_dict()
+        if("model_metrics" in doc_dict):
+            metric = doc.to_dict()["model_metrics"]
+            return metric
+        else:
+            return {}
     except Exception as e:
         return make_response(jsonify({"Error":str(e)}),500) #Request failed, return an error
 
@@ -307,11 +300,12 @@ def predict():
 
         # Get the features from data
         X = data["X"]
+        uuid = data["uuid"]
 
         # Get the user from data
         user_ref = db.collection(u'Models').document(uuid)
 
-        uuid = data["uuid"]
+        
         ser_model = ""
         if "model_name" in data:
             model_dict = user_ref.get().collection(u'user_models').get().to_dict()

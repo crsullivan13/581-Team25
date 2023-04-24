@@ -17,7 +17,7 @@ import { Form, Button, Container } from "react-bootstrap"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput"
-import * as ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 
 
@@ -50,7 +50,7 @@ function NaiveBayesClassifierHypParams(props) {
   //Return following HTML code
   return(
     <Form.Group>
-      <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
+      <ReactTooltip id="Hello" className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
         <Form.Label>Priors</Form.Label><br/>{/**The function to measure the quality of a split.  */}

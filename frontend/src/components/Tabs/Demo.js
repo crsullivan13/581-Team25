@@ -1,10 +1,11 @@
 /*
 Name: Demo.js
 Description: The base component for the demo page
-Programmers: Connor Sullivan
+Programmers: Connor Sullivan, Amith Panuganti 
 Creation Date: 11/05/22
 Revisions:
 	11/05/22 - Initial build of the file
+    4/23/23 - Added Decision Tree Demo
 Preconditions: None
 Errors: None
 Side Effects: New models will be trained on this page
@@ -19,8 +20,12 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useState } from 'react';
 import DemoItem from '../DemoItem';
+<<<<<<< HEAD
 import { LogisticRegressionPart1Front, LogisticRegressionPart1After} from './LogisticRegressionDemo';
 import LogisticRegressionPart from "./LogisticRegressionDemo"
+=======
+import DecisionTreeDemo from './DecisionTreeDemo';
+>>>>>>> 4b051748138e3dc5642aa56eb4f05b19fbc47a09
 import MLPDemo from './MLPDemo';
 import { Navbar } from "react-bootstrap"
 import { Nav } from "react-bootstrap"
@@ -37,7 +42,14 @@ function Demo(){
         setModelType(modelType);
     }
 
+     //Make a dict of tags
+     let demoTags = {
+            "Decision Tree":<DecisionTreeDemo></DecisionTreeDemo>,
+            "Multilayer Perceptron":<MLPDemo></MLPDemo>
+     }
+
     return(
+       
         <>
         <div id="top-level_wrapper">
             <Container fluid>
@@ -49,7 +61,7 @@ function Demo(){
                                     <h3>Demo options</h3>
                                     <Nav.Link eventKey="Linear Regression">Linear Regression</Nav.Link>
                                     <Nav.Link eventKey="Logistic Regression">Logistic Regression</Nav.Link>
-                                    <Nav.Link eventKey="Decison Tree Classification">Decision Tree Classifer</Nav.Link>
+                                    <Nav.Link eventKey="Decision Tree">Decision Tree</Nav.Link>
                                     <Nav.Link eventKey="Multilayer Perceptron">Multilayer Perceptron</Nav.Link>
                                     <Nav.Link eventKey="Naive Bayes">Naive Bayes</Nav.Link>
                                     <Nav.Link eventKey="General Model Training">General Model Training</Nav.Link>
@@ -58,8 +70,8 @@ function Demo(){
                         </Navbar>
                     </Col>
                     <Col>
-                        {(ModelType === "Multilayer Perceptron") 
-                            ? <MLPDemo></MLPDemo>
+                        {(demoTags[ModelType] !== undefined) 
+                            ? demoTags[ModelType]
                             : <DemoItem modelType={ModelType}/>
                         }
                     </Col>

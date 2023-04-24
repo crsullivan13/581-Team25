@@ -17,7 +17,7 @@ import { Form, Button, Container } from "react-bootstrap"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput"
-import * as ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 import {useState, useEffect} from "react"
 import './tooltipstyle.css'
@@ -71,7 +71,7 @@ function MultiLayerPerceptronClassHypParams(props) {
   }
   let learning_rate_init_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("learning_rate_init").value;
-    props.model_data_p["learning_rate_init"] = val;
+    props.model_data_p["learning_rate_init"] = Number(val);
   }
   let power_t_change = ()=>{ //handler for input change on the batch_size
     let val = document.getElementById("power_t").value;
@@ -173,7 +173,7 @@ function MultiLayerPerceptronClassHypParams(props) {
   //Return following HTML code
   return(
     <Form.Group id="form_input">
-      <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
+      <ReactTooltip id="Hello" className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
         <Form.Label>Hidden Layer Sizes</Form.Label>{/**Label for hidden layer sizes */}<br/>

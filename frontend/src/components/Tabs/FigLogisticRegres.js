@@ -44,7 +44,12 @@ import {useAuth} from "../../contexts/AuthContext"
 
 import { useRef } from 'react'
 
-
+let dataPts = {
+	"p1": [20, 150+75],
+	"p2": [34, 150-75],
+	"p3": [60, 150+75],
+	"p4": [100, 150-75]
+}
 
 const FigLogisticRegres = props => {
 	const canvasRef = useRef(null);
@@ -52,6 +57,8 @@ const FigLogisticRegres = props => {
 	const [error, setError] = useState("");
 	const [coef1, setCoef1] = useState(3);
 	const [coef2, setCoef2] = useState(2);
+	const [threshold, setThreshold] = useState(0);
+
 	let msdown = false;
 	let shiftdown = false;
 	let dataPtSelected = "na";
@@ -66,19 +73,12 @@ const FigLogisticRegres = props => {
 		x = x - (ctx.canvas.width/2);
 		x = x/55;
 		let exp = -(coef1 + (coef2*x));
-		let y = -150/(1+Math.pow(2.71, exp)) + 30;
+		let y = -150/(1+Math.pow(2.71, exp)) + 75;
 		y = y + (ctx.canvas.height/2);
 		return y;
 	}
 
 	let origin = [50, 50];
-
-	let dataPts = {
-		"p1": [20, 20],
-		"p2": [34, 35],
-		"p3": [60, 20],
-		"p4": [34, 65],
-	};
 
 
 	let calcError = () => {
@@ -96,7 +96,7 @@ const FigLogisticRegres = props => {
 
 
 	let dataPoints = (ctx) => {
-		ctx.fillStyle = '#000000';
+		//ctx.fillStyle = '#000000';
 		for(let key in dataPts){
 			if(key == dataPtSelected){
 				ctx.beginPath();
@@ -112,7 +112,6 @@ const FigLogisticRegres = props => {
 
 	const releasing = (ctx) => {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-		ctx.fillStyle = '#000000'
 		dataPoints(ctx);
 	}
 
@@ -125,6 +124,11 @@ const FigLogisticRegres = props => {
 		let val = e.target.value/100;
 		val -= 0.5;
 		setCoef2(val*10);
+	}
+	const changeThreshold = (e) => {
+		let val = e.target.value/100;
+		val -= 0.5;
+		setThreshold(val);
 	}
 	const update = (ctx) => {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -140,6 +144,13 @@ const FigLogisticRegres = props => {
 			ctx.lineTo(i, y);
 		}
 		ctx.stroke();
+
+		ctx.setLineDash([5, 15]);
+		ctx.beginPath();
+		ctx.moveTo(0, threshold*150+150);
+		ctx.lineTo(ctx.canvas.width, threshold*150 + 150);
+		ctx.stroke();
+		ctx.setLineDash([]);
 	}
 
 	const mouseDown = (e) =>{
@@ -177,7 +188,14 @@ const FigLogisticRegres = props => {
 		if(dataPtSelected != "na"){
 			let x = e.clientX - canvas.getBoundingClientRect().left;
 			let y = e.clientY - canvas.getBoundingClientRect().top;
-			dataPts[dataPtSelected] = [x, y];
+			let disc_y = 0;
+			let half_y = canvas.width/2;
+			if(y > half_y){
+				disc_y = half_y + 75;
+			}else{
+				disc_y = half_y - 75;
+			}
+			dataPts[dataPtSelected] = [x, disc_y];
 		}
 		update(ctx);
 		dataPoints(ctx);
@@ -195,14 +213,14 @@ const FigLogisticRegres = props => {
 
 	});
 
-
 	return (
 		<div id="div_top">
 			<p>Click and drag the line, and press shift to change the intercept of the line.</p>
 			<p>Click and drag the data points to see how the error changes</p>
 			<canvas id="canv" ref={canvasRef} {...props} onMouseDown={mouseDown} onMouseUp={mouseUp} onMouseMove={mouseMove}/><br/>
 			Coefficient 1: <input type="range" onChange={changeCoef1}/><br/>
-			Coefficient 2: <input type="range" onChange={changeCoef2}/>
+			Coefficient 2: <input type="range" onChange={changeCoef2}/><br/>
+			Threshold: <input type="range" onChange={changeThreshold}/><br/>
 			<p>Squared Error: {error}</p>
 		</div>
 	);

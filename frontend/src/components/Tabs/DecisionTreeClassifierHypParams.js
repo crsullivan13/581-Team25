@@ -18,7 +18,7 @@ import { Form, Button, Container } from "react-bootstrap"
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import DataInput from "./DataInput"
-import * as ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip'
 import HyperparamInfo from './HyperparamInfo'
 
 
@@ -139,15 +139,14 @@ function DecisionTreeClassifierHypParams(props) {
   //Return following HTML code
   return(
     <Form.Group id="form_input">
-      <ReactTooltip className="info_tooltip" effect="solid" html={true} multiline={true}/>
+      <ReactTooltip id="Hello" className="info_tooltip" effect="solid" html={true} multiline={true}/>
       <Row>
       <Col>
         <Form.Label>Criterion</Form.Label>{/**The function to measure the quality of a split.  */}
         <Form.Select id="crit" data-tip={HyperparamInfo("DecisionTreeRegression", "crit")} onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
-          <option>squared_error</option>{/** options*/}
-          <option>friedman_mse</option>
-          <option>absolute_error</option>
-          <option>poisson</option>
+          <option>gini</option>{/** options*/}
+          <option>entropy</option>
+          <option>log_loss</option>
         </Form.Select>
       </Col>
       <Col>
