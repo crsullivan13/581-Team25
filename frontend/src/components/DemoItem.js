@@ -169,6 +169,20 @@ function DemoItem(props){
                         setYData(configData.DTREE_DEMO_DATA.TWO.y);
                         //return the text info fro the model
                     }
+                  case "Naive Bayes":
+                    if(dataSet === 'Set One'){
+                        //set x data from config file
+                        setXData(configData.DTREE_DEMO_DATA.ONE.X);
+                        //set y data from config file
+                        setYData(configData.DTREE_DEMO_DATA.ONE.y);
+                        //return the text info fro the model
+                    } else {
+                            //set x data from config file
+                        setXData(configData.DTREE_DEMO_DATA.TWO.X);
+                        //set y data from config file
+                        setYData(configData.DTREE_DEMO_DATA.TWO.y);
+                        //return the text info fro the model
+                    }
                     break;
                 default:
             }
@@ -243,6 +257,15 @@ function DemoItem(props){
 			case "General Model Training":
                 //dataSetChange()
 				return(<><p>{configData.DEMOS.GENERAL_TXT}</p></>);
+				break;
+			case "Naive Bayes":
+                //dataSetChange()
+				return(
+					<><p>{configData.DEMOS.NAIVE_TXT_ONE}</p>
+					<p>{configData.DEMOS.NAIVE_TXT_TWO}</p>
+					<img src={process.env.PUBLIC_URL + '/normal.png'} alt="Normal image" />
+					<p>{configData.DEMOS.NAIVE_TXT_THREE}</p>
+					</>);
 				break;
 			default:
 

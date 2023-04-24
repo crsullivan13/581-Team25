@@ -21,7 +21,6 @@ import { useState } from 'react';
 import DemoItem from '../DemoItem';
 import { LogisticRegressionPart1Front, LogisticRegressionPart1After} from './LogisticRegressionDemo';
 import LogisticRegressionPart from "./LogisticRegressionDemo"
-import GeneralDemoPart from "./GeneralDemo"
 import MLPDemo from './MLPDemo';
 import { Navbar } from "react-bootstrap"
 import { Nav } from "react-bootstrap"
@@ -52,6 +51,7 @@ function Demo(){
                                     <Nav.Link eventKey="Logistic Regression">Logistic Regression</Nav.Link>
                                     <Nav.Link eventKey="Decison Tree Classification">Decision Tree Classifer</Nav.Link>
                                     <Nav.Link eventKey="Multilayer Perceptron">Multilayer Perceptron</Nav.Link>
+                                    <Nav.Link eventKey="Naive Bayes">Naive Bayes</Nav.Link>
                                     <Nav.Link eventKey="General Model Training">General Model Training</Nav.Link>
                                 </Nav>
                             </Container>
