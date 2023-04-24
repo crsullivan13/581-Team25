@@ -118,7 +118,7 @@ function IntroduceTree()
     let jsonString = JSON.stringify(request)
 
     //Create url for request
-    let url = "http://127.0.0.1:5000/Demo"
+    let url = "https://team-25-362714.uc.r.appspot.com/Demo"
 
     //Send request to backend 
     let xhr = new XMLHttpRequest()

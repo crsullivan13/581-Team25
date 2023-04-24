@@ -242,7 +242,7 @@ function DemoItem(props){
                 //log data for debug
 		        console.log(model_data);
 				//url for training
-				let url = "http://127.0.0.1:5000//fit"
+				let url = "https://team-25-362714.uc.r.appspot.com/fit"
 
                     //set the fields for the json
                     model_data["model"] = props.modelType

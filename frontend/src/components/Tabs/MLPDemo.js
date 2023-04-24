@@ -134,7 +134,7 @@ function MLPDemo(props)
     let tags = []
 
     //Set url for training 
-    let url = "http://127.0.0.1:5000/MLPDemoFigures"
+    let url = "https://team-25-362714.uc.r.appspot.com/MLPDemoFigures"
 
     //Creates graph for Regression Dataset
     //Create dictionary to be send 
