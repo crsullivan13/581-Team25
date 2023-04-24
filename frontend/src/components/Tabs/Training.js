@@ -141,9 +141,9 @@ function Training() {
 			//we need the user id to train, for storage purposes
 			model_data["uuid"] = currentUser.uid
 
+			model_data["name"] = "model_mcmodelface"
 			//turn the request data into json string
 			let jsonString = JSON.stringify(model_data)
-
 			console.log(jsonString)
 
 			//setup http request

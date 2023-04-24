@@ -28,11 +28,20 @@ import { useState, useEffect} from 'react';
 //Input: None
 //Output: HTML Page of Model Metrics
 function ModelMetrics() {
+
+  let default_metrics = {
+    "explained_variance_score": 0,
+    "max_error": 0,
+    "mean_pinball_loss":0,
+    "verbose":0,
+    "figure": 0
+  };
    //state that is a list of models that have been created, just one for now
   const [model_list, setModelList] = useState([]);
    //The current selected model
   const [model_selected, setModelSelected] = useState("");
-  const [m_metrics, setM_Metrics] = useState("metrics");
+  const [m_metrics, setM_Metrics] = useState(default_metrics);
+  const [fig, setFig] = useState("");
 
    let base_url = "https://team-25-362714.uc.r.appspot.com/"
 
@@ -60,8 +69,17 @@ function ModelMetrics() {
 
           //Parse the response 
           var jsonResponse = JSON.parse(xhr.responseText)
-          setM_Metrics(jsonResponse)
-          console.log(model_list)
+          console.log(jsonResponse)
+          if(jsonResponse != null){
+            setM_Metrics(jsonResponse)
+            //Create image that serves as sourc
+            const image = "data:image/png;base64,"+jsonResponse.figure;
+              
+            //Create imag tab 
+            let element = <img alt="Figure" src={image}></img>
+            setFig(element)
+          }
+          
         } else {
           //get here if we get and error status from the http response
           let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
@@ -107,7 +125,11 @@ function ModelMetrics() {
           //Parse the response 
           var jsonResponse = JSON.parse(xhr.responseText)
           setModelList(jsonResponse["names"])
-          console.log(model_list)
+          let first_name = jsonResponse["names"][0]
+          if(first_name != null){//this initializes the page to show the metrics of the first model
+            console.log(first_name)
+            getMetrics(first_name)
+          }
         } else {
           //get here if we get and error status from the http response
           let error = 'Error ' + xhr.status + ': ' + xhr.statusText;
@@ -135,12 +157,19 @@ function ModelMetrics() {
     setModelSelected(doc_id.toString());
 
     //display the metrics
-    setM_Metrics(getMetrics(doc_id.toString()))
+    let new_metrics = getMetrics(doc_id.toString());
+    if(new_metrics != null){
+      setM_Metrics(new_metrics);
+    }else{
+      setM_Metrics(default_metrics);
+      setFig("")
+    }
   }
 
   //initializes the available models to run
   useEffect(()=>{
     getModelNames()
+    //get the id, then get the model metrics
   }, [])
   //Return following HTML code
   return (
@@ -151,7 +180,7 @@ function ModelMetrics() {
       {/* Create a new Form Group For Getting Model */}
       <Form.Group className="mb-3" controlId="modelChoice">
       {/* Label For Choose Model */}
-      <Form.Label>Choose Your Model</Form.Label>
+      <h2>Choose Model</h2>
       {/* Create element for user to choose Model */}
       <Form.Select aria-label="Model Select" onChange={model_changed}>
         {/* Placeholder for actual model */}
@@ -160,7 +189,18 @@ function ModelMetrics() {
       </Form.Select>
       </Form.Group>
     </Form>
-    {JSON.stringify(m_metrics)}
+    <h2>Regression Metrics:</h2>
+    <p>Explained variance score: {m_metrics["explained_variance_score"]}</p>
+    <p>Max Error: {m_metrics["max_error"]}</p>
+    <p>Mean Pinball Loss: {m_metrics["mean_pinball_loss"]}</p>
+    <h2>Classification Metrics:</h2>
+    <p>Accuracy Score: {m_metrics["accuracy_score"]}</p>
+    <p>Average Precision Score: {m_metrics["average_precision_score"]}</p>
+    <p>Hamming Loss: {m_metrics["hamming_loss"]}</p>
+    <h2>Figures:</h2>
+    {fig}
+    <h2>Verbose Output:</h2>
+    {m_metrics["verbose"]}
     </Container>
   </>
   );

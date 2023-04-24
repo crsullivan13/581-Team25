@@ -186,23 +186,17 @@ def fit():
     # Catch any errors 
     try:	
 		# Load data from request
+
         data = json.loads(request.data.decode("utf-8"))
+
         uuid = data["uuid"]
 
         # Get the name for the model
-        name = data["name"]
         data = {k: data[k] for k in data if k != "uuid" and k != "name"}
 
 		# Create a model and figure get its params
         model_metrics = None
-        trained, figure,model_metrics = trainModel(data)
-
-        #Store the model
-        user_ref = db.collection(u'Models').document(uuid)
-
-        json_metrics = json.dumps(model_metrics, ensure_ascii=False)
-        #Store as default
-        user_ref.set({"model": pickle.dumps(trained), "model_metrics": json_metrics})
+        trained, figure, model_metrics = trainModel(data)
 
         # Set bytes to be None
         bytes = None
@@ -215,12 +209,23 @@ def fit():
 
 		    # Get bytes
             bytes = encodebytes(output.getvalue()).decode('ascii')
-		#Next, create metircs with loss and figure
+    
+        #Next, create metircs with loss and figure
+        model_metrics["figure"] = bytes
+
+
+        #Store the model
+        user_ref = db.collection(u'Models').document(uuid)
+
+        json_metrics = json.dumps(model_metrics, ensure_ascii=False)
+        #Store as default
+        user_ref.set({"model": pickle.dumps(trained), "model_metrics": json_metrics})
+
+        #these metrics are returned to the frontend
         metrics = {
 			"loss": loss(trained, data["X"], data["y"]),
 			"figure" : bytes
 		} 
-        
         # Return params back to frontend
         coefs = False 
         if coefs:

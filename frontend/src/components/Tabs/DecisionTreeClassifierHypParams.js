@@ -144,10 +144,9 @@ function DecisionTreeClassifierHypParams(props) {
       <Col>
         <Form.Label>Criterion</Form.Label>{/**The function to measure the quality of a split.  */}
         <Form.Select id="crit" data-tip={HyperparamInfo("DecisionTreeRegression", "crit")} onChange={crit_change} defaultValue="squared_error">{/**select input for criterion */}
-          <option>squared_error</option>{/** options*/}
-          <option>friedman_mse</option>
-          <option>absolute_error</option>
-          <option>poisson</option>
+          <option>gini</option>{/** options*/}
+          <option>entropy</option>
+          <option>log_loss</option>
         </Form.Select>
       </Col>
       <Col>
