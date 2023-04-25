@@ -329,27 +329,6 @@ function DemoItem(props){
                     {/*internal component render*/}
                     <DemoType />
                 </Row>
-                <Row>
-                    <h3 className='w-100 mt-2'>Select a data set to demo</h3>
-                    {/*simple drop down for data set selection*/}
-                    <Form.Select id="dataSetInput" aria-label="Model Select" onChange={dataSetChange}>
-                        <option>None</option>
-                        <option>Set One</option>
-                        <option>Set Two</option>
-                    </Form.Select>
-                </Row>
-                <Row>
-		            {/*button to begin training*/}
-                    <br></br>
-                    <Button type="button" onClick={handleTrain}>Train</Button>
-                </Row>
-                <Row>
-                <h3 className='w-100 mt-2'>Loss for this demo set's trained model</h3>
-                <br></br>
-                {/*show return values*/}
-	            <div>{ReturnedModel}</div>
-                </Row>
-                {image}
             </Container>
         </>
     )

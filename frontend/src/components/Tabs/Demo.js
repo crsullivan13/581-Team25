@@ -20,12 +20,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useState } from 'react';
 import DemoItem from '../DemoItem';
-<<<<<<< HEAD
 import { LogisticRegressionPart1Front, LogisticRegressionPart1After} from './LogisticRegressionDemo';
 import LogisticRegressionPart from "./LogisticRegressionDemo"
-=======
 import DecisionTreeDemo from './DecisionTreeDemo';
->>>>>>> 4b051748138e3dc5642aa56eb4f05b19fbc47a09
 import MLPDemo from './MLPDemo';
 import { Navbar } from "react-bootstrap"
 import { Nav } from "react-bootstrap"

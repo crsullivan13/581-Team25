@@ -54,15 +54,15 @@ function App() {
 		<Router>
 			<AuthProvider>
 				<Routes>
-					<Route exact path="/" element={<><PrivateRoute><NavigationBar /> <Dashboard /></PrivateRoute> </>} />
+					<Route exact path="/" element={<><PrivateRoute><NavigationBar page=""/> <Dashboard /></PrivateRoute> </>} />
 					<Route path="/signup" element={<Signup/>} />
 					<Route path="/login" element={<Login/>} />
 					{/*<Route path="/datainput" element={<><PrivateRoute><NavigationBar /><DataInput handleCallback={handleCallback}></DataInput></PrivateRoute></>} />*/}
-					<Route path="/modelmetrics" element={<><PrivateRoute><NavigationBar /><ModelMetrics></ModelMetrics></PrivateRoute></>} />
-					<Route path="/modelusage" element={<><PrivateRoute><NavigationBar /><ModelUsage></ModelUsage></PrivateRoute></>} />
-					<Route path="/training" element={<><PrivateRoute><NavigationBar /><Training></Training></PrivateRoute></>} />
-					<Route path="/demos" element={<><PrivateRoute><NavigationBar /><Demo></Demo></PrivateRoute></>} />
-					<Route path="/datasets" element={<><PrivateRoute><NavigationBar /><DataSets></DataSets></PrivateRoute></>} />
+					<Route path="/modelmetrics" element={<><PrivateRoute><NavigationBar page="Model Metrics"/><ModelMetrics></ModelMetrics></PrivateRoute></>} />
+					<Route path="/modelusage" element={<><PrivateRoute><NavigationBar page="Model Usage"/><ModelUsage></ModelUsage></PrivateRoute></>} />
+					<Route path="/training" element={<><PrivateRoute><NavigationBar page="Training"/><Training></Training></PrivateRoute></>} />
+					<Route path="/demos" element={<><PrivateRoute><NavigationBar page="Demos"/><Demo></Demo></PrivateRoute></>} />
+					<Route path="/datasets" element={<><PrivateRoute><NavigationBar page="Data Sets"/><DataSets></DataSets></PrivateRoute></>} />
 				</Routes>
 			</AuthProvider>
 		</Router>

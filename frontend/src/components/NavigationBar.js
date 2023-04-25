@@ -29,7 +29,7 @@ import { useState } from 'react'
 
 
 
-function NavigationBar() {
+function NavigationBar(props) {
 
 	const [ModelType, setModelType] = useState('')
 
@@ -49,7 +49,7 @@ function NavigationBar() {
 					<Navbar.Brand href="/" className="blue-txt">ML for Everyone</Navbar.Brand>
 					<Navbar.Toggle aria-controls='responsive-navbar-vav' />
 					<Navbar.Collapse id='responsive-navbar-nav' >
-					<Nav className="me-auto" activeKey={ModelType} onSelect={(selectedKey => modelTypeChange(selectedKey))}>
+					<Nav className="me-auto" activeKey={props.page} onSelect={(selectedKey => modelTypeChange(selectedKey))}>
 						<Nav.Link href="/training" eventKey="Training">Training</Nav.Link>
 						<Nav.Link href="/modelusage" eventKey="Model Usage">Model Usage</Nav.Link>
 						<Nav.Link href="/modelmetrics" eventKey="Model Metrics">Model Metrics</Nav.Link>
